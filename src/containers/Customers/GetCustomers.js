@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCustomers } from '../../redux/actions/customer';
 import { connect } from 'react-redux';
-import {  Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import DeleteModal from '../../components/DeleteModal';
 import { setLoading } from '../../redux/actions/loading';
 import { del } from '../../axios';
@@ -121,14 +121,17 @@ const GetCustomers = ({
                 </button>
             </div>
             <div className="custom-table-searchbar mb-3">
-                <input
-                    type="text"
-                    className="d-inline"
-                    onChange={inputOnChange}
-                    onSubmit={searchName}
-                    placeholder="Search"
-                />
-                <i className="simple-icon-magnifier" onClick={searchName}></i>
+                <form onSubmit={searchName}>
+                    <input
+                        type="text"
+                        className="d-inline"
+                        onChange={inputOnChange}
+                        placeholder="Search"
+                    />
+                    <i
+                        className="simple-icon-magnifier"
+                        onClick={searchName}></i>
+                </form>
             </div>
             <Container fluid>
                 <div className="custom-table">

@@ -1,8 +1,8 @@
 import React from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { Nav, NavItem, Label, NavLink } from 'reactstrap';
-import { withRouter, Link } from 'react-router-dom';
+import { Nav, NavItem, Label } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setMenuState } from '../../redux/actions/menu';
 

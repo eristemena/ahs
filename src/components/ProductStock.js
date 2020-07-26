@@ -6,7 +6,7 @@ import { Col } from 'reactstrap';
 const ProductStock = ({ product_name, stock }) => {
     return (
         <Col>
-            <div className="card shadow mx-2">
+            <div className="card shadow mx-2 mb-2">
                 <div className="card-body">
                     <h5
                         className={`card-title ${stock > 0 && 'text-success'} ${

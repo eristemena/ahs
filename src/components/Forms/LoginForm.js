@@ -4,7 +4,7 @@ import { Label, FormGroup, Button, Spinner } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import CustomSpinner from './CustomSpinner';
+import CustomSpinner from '../CustomSpinner';
 
 function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
     const validateEmail = (value) => {

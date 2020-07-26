@@ -1,10 +1,7 @@
 import React, { Fragment } from 'react';
-import TopNav from './Nav/TopNav';
-import SideNav from './Nav/SideNav';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { TopNav, SideNav } from './Nav';
 
-const Navigation = ({ history }) => {
+const Navigation = () => {
     return (
         <Fragment>
             <TopNav />
@@ -13,4 +10,4 @@ const Navigation = ({ history }) => {
     );
 };
 
-export default connect()(Navigation);
+export default Navigation;

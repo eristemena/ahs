@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { get, put } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
-import { withRouter, Link } from 'react-router-dom';
-import TransactionForm from '../../components/TransactionForm';
+import { TransactionForm } from '../../components/Forms';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/id';
@@ -26,7 +25,7 @@ const EditTransaction = ({ alert, history }) => {
             history.push('/transactions/get');
             return alert('Telah terjadi kesalahan');
         }
-        
+
         if (!search.includes('id')) {
             history.push('/transactions/get');
             return alert('Telah terjadi kesalahan');
@@ -78,7 +77,7 @@ const EditTransaction = ({ alert, history }) => {
                 quantity,
                 info,
                 customer_id,
-            }, 
+            },
             (success) => {
                 setSubmitting(false);
                 alert('Transaksi berhasil diedit', 'success');

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { addAlert } from '../redux/actions/alert';
+import { addAlert } from '../../redux/actions/alert';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Label, FormGroup, Button, Spinner, CardBody, Card } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
-import CustomSpinner from './CustomSpinner';
+import CustomSpinner from '../CustomSpinner';
 
 const CustomerForm = ({
     stateName = '',
@@ -12,9 +12,7 @@ const CustomerForm = ({
     statePhone = '',
     stateAddress = '',
     onSubmit = () => {},
-    alert,
     submitting,
-    loading,
     history,
 }) => {
     const [name, setName] = useState('');
@@ -82,7 +80,7 @@ const CustomerForm = ({
             onSubmit={submitHandler}
             enableReinitialize>
             {({ errors, touched }) => (
-                <Card>
+                <Card className="custom-form-card">
                     <CardBody>
                         <Form>
                             <FormGroup className="form-group has-float-label">

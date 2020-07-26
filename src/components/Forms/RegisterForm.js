@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addAlert } from '../redux/actions/alert';
+import { addAlert } from '../../redux/actions/alert';
 import { connect } from 'react-redux';
 
 function RegisterForm({ onSubmit = () => {}, loading, alert}) {

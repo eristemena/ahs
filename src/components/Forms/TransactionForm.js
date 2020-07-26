@@ -1,13 +1,13 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { addAlert } from '../redux/actions/alert';
+import { addAlert } from '../../redux/actions/alert';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
-import { setLoading } from '../redux/actions/loading';
-import { get } from '../axios';
+import { setLoading } from '../../redux/actions/loading';
+import { get } from '../../axios';
 
 registerLocale('id', id);
 

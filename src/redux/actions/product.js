@@ -6,7 +6,7 @@ import { setLoading } from './loading';
 export const getProducts = (page, name = '') => (dispatch) => {
     dispatch(setLoading(true))
     get(
-        `/products?limit=10&page=${page}${name.length > 0 ? `&name=${name}` : ''}`,
+        `/products?limit=7&page=${page}${name.length > 0 ? `&name=${name}` : ''}`,
          ({ data, totalPage, totalData, page }) => {
             dispatch({
                 type: PRODUCT_GET,

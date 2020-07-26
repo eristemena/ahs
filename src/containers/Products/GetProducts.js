@@ -122,14 +122,17 @@ const GetProducts = ({
                 </button>
             </div>
             <div className="custom-table-searchbar mb-3">
-                <input
-                    type="text"
-                    className="d-inline"
-                    onChange={inputOnChange}
-                    onSubmit={searchName}
-                    placeholder="Search"
-                />
-                <i className="simple-icon-magnifier" onClick={searchName}></i>
+                <form onSubmit={searchName}>
+                    <input
+                        type="text"
+                        className="d-inline"
+                        onChange={inputOnChange}
+                        placeholder="Search"
+                    />
+                    <i
+                        className="simple-icon-magnifier"
+                        onClick={searchName}></i>
+                </form>
             </div>
             <Container fluid>
                 <div className="custom-table">
@@ -150,7 +153,9 @@ const GetProducts = ({
                         </thead>
                         <tbody>
                             {!loading ? (
-                                product.data && product.data.length > 0 ? (
+                                product &&
+                                product.data &&
+                                product.data.length > 0 ? (
                                     product.data.map((product) => (
                                         <tr
                                             key={product.id}

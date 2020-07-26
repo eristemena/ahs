@@ -3,15 +3,15 @@ import { Switch, Route } from 'react-router';
 import { connect } from 'react-redux';
 import NotFound from './NotFound';
 import Home from './Home';
-import GetUsers from './GetUsers';
+import User from './User';
 import Product from './Product';
 import Login from './Login';
 import Merchant from './Merchant';
 import Transaction from './Transaction';
 import Customer from './Customer';
-import { Row, Col } from 'reactstrap';
 import Alerts from '../components/Alerts';
 import Navigation from './Navigation';
+import { Row, Col } from 'reactstrap';
 import { setMenuState } from '../redux/actions/menu';
 
 const Content = ({ user, menu, history, setMenuState }) => {
@@ -39,7 +39,7 @@ const Content = ({ user, menu, history, setMenuState }) => {
                                             <Route
                                                 path="/users"
                                                 exact
-                                                component={GetUsers}
+                                                component={User}
                                             />
                                             <Route
                                                 path="/products"

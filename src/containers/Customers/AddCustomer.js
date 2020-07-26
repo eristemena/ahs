@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CustomerForm from '../../components/CustomerForm';
+import { CustomerForm } from '../../components/Forms';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { postWithAuth } from '../../axios';

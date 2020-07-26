@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from '../components/LoginForm';
+import { LoginForm } from '../components/Forms';
 import { login } from '../redux/actions/user';
 import { connect } from 'react-redux';
 import { Row, Card, CardBody, CardTitle, Col, Alert } from 'reactstrap';

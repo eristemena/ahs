@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { get } from '../axios';
-import { addAlert } from '../redux/actions/alert';
+import { get } from '../../axios';
+import { addAlert } from '../../redux/actions/alert';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { setLoading } from '../redux/actions/loading';
-import CustomSpinner from '../components/CustomSpinner';
+import { setLoading } from '../../redux/actions/loading';
+import CustomSpinner from '../../components/CustomSpinner';
 import { Container } from 'reactstrap';
 
 const GetUsers = ({ alert, loading, setLoading }) => {

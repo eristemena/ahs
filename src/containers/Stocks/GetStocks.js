@@ -4,6 +4,7 @@ import { addAlert } from '../../redux/actions/alert';
 import ProductStock from '../../components/ProductStock';
 import { getStocks } from '../../redux/actions/stock';
 import CustomSpinner from '../../components/CustomSpinner';
+import { Row, Col } from 'reactstrap';
 
 const GetStocks = ({ stock, getStocks, loading }) => {
     useEffect(() => {
@@ -13,20 +14,21 @@ const GetStocks = ({ stock, getStocks, loading }) => {
     return (
         <div className="container">
             <CustomSpinner loading={loading} type="page" />
-            <div className="row">
+            <Row xs="1" md="2" lg="3">
                 {!loading ? (
                     <Fragment>
                         {stock &&
                             stock.data.map((own) => (
-                                <ProductStock
-                                    key={own.product_id}
-                                    product_name={own.name}
-                                    stock={own.stock}
-                                />
+                                <Col key={own.product_id}>
+                                    <ProductStock
+                                        product_name={own.name}
+                                        stock={own.stock}
+                                    />
+                                </Col>
                             ))}
                     </Fragment>
                 ) : null}
-            </div>
+            </Row>
         </div>
     );
 };

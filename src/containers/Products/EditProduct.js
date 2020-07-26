@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ProductForm from '../../components/ProductForm';
+import { ProductForm } from '../../components/Forms';
 import { put, get } from '../../axios';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { addAlert } from '../../redux/actions/alert';
 
 const EditProduct = ({ user, history, alert }) => {
@@ -30,7 +29,7 @@ const EditProduct = ({ user, history, alert }) => {
             history.push('/products/get');
             return alert('Telah terjadi kesalahan');
         }
-        
+
         if (!search.includes('id')) {
             history.push('/products/get');
             return alert('Telah terjadi kesalahan');
@@ -46,7 +45,7 @@ const EditProduct = ({ user, history, alert }) => {
         setId(queryId);
         get(
             `/products?id=${queryId}`,
-            ({data}) => {
+            ({ data }) => {
                 setLoading(false);
                 const product = data[0];
                 setName(product.name);
@@ -56,9 +55,9 @@ const EditProduct = ({ user, history, alert }) => {
             (error) => {
                 setLoading(false);
                 history.push('/products/get');
-                alert('Telah terjadi kesalahan')
+                alert('Telah terjadi kesalahan');
             }
-        )
+        );
     }, []);
 
     const submitHandler = (name, price, buying_price) => {
@@ -93,7 +92,9 @@ const EditProduct = ({ user, history, alert }) => {
                 history={history}
             />
         </div>
-    ) : <div></div>;
+    ) : (
+        <div></div>
+    );
 };
 
 const mapStateToProps = (state) => ({

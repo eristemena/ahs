@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ProductForm from '../../components/ProductForm';
+import { ProductForm } from '../../components/Forms';
 import { postWithAuth } from '../../axios';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { addAlert } from '../../redux/actions/alert';
 
 const AddProduct = ({ user, history, alert }) => {
@@ -38,7 +37,11 @@ const AddProduct = ({ user, history, alert }) => {
     };
     return (
         <div>
-            <ProductForm onSubmit={submitHandler} loading={loading} history={history} />
+            <ProductForm
+                onSubmit={submitHandler}
+                loading={loading}
+                history={history}
+            />
         </div>
     );
 };

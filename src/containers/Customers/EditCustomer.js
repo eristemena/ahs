@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import CustomerForm from '../../components/CustomerForm';
+import { CustomerForm } from '../../components/Forms';
 import { connect } from 'react-redux';
 import { put, get } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';

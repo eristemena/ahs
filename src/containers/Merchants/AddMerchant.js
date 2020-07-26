@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { postWithAuth, post } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { connect } from 'react-redux';
-import RegisterForm from '../../components/RegisterForm';
+import { RegisterForm } from '../../components/Forms';
 
 const AddMerchant = ({ alert, history }) => {
     const [loading, setLoading] = useState(false);

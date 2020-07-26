@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { addAlert } from '../redux/actions/alert';
+import { addAlert } from '../../redux/actions/alert';
 
 const ProductForm = ({
     onSubmit = () => {},
