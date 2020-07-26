@@ -112,7 +112,7 @@ const GetCustomers = ({
 
     return (
         <Container fluid>
-            <div className="d-md-flex flex-column flex-md-row justify-content-between mb-3 align-middle">
+            <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
                 <h1>Customers</h1>
                 <button
                     className="btn btn-primary font-weight-bold table-button"

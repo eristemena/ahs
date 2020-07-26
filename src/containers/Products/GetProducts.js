@@ -150,7 +150,7 @@ const GetProducts = ({
                         </thead>
                         <tbody>
                             {!loading ? (
-                                product && product.data.length > 0 ? (
+                                product.data && product.data.length > 0 ? (
                                     product.data.map((product) => (
                                         <tr
                                             key={product.id}

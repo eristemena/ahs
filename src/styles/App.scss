@@ -26,6 +26,8 @@ $navbar-height: 100px;
 
 $navbar-border-radius: 13px;
 
+$border-radius: 1rem;
+
 $button-border-radius: 50px;
 $button-color: $primary-color;
 $button-hover: $primary-color - rgb(26, 26, 26);
@@ -133,8 +135,9 @@ body {
                         }
                     }
                 }
-                
+
             }
+
             .name {
                 margin-top: 1.32rem;
                 margin-right: .2rem;
@@ -270,14 +273,15 @@ body {
 
             svg {
                 height: 13px;
-                
+
             }
 
-            .main, .sub {
+            .main,
+            .sub {
                 fill: $primary-color;
             }
-            
-            .main {   
+
+            .main {
                 width: 10px;
             }
         }
@@ -296,6 +300,21 @@ body {
 
             .notification-alert {
                 margin-top: 20px;
+                transform: translateX(120%);
+
+                &.show {
+                    animation: slide .7s ease forwards;
+
+                    @keyframes slide {
+                        0% {
+                            transform: translateX(120%)
+                        }
+
+                        100% {
+                            transform: translateX(0%)
+                        }
+                    }
+                }
             }
         }
 
@@ -339,6 +358,10 @@ body {
 
                 &.product-table {
                     min-width: 500px;
+                }
+
+                &.customer-table {
+                    min-width: 498px;
                 }
 
                 thead th {
@@ -403,6 +426,7 @@ body {
 
         .custom-table-searchbar {
             position: relative;
+
             input {
                 background: none;
                 outline: medium none invert !important;
@@ -420,6 +444,45 @@ body {
                 position: absolute;
                 top: 7.2px;
                 left: 8.7rem;
+            }
+        }
+
+        .invalid-feedback {
+            border-radius: $border-radius;
+            padding: 0.5rem 1rem;
+            font-size: 0.76rem;
+            color: $danger-color;
+            background: $background-color;
+            border: 1px solid $danger-color;
+            text-align: center;
+            width: unset !important;
+            position: absolute;
+            z-index: 4;
+            margin-top: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+
+            &::before,
+            &::after {
+                content: "";
+                position: absolute;
+                width: 10px;
+                height: 5px;
+                margin-left: 50%;
+                border-left: solid 5px transparent;
+                border-right: solid 5px transparent;
+            }
+
+            &::before {
+                top: -5px;
+                left: -2.5px;
+                border-bottom: solid 5px $danger-color;
+            }
+
+            &::after {
+                top: -4px;
+                left: -2.5px;
+                border-bottom: solid 5px $background-color;
             }
         }
     }
@@ -442,6 +505,7 @@ body {
                     background-color: $button-click;
                 }
             }
+
             &.disabled {
                 padding: 0 1.5rem;
             }
@@ -452,7 +516,24 @@ body {
         }
 
         &.table-button {
-            @media (max-width: 768px) {
+            @media (max-width: 576px) {
+                display: block;
+                width: 100%;
+                padding: .75rem 1.25rem .75rem 1.25rem;
+            }
+        }
+
+        &.submit-button {
+            @media (max-width: 576px) {
+                display: block;
+                width: 100%;
+                padding: .75rem 1.25rem .75rem 1.25rem;
+                margin-bottom: .75rem;
+            }
+        }
+
+        &.cancel-button {
+            @media (max-width: 576px) {
                 display: block;
                 width: 100%;
                 padding: .75rem 1.25rem .75rem 1.25rem;
@@ -518,7 +599,7 @@ body {
 
     .tooltip-container {
 
-        border-radius: 1rem;
+        border-radius: $border-radius;
 
         .tooltip-body {
             color: $text-light;

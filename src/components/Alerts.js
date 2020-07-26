@@ -5,17 +5,17 @@ import { Alert } from 'reactstrap';
 
 function Alerts({ alerts }) {
     return (
-        <div>
+        <Fragment>
             {alerts.length > 0 ? (
                 <Fragment>
                     {alerts.map((alert) => (
-                        <Alert color={alert.type} key={alert.id} className="notification-alert"> 
+                        <Alert color={alert.type} key={alert.id} fade={false} className="notification-alert"> 
                             {alert.message}
                         </Alert>
                     ))}
                 </Fragment>
             ) : null}
-        </div>
+        </Fragment>
     );
 }
 

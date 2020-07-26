@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import CustomerForm from '../../components/CustomerForm';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { put, get } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { setLoading } from '../../redux/actions/loading';
+import CustomSpinner from '../../components/CustomSpinner'
 
 const EditCustomer = ({ history, alert, setLoading, loading }) => {
     const [submitting, setSubmitting] = useState(false);
@@ -74,15 +74,21 @@ const EditCustomer = ({ history, alert, setLoading, loading }) => {
         );
     };
     return (
-        <CustomerForm
-            submitting={submitting}
-            onSubmit={submitHandler}
-            stateName={name}
-            stateEmail={email}
-            statePhone={phone}
-            stateAddress={address}
-            history={history}
-        />
+        <Fragment>
+            <CustomSpinner loading={loading} type="page" />
+            {!loading ? (
+                <CustomerForm
+                submitting={submitting}
+                onSubmit={submitHandler}
+                stateName={name}
+                stateEmail={email}
+                statePhone={phone}
+                stateAddress={address}
+                history={history}
+            />
+            ) : null}
+            
+        </Fragment>
     );
 };
 
@@ -91,4 +97,8 @@ const mapDispatchToProps = (dispatch) => ({
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
-export default connect(null, mapDispatchToProps)(EditCustomer);
+const mapStateToProps = (state) => ({
+    loading: state.loading
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditCustomer);

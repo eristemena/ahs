@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addAlert } from '../redux/actions/alert';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Label, FormGroup, Button, Spinner } from 'reactstrap';
+import { Label, FormGroup, Button, Spinner, CardBody, Card } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import CustomSpinner from './CustomSpinner';
 
@@ -21,6 +21,7 @@ const CustomerForm = ({
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+
     useEffect(() => {
         setName(stateName);
         setEmail(stateEmail);
@@ -73,87 +74,99 @@ const CustomerForm = ({
     return (
         <Formik
             initialValues={{
-                name: stateName || '',
-                email: stateEmail || '',
-                phone: statePhone || '',
-                address: stateAddress || '',
+                name: name,
+                email: email,
+                phone: phone,
+                address: address,
             }}
-            onSubmit={submitHandler}>
+            onSubmit={submitHandler}
+            enableReinitialize>
             {({ errors, touched }) => (
-                <Form>
-                    <FormGroup className="form-group has-float-label">
-                        <Label>Name</Label>
-                        <Field
-                            className="form-control"
-                            name="name"
-                            validate={validateName}
-                        />
-                        {errors.name && touched.name && (
-                            <div className="invalid-feedback d-block">
-                                {errors.name}
+                <Card>
+                    <CardBody>
+                        <Form>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Name</Label>
+                                <Field
+                                    className="form-control"
+                                    name="name"
+                                    validate={validateName}
+                                />
+                                {errors.name && touched.name && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.name}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Email</Label>
+                                <Field
+                                    className="form-control"
+                                    name="email"
+                                    type="email"
+                                    validate={validateEmail}
+                                />
+                                {errors.email && touched.email && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.email}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Phone</Label>
+                                <Field
+                                    className="form-control"
+                                    name="phone"
+                                    validate={validatePhone}
+                                />
+                                {errors.phone && touched.phone && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.phone}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Address</Label>
+                                <Field
+                                    className="form-control"
+                                    as="textarea"
+                                    name="address"
+                                    validate={validateAddress}
+                                />
+                                {errors.address && touched.address && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.address}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <div>
+                                <button
+                                    className={`btn btn-primary submit-button mr-2 ${
+                                        submitting ? 'disabled' : ''
+                                    }`}
+                                    type="submit"
+                                    disabled={submitting}>
+                                    <CustomSpinner
+                                        loading={submitting}
+                                        type="button"
+                                    />
+                                    <span
+                                        className={`${
+                                            submitting ? 'd-none' : ''
+                                        }`}>
+                                        Submit
+                                    </span>
+                                </button>
+                                <button
+                                    className="btn btn-secondary cancel-button"
+                                    type="button"
+                                    onClick={() => history.goBack()}>
+                                    Cancel
+                                </button>
                             </div>
-                        )}
-                    </FormGroup>
-                    <FormGroup className="form-group has-float-label">
-                        <Label>Email</Label>
-                        <Field
-                            className="form-control"
-                            name="email"
-                            type="email"
-                            validate={validateEmail}
-                        />
-                        {errors.email && touched.email && (
-                            <div className="invalid-feedback d-block">
-                                {errors.email}
-                            </div>
-                        )}
-                    </FormGroup>
-                    <FormGroup className="form-group has-float-label">
-                        <Label>Phone</Label>
-                        <Field
-                            className="form-control"
-                            name="phone"
-                            validate={validatePhone}
-                        />
-                        {errors.phone && touched.phone && (
-                            <div className="invalid-feedback d-block">
-                                {errors.phone}
-                            </div>
-                        )}
-                    </FormGroup>
-                    <FormGroup className="form-group has-float-label">
-                        <Label>Address</Label>
-                        <Field
-                            className="form-control"
-                            as="textarea"
-                            name="address"
-                            validate={validateAddress}
-                        />
-                        {errors.address && touched.address && (
-                            <div className="invalid-feedback d-block">
-                                {errors.address}
-                            </div>
-                        )}
-                    </FormGroup>
-                    <div className="customer-buttons">
-                        <button
-                            className={`btn btn-primary mr-2 ${
-                                loading ? 'disabled' : ''
-                            }`}
-                            type="submit"
-                            disabled={loading}>
-                            <CustomSpinner loading={loading} type="button" />
-                            <span className={`${loading ? 'd-none' : ''}`}>
-                                Submit
-                            </span>
-                        </button>
-                        <button
-                            className="btn btn-secondary"
-                            onClick={() => history.goBack()}>
-                            Cancel
-                        </button>
-                    </div>
-                </Form>
+                        </Form>
+                    </CardBody>
+                </Card>
             )}
         </Formik>
     );

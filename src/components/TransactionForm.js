@@ -8,7 +8,6 @@ import moment from 'moment';
 import 'moment/locale/id';
 import { setLoading } from '../redux/actions/loading';
 import { get } from '../axios';
-import CustomSpinner from './CustomSpinner'
 
 registerLocale('id', id);
 
@@ -117,7 +116,6 @@ const TransactionForm = ({
 
     return (
         <Fragment>
-            <CustomSpinner loading={loading} type="page" />
             <form
                 onSubmit={submitHandler}
                 className={`mt-2 ${loading ? 'd-none' : ''}`}>
