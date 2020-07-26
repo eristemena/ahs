@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter} from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/user';
 import { setMenuState } from '../../redux/actions/menu';
@@ -90,4 +90,4 @@ const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));

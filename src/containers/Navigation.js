@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { TopNav, SideNav } from './Nav';
+import { connect } from 'react-redux';
 
 const Navigation = () => {
     return (
@@ -10,4 +11,4 @@ const Navigation = () => {
     );
 };
 
-export default Navigation;
+export default connect()(Navigation);
