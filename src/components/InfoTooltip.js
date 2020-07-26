@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TooltipTrigger from 'react-popper-tooltip';
 import 'react-popper-tooltip/dist/styles.css';
 
@@ -37,13 +37,13 @@ const InfoTooltip = ({ info }) => {
                     className: 'trigger',
                 })}
             >
-                <span className="material-icons text-info" style={{userSelect: "none"}}>textsms</span>
+                <i className="simple-icon-info info-icon"></i>
             </span>
         );
     };
 
     return (
-        <TooltipTrigger tooltip={Tooltip} placement="left">
+        <TooltipTrigger tooltip={Tooltip} placement="top">
             {Trigger}
         </TooltipTrigger>
     );

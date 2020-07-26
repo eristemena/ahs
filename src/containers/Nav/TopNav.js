@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment } from 'react';
 import { withRouter, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/user';
@@ -9,7 +9,7 @@ import {
     DropdownToggle,
     DropdownMenu,
 } from 'reactstrap';
-import { MobileMenuIcon, MenuIcon } from '../../components/svg';
+import { MenuIcon } from '../../components/svg';
 
 function NavBar({
     user,
@@ -43,16 +43,9 @@ function NavBar({
                         <NavLink
                             to="#"
                             location={{}}
-                            className="menu-button d-none d-md-block"
+                            className="menu-button d-block"
                             onClick={menuButtonClick} >
                             <MenuIcon />
-                        </NavLink>
-                        <NavLink
-                            to="#"
-                            location={{}}
-                            className="menu-button-mobile d-xs-block d-sm-block d-md-none ml-4"
-                            onClick={menuButtonClick} >
-                            <MobileMenuIcon />
                         </NavLink>
                     </div>
                     <NavLink className="navbar-logo" to="/">
@@ -63,18 +56,19 @@ function NavBar({
                         <div className="user d-inline-block">
                             <UncontrolledDropdown className="dropdown-menu-right">
                                 <DropdownToggle
-                                    className="nav-profile-picture"
+                                    className="nav-profile-picture d-flex align-middle"
                                     color="empty">
-                                    <span className="name mr-2 d-none d-md-inline">
+                                    <p className="name d-none d-md-inline">
                                         {user.name}
-                                    </span>
-                                    <span className="default-profile-picture">
-                                        <img src="https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png" />
-                                    </span>
+                                    </p>
+                                    <i className="iconsminds-male-2 default-profile-picture"></i>
                                 </DropdownToggle>
                                 <DropdownMenu className="" right>
                                     <DropdownItem onClick={logoutHandler}>
-                                        Log out
+                                        <div className="d-flex justify-content-between">
+                                            <span>Log Out</span>
+                                            <i className="simple-icon-logout" style={{marginTop: 3}} ></i>
+                                        </div>
                                     </DropdownItem>
                                 </DropdownMenu>
                             </UncontrolledDropdown>

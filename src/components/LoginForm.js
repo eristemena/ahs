@@ -4,9 +4,9 @@ import { Label, FormGroup, Button, Spinner } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import CustomSpinner from './CustomSpinner';
 
 function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
-
     const validateEmail = (value) => {
         let error;
         if (!value) {
@@ -14,7 +14,7 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
         } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
             error = 'Alamat email salah';
         } else if (errorMessage.emailNotFound) {
-            error = 'Email tidak ditemukan'
+            error = 'Email tidak ditemukan';
         }
         return error;
     };
@@ -26,7 +26,7 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
         } else if (value.length < 4) {
             error = 'Kata sandi harus lebih dari 3 karakter';
         } else if (errorMessage.wrongPassword) {
-            error = 'Kata sandi salah'
+            error = 'Kata sandi salah';
         }
         return error;
     };
@@ -41,8 +41,7 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
                 email: process.env.REACT_APP_EMAIL || '',
                 password: process.env.REACT_APP_PASSWORD || '',
             }}
-            onSubmit={submitHandler}
-        >
+            onSubmit={submitHandler}>
             {({ errors, touched }) => (
                 <Form>
                     <FormGroup className="form-group has-float-label">
@@ -75,8 +74,7 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
                     <div className="d-flex justify-content-between align-items-center">
                         <Link
                             to="#"
-                            className="custom-login-form-forgot-password"
-                        >
+                            className="custom-login-form-forgot-password">
                             Lupa password?
                         </Link>
                         <Button
@@ -85,10 +83,11 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
                             }`}
                             size="md"
                             type="submit"
-                            disabled={loading}
-                        >
+                            disabled={loading}>
                             <Spinner
-                                className={`${!loading ? 'd-none' : ''} custom-loading-spinner`}
+                                className={`${
+                                    !loading ? 'd-none' : ''
+                                } custom-loading-spinner`}
                             />
                             <span className={`${loading ? 'd-none' : ''}`}>
                                 Login

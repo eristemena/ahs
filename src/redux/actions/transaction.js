@@ -6,7 +6,7 @@ import { TRANSACTION_ADD } from '../actionTypes';
 export const getTransactions = (page) => (dispatch) => {
     dispatch(setLoading(true))
     get(
-        `/transactions?limit=10&page=${page}`,
+        `/transactions?limit=7&page=${page}`,
         ({data, page, totalPage, totalData}) => {
             dispatch({
                 type: TRANSACTION_ADD,

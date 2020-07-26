@@ -2,9 +2,7 @@ import React, {useEffect} from 'react';
 import {addAlert } from '../redux/actions/alert'
 import { connect } from 'react-redux';
 import { withRouter, Switch, Route } from 'react-router-dom';
-import GetTransaction from './Transaction/GetTransaction';
-import AddTransaction from './Transaction/AddTransaction';
-import EditTransaction from './Transaction/EditTransaction';
+import { GetTransaction, AddTransaction, EditTransaction } from './Transactions'
 
 
 const Transaction = ({user, alert, history}) => {

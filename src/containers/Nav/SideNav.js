@@ -22,8 +22,7 @@ const SideNav = ({ user, menu, setMenuState }) => {
     return (
         <div className="side-nav">
             <div
-                className={`main-menu ${!menu ? 'main-hidden' : ''}`}
-                id="main-menu">
+                className={`main-menu ${!menu ? 'main-hidden' : ''} shadow`}>
                 <div className="scroll">
                     <PerfectScrollbar
                         options={{

@@ -1,28 +1,31 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
 import { addAlert } from '../../redux/actions/alert';
-import { get } from '../../axios';
-import ProductStock from '../../components/ProductStock'
+import ProductStock from '../../components/ProductStock';
 import { getStocks } from '../../redux/actions/stock';
-import PageLoadingSpinner from '../../components/PageLoadingSpinner'
+import CustomSpinner from '../../components/CustomSpinner';
 
 const GetStocks = ({ stock, getStocks, loading }) => {
-    const [owned, setOwned] = useState([]);
-
     useEffect(() => {
-        getStocks()
+        getStocks();
     }, []);
 
     return (
         <div className="container">
-            <PageLoadingSpinner loading={loading} />
-            <div className="row row-cols-md-5">
-                {!loading ? <Fragment>
-                    {stock && stock.data.map((own) => 
-                        <ProductStock key={own.product_id} product_name={own.name} stock={own.stock} />
-                    )}
-                </Fragment> : null }
+            <CustomSpinner loading={loading} type="page" />
+            <div className="row">
+                {!loading ? (
+                    <Fragment>
+                        {stock &&
+                            stock.data.map((own) => (
+                                <ProductStock
+                                    key={own.product_id}
+                                    product_name={own.name}
+                                    stock={own.stock}
+                                />
+                            ))}
+                    </Fragment>
+                ) : null}
             </div>
         </div>
     );
@@ -30,12 +33,12 @@ const GetStocks = ({ stock, getStocks, loading }) => {
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
-    getStocks: () => dispatch(getStocks())
+    getStocks: () => dispatch(getStocks()),
 });
 
 const mapStateToProps = (state) => ({
     stock: state.stock,
-    loading: state.loading
-})
+    loading: state.loading,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetStocks);

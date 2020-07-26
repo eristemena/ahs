@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { addAlert } from '../../redux/actions/alert';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getProducts } from '../../redux/actions/product';
-import { formatPrice } from '../../utilities';
-import { checkAdminMerchant } from '../../utilities';
-import { setLoading } from '../../redux/actions/loading';
-import DeleteModal from '../../components/DeleteModal';
+import { getTransactions } from '../../redux/actions/transaction';
+import moment from 'moment';
+import 'moment/locale/id';
 import { del } from '../../axios';
+import InfoTooltip from '../../components/InfoTooltip';
+import { formatPrice, checkAdminMerchant } from '../../utilities';
+import DeleteModal from '../../components/DeleteModal';
+import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
 import {
     Container,
@@ -16,35 +18,38 @@ import {
     PaginationLink,
 } from 'reactstrap';
 
-const GetProducts = ({
-    history,
+const GetTransaction = ({
     alert,
+    getTransaction,
+    transaction,
+    history,
     user,
-    getProducts,
-    product,
     loading,
     setLoading,
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
     const [delId, setDelId] = useState(-1);
-    const [queryName, setQueryName] = useState('');
 
     useEffect(() => {
-        getProducts(page, queryName);
+        getTransaction(page);
     }, [page]);
 
     useEffect(() => {
         if (loading) {
             setTotalPage(() => {
                 let a = [];
-                for (let i = 1; i <= (product ? product.totalPage : 1); i++) {
+                for (
+                    let i = 1;
+                    i <= (transaction ? transaction.totalPage : 1);
+                    i++
+                ) {
                     a.push(i);
                 }
                 return a;
             });
         }
-    }, [product]);
+    }, [transaction]);
 
     const activeNav = (type) => {
         if (loading) {
@@ -55,9 +60,9 @@ const GetProducts = ({
                 return true;
             }
         } else {
-            if (!product || product.totalPage < 1) {
+            if (!transaction || transaction.totalPage < 1) {
                 return true;
-            } else if (page === product.totalPage) {
+            } else if (page === transaction.totalPage) {
                 return true;
             }
         }
@@ -74,75 +79,50 @@ const GetProducts = ({
         }
     };
 
-    const deleteHandler = () => {
+    const deleteData = () => {
         setLoading(true);
         if (delId < 0) {
             setLoading(false);
             return alert('Telah terjadi kesalahan');
         }
         del(
-            `/products/${delId}`,
+            `/transactions/${delId}`,
             (success) => {
-                alert('Berhasil menghapus data', 'success');
-                getProducts(page);
+                alert('Data berhasil dihapus', 'success');
+                getTransaction(page);
                 setLoading(false);
                 setDelId(-1);
             },
             (error) => {
                 alert('Telah terjadi kesalahan');
-                getProducts(page);
+                getTransaction(page);
                 setLoading(false);
                 setDelId(-1);
             }
         );
     };
 
-    const searchName = (e) => {
-        e.preventDefault();
-
-        getProducts(1, queryName);
-    };
-
-    const inputOnChange = (e) => {
-        if (e.target.value.length === 0) {
-            getProducts(page, '');
-        } else {
-            setQueryName(e.target.value);
-        }
-    };
-
     return (
         <Container fluid>
             <div className="d-md-flex flex-column flex-md-row justify-content-between mb-3 align-middle">
-                <h1>Products</h1>
+                <h1>Transactions</h1>
                 <button
                     className="btn btn-primary font-weight-bold table-button"
-                    onClick={() => history.push('/products/add')}>
-                    ADD PRODUCT
+                    onClick={() => history.push('/transactions/add')}>
+                    ADD TRANSACTION
                 </button>
-            </div>
-            <div className="custom-table-searchbar mb-3">
-                <input
-                    type="text"
-                    className="d-inline"
-                    onChange={inputOnChange}
-                    onSubmit={searchName}
-                    placeholder="Search"
-                />
-                <i className="simple-icon-magnifier" onClick={searchName}></i>
             </div>
             <Container fluid>
                 <div className="custom-table">
-                    <table className="product-table">
+                    <table className="transaction-table">
                         <thead>
                             <tr className="text-center">
-                                <th>ID</th>
+                                <th>Date</th>
                                 <th>Product Name</th>
+                                <th>Type</th>
+                                <th>Quantity</th>
                                 <th>Price</th>
-                                <th>Buying Price</th>
-                                {user.merchant_id === null ? (
-                                    <th>Merchant</th>
-                                ) : null}
+                                <th>Customer</th>
                                 {checkAdminMerchant(user) ? (
                                     <th>Actions</th>
                                 ) : null}
@@ -150,26 +130,41 @@ const GetProducts = ({
                         </thead>
                         <tbody>
                             {!loading ? (
-                                product && product.data.length > 0 ? (
-                                    product.data.map((product) => (
+                                transaction &&
+                                transaction.data &&
+                                transaction.data.length > 0 ? (
+                                    transaction.data.map((tran) => (
                                         <tr
-                                            key={product.id}
+                                            key={tran.id}
+                                            role="row"
                                             className="text-center">
-                                            <td>{product.id}</td>
-                                            <td>{product.name}</td>
-                                            <td>{`Rp. ${formatPrice(
-                                                product.price
-                                            )}`}</td>
-                                            <td>{`Rp. ${formatPrice(
-                                                product.buying_price
-                                            )}`}</td>
-                                            {user.merchant_id === null ? (
-                                                <td> {product.owner.name} </td>
-                                            ) : null}
+                                            <td>
+                                                {moment(tran.date).format('LL')}
+                                            </td>
+                                            <td>{tran.product.name}</td>
+                                            <td>
+                                                {tran.type === 'sell'
+                                                    ? 'Jual'
+                                                    : 'Beli'}
+                                            </td>
+                                            <td>{tran.quantity}</td>
+                                            <td>
+                                                Rp.{' '}
+                                                {formatPrice(
+                                                    tran.type === 'sell'
+                                                        ? tran.price
+                                                        : tran.buying_price
+                                                )}
+                                            </td>
+                                            <td>
+                                                {tran.customer
+                                                    ? tran.customer.name
+                                                    : '~'}
+                                            </td>
                                             {checkAdminMerchant(user) ? (
                                                 <td>
                                                     <Link
-                                                        to={`/products/edit?id=${product.id}`}
+                                                        to={`/transactions/edit?id=${tran.id}`}
                                                         className="mr-2">
                                                         <i
                                                             className="simple-icon-note edit-icon"
@@ -181,51 +176,37 @@ const GetProducts = ({
                                                         data-target="#modal"
                                                         title="Delete"
                                                         onClick={(e) =>
-                                                            setDelId(product.id)
+                                                            setDelId(tran.id)
                                                         }></i>
+                                                    {tran.info ? (
+                                                        <Fragment>
+                                                            <InfoTooltip
+                                                                info={tran.info}
+                                                            />
+                                                        </Fragment>
+                                                    ) : null}
                                                 </td>
                                             ) : null}
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td
-                                            colSpan={
-                                                checkAdminMerchant(user)
-                                                    ? 5
-                                                    : user.merchant_id === null
-                                                    ? 5
-                                                    : 4
-                                            }
-                                            className="text-center">
-                                            {queryName.length > 0
-                                                ? 'Produk tidak ditemukan'
-                                                : checkAdminMerchant(user)
-                                                ? 'Belum ada produk, silahkan tambahkan produk'
-                                                : 'Belum ada produk'}
+                                        <td colSpan="7" className="text-center">
+                                            Belum ada transaksi, silahkan
+                                            tambahkan transaksi
                                         </td>
                                     </tr>
                                 )
                             ) : (
-                                <tr>
-                                    <td
-                                        colSpan={
-                                            checkAdminMerchant(user)
-                                                ? 5
-                                                : user.merchant_id === null
-                                                ? 5
-                                                : 4
-                                        }
-                                        className="text-center">
-                                        <CustomSpinner
-                                            loading={loading}
-                                            type="table"
-                                        />
+                                <tr className="align-middle">
+                                    <td colSpan="7" className="text-center">
+                                        <CustomSpinner loading={loading} type="table" />
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
+
                     <div className="text-center">
                         <Pagination
                             className="d-inline-block"
@@ -235,18 +216,14 @@ const GetProducts = ({
                                 className={`previous-page ${
                                     activeNav('prev') ? 'disabled' : ''
                                 }`}>
-                                <PaginationLink
-                                    disabled={activeNav('prev')}
-                                    onClick={() => setPage(page - 1)}>
+                                <PaginationLink disabled={activeNav('prev')} onClick={() => setPage(page - 1)}>
                                     <i className="simple-icon-arrow-left" />
                                 </PaginationLink>
                             </PaginationItem>
                             {totalPage.map((number) => (
                                 <PaginationItem
                                     className={`goto-page ${
-                                        activePage(number)
-                                            ? 'disabled active'
-                                            : ''
+                                        activePage(number) ? 'disabled active' : ''
                                     }`}
                                     key={number}>
                                     <PaginationLink
@@ -260,9 +237,7 @@ const GetProducts = ({
                                 className={`next-page ${
                                     activeNav('next') ? 'disabled' : ''
                                 }`}>
-                                <PaginationLink
-                                    disabled={activeNav('next')}
-                                    onClick={() => setPage(page + 1)}>
+                                <PaginationLink disabled={activeNav('next')} onClick={() => setPage(page + 1)}>
                                     <i className="simple-icon-arrow-right" />
                                 </PaginationLink>
                             </PaginationItem>
@@ -270,24 +245,22 @@ const GetProducts = ({
                     </div>
                 </div>
             </Container>
-            <DeleteModal
-                deleteHandler={deleteHandler}
-                additionalText="All transactions related to this product will also be deleted."
-            />
+
+            <DeleteModal deleteHandler={deleteData} />
         </Container>
     );
 };
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
-    getProducts: (page, name) => dispatch(getProducts(page, name)),
+    getTransaction: (page) => dispatch(getTransactions(page)),
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
 const mapStateToProps = (state) => ({
-    product: state.product,
-    loading: state.loading,
+    transaction: state.transaction,
     user: state.user,
+    loading: state.loading,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetProducts);
+export default connect(mapStateToProps, mapDispatchToProps)(GetTransaction);

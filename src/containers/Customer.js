@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Switch, Route } from 'react-router-dom';
-import GetCustomers from './Customers/GetCustomers';
-import AddCustomer from './Customers/AddCustomer';
-import EditCustomer from './Customers/EditCustomer';
+import { GetCustomers, AddCustomer, EditCustomer } from './Customers'
 
 const Customer = () => {
     return (

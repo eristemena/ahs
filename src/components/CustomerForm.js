@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { addAlert } from '../redux/actions/alert';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import { Label, FormGroup, Button, Spinner } from 'reactstrap';
+import { Formik, Form, Field } from 'formik';
+import CustomSpinner from './CustomSpinner';
 
 const CustomerForm = ({
     stateName = '',
@@ -13,13 +15,12 @@ const CustomerForm = ({
     alert,
     submitting,
     loading,
-    history
+    history,
 }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-
     useEffect(() => {
         setName(stateName);
         setEmail(stateEmail);
@@ -27,85 +28,141 @@ const CustomerForm = ({
         setAddress(stateAddress);
     }, [stateName, statePhone, stateEmail, stateAddress]);
 
-    const submitHandler = (e) => {
-        e.preventDefault();
+    const validateName = (value) => {
+        let error;
+        if (!value) {
+            error = 'Nama perlu diisi';
+        }
+        return error;
+    };
 
-        if (!name.length > 0) {
-            return alert('Nama perlu diisi');
+    const validateEmail = (value) => {
+        let error;
+        if (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+            error = 'Alamat email salah';
         }
-        if (!phone.length > 0) {
-            return alert('Nomor telepon perlu diisi');
-        } else if (isNaN(phone)) {
-            return alert('Nomor telepon perlu diisi dengan nomor');
-        }
-        if (!address.length > 0) {
-            return alert('Alamat perlu diisi');
-        }
+        return error;
+    };
 
+    const validatePhone = (value) => {
+        let error;
+        if (!value) {
+            error = 'Nomor telepon perlu diisi';
+        } else if (isNaN(value)) {
+            error = 'Nomor telepon harus angka';
+        } else if (value.length < 3) {
+            error = 'Nomor telepon harus lebih dari 3 angka';
+        }
+        return error;
+    };
+
+    const validateAddress = (value) => {
+        let error;
+        if (!value) {
+            error = 'Alamat perlu diisi';
+        } else if (value.length < 3) {
+            error = 'Alamat harus lebih dari 3 karakter';
+        }
+        return error;
+    };
+
+    const submitHandler = ({ name, email, phone, address }) => {
         onSubmit(name, email.length > 0 ? email : null, phone, address);
     };
 
     return (
-        <form onSubmit={submitHandler} className={loading ? 'd-none' : ''}>
-            <div className="form-group">
-                <label htmlFor="name">Name</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="email">Email address</label>
-                <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="phone">Phone</label>
-                <input
-                    type="tel"
-                    className="form-control"
-                    id="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                />
-            </div>
-            <div>
-                <label htmlFor="address">Address</label>
-                <textarea
-                    className="form-control mb-4"
-                    id="address"
-                    rows="2"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-            </div>
-            <div className="d-flex">
-                <button
-                    type="submit"
-                    className={`btn btn-primary mr-2 ${submitting && 'disabled'}`}
-                    disabled={submitting}
-                >
-                    Submit
-                </button>
-                <button
-                    type="button"
-                    className={`btn btn-secondary ${submitting && 'disabled'}`}
-                    disabled={submitting}
-                    onClick={() => history.goBack()}
-                >
-                    Cancel
-                </button>
-            </div>
-        </form>
+        <Formik
+            initialValues={{
+                name: stateName || '',
+                email: stateEmail || '',
+                phone: statePhone || '',
+                address: stateAddress || '',
+            }}
+            onSubmit={submitHandler}>
+            {({ errors, touched }) => (
+                <Form>
+                    <FormGroup className="form-group has-float-label">
+                        <Label>Name</Label>
+                        <Field
+                            className="form-control"
+                            name="name"
+                            validate={validateName}
+                        />
+                        {errors.name && touched.name && (
+                            <div className="invalid-feedback d-block">
+                                {errors.name}
+                            </div>
+                        )}
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label">
+                        <Label>Email</Label>
+                        <Field
+                            className="form-control"
+                            name="email"
+                            type="email"
+                            validate={validateEmail}
+                        />
+                        {errors.email && touched.email && (
+                            <div className="invalid-feedback d-block">
+                                {errors.email}
+                            </div>
+                        )}
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label">
+                        <Label>Phone</Label>
+                        <Field
+                            className="form-control"
+                            name="phone"
+                            validate={validatePhone}
+                        />
+                        {errors.phone && touched.phone && (
+                            <div className="invalid-feedback d-block">
+                                {errors.phone}
+                            </div>
+                        )}
+                    </FormGroup>
+                    <FormGroup className="form-group has-float-label">
+                        <Label>Address</Label>
+                        <Field
+                            className="form-control"
+                            as="textarea"
+                            name="address"
+                            validate={validateAddress}
+                        />
+                        {errors.address && touched.address && (
+                            <div className="invalid-feedback d-block">
+                                {errors.address}
+                            </div>
+                        )}
+                    </FormGroup>
+                    <div className="customer-buttons">
+                        <button
+                            className={`btn btn-primary mr-2 ${
+                                loading ? 'disabled' : ''
+                            }`}
+                            type="submit"
+                            disabled={loading}>
+                            <CustomSpinner loading={loading} type="button" />
+                            <span className={`${loading ? 'd-none' : ''}`}>
+                                Submit
+                            </span>
+                        </button>
+                        <button
+                            className="btn btn-secondary"
+                            onClick={() => history.goBack()}>
+                            Cancel
+                        </button>
+                    </div>
+                </Form>
+            )}
+        </Formik>
     );
+};
+
+CustomerForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

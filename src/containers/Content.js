@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { Switch, Route } from 'react-router';
-import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import NotFound from './NotFound';
 import Home from './Home';
@@ -9,13 +8,11 @@ import Product from './Product';
 import Login from './Login';
 import Merchant from './Merchant';
 import Transaction from './Transaction';
-import Stocks from './Stocks';
 import Customer from './Customer';
 import { Row, Col } from 'reactstrap';
 import Alerts from '../components/Alerts';
 import Navigation from './Navigation';
 import { setMenuState } from '../redux/actions/menu';
-import { Spinner } from 'reactstrap';
 
 const Content = ({ user, menu, history, setMenuState }) => {
     return (
@@ -28,8 +25,8 @@ const Content = ({ user, menu, history, setMenuState }) => {
                     <Navigation />
                     <main
                         onClick={() => setMenuState(false)}
-                        className={`${menu ? 'open' : ''}`}>
-                        <div className="container-fluid p-4">
+                        className={`${menu ? 'sidenav-open' : ''}`}>
+                        <div className="container-fluid p-4 content-container">
                             <Row>
                                 <Col className="p-0">
                                     <Switch>
@@ -55,10 +52,6 @@ const Content = ({ user, menu, history, setMenuState }) => {
                                             <Route
                                                 path="/transactions"
                                                 component={Transaction}
-                                            />
-                                            <Route
-                                                path="/stocks"
-                                                component={Stocks}
                                             />
                                             <Route
                                                 path="/customers"

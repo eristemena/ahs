@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Switch, Route } from 'react-router-dom';
-import GetProducts from './Products/GetProducts';
-import AddProduct from './Products/AddProduct';
-import EditProduct from './Products/EditProduct';
 import { addAlert } from '../redux/actions/alert';
+import { GetProducts, AddProduct, EditProduct } from './Products'
 
 const Product = ({history, user, alert}) => {
     const [me, setMe] = useState({})

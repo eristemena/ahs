@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { addAlert } from '../redux/actions/alert';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
@@ -9,7 +8,7 @@ import moment from 'moment';
 import 'moment/locale/id';
 import { setLoading } from '../redux/actions/loading';
 import { get } from '../axios';
-import PageLoadingSpinner from './PageLoadingSpinner'
+import CustomSpinner from './CustomSpinner'
 
 registerLocale('id', id);
 
@@ -118,7 +117,7 @@ const TransactionForm = ({
 
     return (
         <Fragment>
-            <PageLoadingSpinner loading={loading} />
+            <CustomSpinner loading={loading} type="page" />
             <form
                 onSubmit={submitHandler}
                 className={`mt-2 ${loading ? 'd-none' : ''}`}>

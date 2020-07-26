@@ -1,13 +1,19 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getCustomers } from '../../redux/actions/customer';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import {  Link } from 'react-router-dom';
 import DeleteModal from '../../components/DeleteModal';
 import { setLoading } from '../../redux/actions/loading';
 import { del } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { checkAdminMerchant } from '../../utilities';
-import TableLoadingSpinner from '../../components/TableLoadingSpinner';
+import CustomSpinner from '../../components/CustomSpinner';
+import {
+    Container,
+    Pagination,
+    PaginationItem,
+    PaginationLink,
+} from 'reactstrap';
 
 const GetCustomers = ({
     customer,
@@ -16,7 +22,7 @@ const GetCustomers = ({
     user,
     history,
     alert,
-    setLoading
+    setLoading,
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
@@ -25,7 +31,6 @@ const GetCustomers = ({
 
     useEffect(() => {
         getCustomers(page, queryName);
-        console.log(page)
     }, [page]);
 
     useEffect(() => {
@@ -42,29 +47,29 @@ const GetCustomers = ({
 
     const activeNav = (type) => {
         if (loading) {
-            return 'disabled';
+            return true;
         }
         if (type === 'prev') {
             if (page === 1) {
-                return 'disabled';
+                return true;
             }
         } else {
             if (!customer || customer.totalPage < 1) {
-                return 'disabled';
+                return true;
             } else if (page === customer.totalPage) {
-                return 'disabled';
+                return true;
             }
         }
     };
 
     const activePage = (p) => {
         if (loading) {
-            return 'disabled';
+            return true;
         }
         if (p === page) {
-            return 'active';
+            return true;
         } else {
-            return '';
+            return false;
         }
     };
 
@@ -106,145 +111,159 @@ const GetCustomers = ({
     };
 
     return (
-        <div className="container-fluid">
-            <div className="d-flex justify-content-between mb-2">
-                <Link
-                    className={`btn btn-primary p-2 ${
-                        checkAdminMerchant(user) ? '' : 'disabled'
-                    }`}
-                    to="/customers/add"
-                >
-                    Add Customer
-                    <span className="material-icons align-middle ml-1">
-                        add
-                    </span>
-                </Link>
-                <form
-                    className="input-group w-25 h-100 mt-1"
-                    onSubmit={searchName}
-                >
-                    <input
-                        type="text"
-                        className="form-control"
-                        onChange={inputOnChange}
-                    />
-                    <div className="input-group-append">
-                        <button
-                            className="btn btn-outline-primary"
-                            type="submit"
-                        >
-                            Search
-                        </button>
-                    </div>
-                </form>
+        <Container fluid>
+            <div className="d-md-flex flex-column flex-md-row justify-content-between mb-3 align-middle">
+                <h1>Customers</h1>
+                <button
+                    className="btn btn-primary font-weight-bold table-button"
+                    onClick={() => history.push('/customers/add')}>
+                    ADD CUSTOMER
+                </button>
             </div>
-            <table className="table table-hover table-bordered">
-                <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Address</th>
-                        {checkAdminMerchant(user) ? (
-                            <th scope="col" className="text-center">
-                                Actions
-                            </th>
-                        ) : null}
-                    </tr>
-                </thead>
-                <tbody>
-                    {!loading ? customer && customer.data.length > 0 ? (
-                        customer.data.map((custom) => (
-                            <tr key={custom.id}>
-                                <td>{custom.name}</td>
-                                <td> {custom.email || '~'} </td>
-                                <td> {custom.phone} </td>
-                                <td> {custom.address}</td>
+            <div className="custom-table-searchbar mb-3">
+                <input
+                    type="text"
+                    className="d-inline"
+                    onChange={inputOnChange}
+                    onSubmit={searchName}
+                    placeholder="Search"
+                />
+                <i className="simple-icon-magnifier" onClick={searchName}></i>
+            </div>
+            <Container fluid>
+                <div className="custom-table">
+                    <table className="customer-table">
+                        <thead>
+                            <tr className="text-center">
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
                                 {checkAdminMerchant(user) ? (
-                                    <td className="text-center">
-                                        <Link
-                                            to={`/customers/edit?id=${custom.id}`}
-                                            className="mr-2"
-                                        >
-                                            <span
-                                                className={`material-icons align-middle text-primary`}
-                                                style={{ marginBottom: 2 }}
-                                                title="Edit"
-                                            >
-                                                edit
-                                            </span>
-                                        </Link>
-                                        <span
-                                            className="material-icons align-middle text-danger ml-2"
-                                            style={{
-                                                marginBottom: 2,
-                                                userSelect: 'none',
-                                                cursor: 'pointer',
-                                            }}
-                                            data-toggle="modal"
-                                            data-target="#modal"
-                                            onClick={(e) => setDelId(custom.id)}
-                                            title="Delete"
-                                        >
-                                            delete
-                                        </span>
-                                    </td>
+                                    <th>Actions</th>
                                 ) : null}
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="5" className="text-center">
-                                {queryName.length > 0
-                                    ? 'Pelanggan tidak ditemukan'
-                                    : checkAdminMerchant(user)
-                                    ? 'Belum ada pelanggan, silahkan tambahkan pelanggan'
-                                    : 'Belum ada pelanggan'}
-                            </td>
-                        </tr>
-                    ) : (
-                        <tr>
-                            <td colSpan="5" className="text-center">
-                                <TableLoadingSpinner loading={loading} />
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
-            <div className="d-flex justify-content-around">
-                <ul className="pagination">
-                    <li className={`page-item ${activeNav('prev')}`}>
-                        <button
-                            className="page-link"
-                            onClick={() => setPage(page - 1)}
-                        >
-                            Previous
-                        </button>
-                    </li>
-                    {totalPage.map((number) => (
-                        <li
-                            className={`page-item ${activePage(number)}`}
-                            key={number}
-                            onClick={() => setPage(number)}
-                        >
-                            <button className="page-link">{number}</button>
-                        </li>
-                    ))}
-                    <li className={`page-item ${activeNav('next')}`}>
-                        <button
-                            className="page-link"
-                            onClick={() => setPage(page + 1)}
-                        >
-                            Next
-                        </button>
-                    </li>
-                </ul>
-            </div>
+                        </thead>
+                        <tbody>
+                            {!loading ? (
+                                customer && customer.data.length > 0 ? (
+                                    customer.data.map((custom) => (
+                                        <tr
+                                            key={custom.id}
+                                            className="text-center">
+                                            <td>{custom.name}</td>
+                                            <td> {custom.email || '~'} </td>
+                                            <td> {custom.phone} </td>
+                                            <td> {custom.address}</td>
+                                            {checkAdminMerchant(user) ? (
+                                                <td className="text-center">
+                                                    <Link
+                                                        to={`/customers/edit?id=${custom.id}`}
+                                                        className="mr-2">
+                                                        <i
+                                                            className="simple-icon-note edit-icon"
+                                                            title="Edit"></i>
+                                                    </Link>
+                                                    <i
+                                                        className="simple-icon-close delete-icon mr-2"
+                                                        data-toggle="modal"
+                                                        data-target="#modal"
+                                                        title="Delete"
+                                                        onClick={(e) =>
+                                                            setDelId(custom.id)
+                                                        }></i>
+                                                </td>
+                                            ) : null}
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td
+                                            colSpan={
+                                                checkAdminMerchant(user)
+                                                    ? 5
+                                                    : user.merchant_id === null
+                                                    ? 5
+                                                    : 4
+                                            }
+                                            className="text-center">
+                                            {queryName.length > 0
+                                                ? 'Pelanggan tidak ditemukan'
+                                                : checkAdminMerchant(user)
+                                                ? 'Belum ada pelanggan, silahkan tambahkan pelanggan'
+                                                : 'Belum ada pelanggan'}
+                                        </td>
+                                    </tr>
+                                )
+                            ) : (
+                                <tr>
+                                    <td
+                                        colSpan={
+                                            checkAdminMerchant(user)
+                                                ? 5
+                                                : user.merchant_id === null
+                                                ? 5
+                                                : 4
+                                        }
+                                        className="text-center">
+                                        <CustomSpinner
+                                            loading={loading}
+                                            type="table"
+                                        />
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                    <div className="text-center">
+                        <Pagination
+                            className="d-inline-block"
+                            size="sm"
+                            listClassName="justify-content-center">
+                            <PaginationItem
+                                className={`previous-page ${
+                                    activeNav('prev') ? 'disabled' : ''
+                                }`}>
+                                <PaginationLink
+                                    disabled={activeNav('prev')}
+                                    onClick={() => setPage(page - 1)}>
+                                    <i className="simple-icon-arrow-left" />
+                                </PaginationLink>
+                            </PaginationItem>
+                            {totalPage.map((number) => (
+                                <PaginationItem
+                                    className={`goto-page ${
+                                        activePage(number)
+                                            ? 'disabled active'
+                                            : ''
+                                    }`}
+                                    key={number}>
+                                    <PaginationLink
+                                        disabled={activePage(number)}
+                                        onClick={() => setPage(number)}>
+                                        {number}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem
+                                className={`next-page ${
+                                    activeNav('next') ? 'disabled' : ''
+                                }`}>
+                                <PaginationLink
+                                    disabled={activeNav('next')}
+                                    onClick={() => setPage(page + 1)}>
+                                    <i className="simple-icon-arrow-right" />
+                                </PaginationLink>
+                            </PaginationItem>
+                        </Pagination>
+                    </div>
+                </div>
+            </Container>
             <DeleteModal
                 deleteHandler={deleteHandler}
                 additionalText="All transactions related to this customer will also be deleted."
             />
-        </div>
+        </Container>
     );
 };
 

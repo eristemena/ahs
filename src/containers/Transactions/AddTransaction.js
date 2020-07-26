@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { get, postWithAuth } from '../../axios';
+import { postWithAuth } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
-import { withRouter } from 'react-router-dom';
 import TransactionForm from '../../components/TransactionForm';
 import { connect } from 'react-redux';
 

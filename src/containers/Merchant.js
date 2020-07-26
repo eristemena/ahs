@@ -1,13 +1,11 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import AddMerchant from './Merchants/AddMerchant';
 import { addAlert } from '../redux/actions/alert';
 import GetMerchants from './Merchants/GetMerchants';
 
 const Merchant = ({ user, history, alert }) => {
-    const [auth, setAuth] = useState('user');
-
     useEffect(() => {
         if (!user) {
             alert('Anda belum login. Silahkan login terlebih dahulu');
