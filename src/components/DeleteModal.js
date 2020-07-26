@@ -13,13 +13,13 @@ const DeleteModal = ({deleteHandler = () => {}, additionalText}) => {
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h3 className="modal-title text-danger">Warning!</h3>
+                        <h2 className="modal-title text-danger">Warning!</h2>
                     </div>
                     <div className="modal-body py-3">
-                        <p className="font-weight-bold">
+                        <p className="font-weight-bold text">
                             Are you really sure want to delete this item? {additionalText ? additionalText : null}
                         </p>
-                        <small>(Note: You cannot undo this action)</small>
+                        <p>(Note: You cannot undo this action)</p>
                     </div>
                     <div className="modal-footer">
                         <button

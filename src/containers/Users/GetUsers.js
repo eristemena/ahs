@@ -4,7 +4,7 @@ import { addAlert } from '../../redux/actions/alert';
 import { connect } from 'react-redux';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
-import { Container } from 'reactstrap';
+import { Container, Card, CardBody } from 'reactstrap';
 
 const GetUsers = ({ alert, loading, setLoading }) => {
     const [users, setList] = useState([]);
@@ -33,41 +33,49 @@ const GetUsers = ({ alert, loading, setLoading }) => {
             </div>
             <Container fluid>
                 <div className="custom-table">
-                    <table className="users-table">
-                        <thead>
-                            <tr className="text-center">
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Merchant</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!loading ? (
-                                users.map((user) => (
-                                    <tr key={user.id} className="text-center">
-                                        <td>{user.id}</td>
-                                        <td>{user.name}</td>
-                                        <td>{user.email}</td>
-                                        <td>
-                                            {user.merchant
-                                                ? user.merchant.name
-                                                : '(SUPER ADMIN)'}
-                                        </td>
+                    <Card className="user">
+                        <CardBody>
+                            <table className="users-table">
+                                <thead>
+                                    <tr className="text-center">
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Merchant</th>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="4" className="text-center">
-                                        <CustomSpinner
-                                            loading={loading}
-                                            type="table"
-                                        />
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                    {!loading ? (
+                                        users.map((user) => (
+                                            <tr
+                                                key={user.id}
+                                                className="text-center">
+                                                <td>{user.id}</td>
+                                                <td>{user.name}</td>
+                                                <td>{user.email}</td>
+                                                <td>
+                                                    {user.merchant
+                                                        ? user.merchant.name
+                                                        : '(SUPER ADMIN)'}
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan="4"
+                                                className="text-center">
+                                                <CustomSpinner
+                                                    loading={loading}
+                                                    type="table"
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </CardBody>
+                    </Card>
                 </div>
             </Container>
         </div>

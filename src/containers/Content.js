@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { Switch, Route } from 'react-router';
+import React, { Fragment, useEffect } from 'react';
+import { Switch, Route, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import NotFound from './NotFound';
 import Home from './Home';
@@ -15,12 +15,19 @@ import { Row, Col } from 'reactstrap';
 import { setMenuState } from '../redux/actions/menu';
 
 const Content = ({ user, menu, history, setMenuState }) => {
+
+    useEffect(() => {
+        if (!user) {
+            history.push('/');
+        }
+    }, []);
+
     return (
         <div className="main-container">
             <div className="notification-container">
                 <Alerts />
             </div>
-            {user ? (
+            {user !== null ? (
                 <Fragment>
                     <Navigation />
                     <main
@@ -30,34 +37,32 @@ const Content = ({ user, menu, history, setMenuState }) => {
                             <Row>
                                 <Col className="p-0">
                                     <Switch>
-                                        <Fragment>
-                                            <Route
-                                                path="/"
-                                                exact
-                                                component={Home}
-                                            />
-                                            <Route
-                                                path="/users"
-                                                exact
-                                                component={User}
-                                            />
-                                            <Route
-                                                path="/products"
-                                                component={Product}
-                                            />
-                                            <Route
-                                                path="/merchants"
-                                                component={Merchant}
-                                            />
-                                            <Route
-                                                path="/transactions"
-                                                component={Transaction}
-                                            />
-                                            <Route
-                                                path="/customers"
-                                                component={Customer}
-                                            />
-                                        </Fragment>
+                                        <Route
+                                            path="/"
+                                            exact
+                                            component={Home}
+                                        />
+                                        <Route
+                                            path="/users"
+                                            exact
+                                            component={User}
+                                        />
+                                        <Route
+                                            path="/products"
+                                            component={Product}
+                                        />
+                                        <Route
+                                            path="/merchants"
+                                            component={Merchant}
+                                        />
+                                        <Route
+                                            path="/transactions"
+                                            component={Transaction}
+                                        />
+                                        <Route
+                                            path="/customers"
+                                            component={Customer}
+                                        />
 
                                         <Route component={NotFound} />
                                     </Switch>
@@ -67,9 +72,7 @@ const Content = ({ user, menu, history, setMenuState }) => {
                     </main>
                 </Fragment>
             ) : (
-                <Switch>
-                    <Route path="/" exact component={Login} />
-                </Switch>
+                <Login />
             )}
         </div>
     );
@@ -84,4 +87,4 @@ const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Content);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Content));

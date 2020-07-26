@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { addAlert } from '../../redux/actions/alert';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Label, FormGroup, Button, Spinner, CardBody, Card } from 'reactstrap';
+import { Label, FormGroup, CardBody, Card } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import CustomSpinner from '../CustomSpinner';
 
@@ -15,22 +14,13 @@ const CustomerForm = ({
     submitting,
     history,
 }) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
-
-    useEffect(() => {
-        setName(stateName);
-        setEmail(stateEmail);
-        setPhone(statePhone);
-        setAddress(stateAddress);
-    }, [stateName, statePhone, stateEmail, stateAddress]);
 
     const validateName = (value) => {
         let error;
         if (!value) {
             error = 'Nama perlu diisi';
+        } else if (value.length < 3) {
+            error = 'Nama harus lebih dari 3 huruf'
         }
         return error;
     };
@@ -72,10 +62,10 @@ const CustomerForm = ({
     return (
         <Formik
             initialValues={{
-                name: name,
-                email: email,
-                phone: phone,
-                address: address,
+                name: stateName || '',
+                email: stateEmail || '',
+                phone: statePhone || '',
+                address: stateAddress || '',
             }}
             onSubmit={submitHandler}
             enableReinitialize>
@@ -176,12 +166,8 @@ CustomerForm.propTypes = {
     submitting: PropTypes.bool.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-    alert: (message) => dispatch(addAlert(message)),
-});
-
 const mapStateToProps = (state) => ({
     loading: state.loading,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomerForm);
+export default connect(mapStateToProps)(CustomerForm);

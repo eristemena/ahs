@@ -1,102 +1,154 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { addAlert } from '../../redux/actions/alert';
+import PropTypes from 'prop-types';
+import {
+    Label,
+    FormGroup,
+    CardBody,
+    Card,
+    InputGroup,
+    InputGroupAddon,
+    InputGroupText,
+} from 'reactstrap';
+import { Formik, Form, Field } from 'formik';
+import CustomSpinner from '../CustomSpinner';
 
 const ProductForm = ({
     onSubmit = () => {},
-    loading,
+    submitting,
     stateName = '',
     statePrice = '',
     stateBuyingPrice = '',
-    action,
-    alert,
     history,
+    action,
 }) => {
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState('');
-    const [buyingPrice, setBuyingPrice] = useState('');
-
-    useEffect(() => {
-        setName(stateName);
-        setPrice(statePrice);
-        setBuyingPrice(stateBuyingPrice);
-    }, [stateName, statePrice, stateBuyingPrice]);
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-
-        if (!name.length > 0) {
-            return alert(`Nama produk perlu diisi`);
-        } else if (!price.length > 0) {
-            return alert('Harga jual perlu diisi');
-        } else if (!buyingPrice.length > 0) {
-            return alert('Harga beli perlu diisi');
+    
+    const validateName = (value) => {
+        let error;
+        if (!value) {
+            error = 'Nama perlu diisi';
+        } else if (value.length < 3) {
+            error = 'Nama harus lebih dari 3 huruf';
         }
+        return error;
+    };
 
+    const validatePrice = (value) => {
+        let error;
+        if (!value) {
+            error = 'Harga jual perlu diisi';
+        } else if (isNaN(value)) {
+            error = 'Harga harus angka';
+        }
+        return error;
+    };
+
+    const submitHandler = ({ name, price, buyingPrice }) => {
         onSubmit(name, price * 1, buyingPrice * 1);
     };
 
-    // console.log(loading)
-
     return (
-        <form onSubmit={submitHandler}>
-            <div className="form-group">
-                <label htmlFor="product-name">Name</label>
-                <input
-                    type="text"
-                    className="form-control mb-2"
-                    id="product-name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <label htmlFor="price">Price</label>
-                <div className="input-group mb-2">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text">Rp.</span>
-                    </div>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="price"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                    />
-                </div>
-                <label htmlFor="buying-price">Buying Price</label>
-                <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text">Rp.</span>
-                    </div>
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="buying-price"
-                        value={buyingPrice}
-                        onChange={(e) => setBuyingPrice(e.target.value)}
-                    />
-                </div>
-                <div className="d-flex">
-                    <button
-                        type="submit"
-                        className={`btn btn-primary mr-2 ${
-                            loading && 'disabled'
-                        }`}
-                        disabled={loading}
-                    >
-                        {action ? action : 'Submit'}
-                    </button>
-                    <button
-                        type="button"
-                        className={`btn btn-secondary ${loading && 'disabled'}`}
-                        disabled={loading}
-                        onClick={() => history.goBack()}
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </form>
+        <Formik
+            initialValues={{
+                name: stateName || '',
+                price: statePrice || '',
+                buyingPrice: stateBuyingPrice || '',
+            }}
+            onSubmit={submitHandler}
+            enableReinitialize>
+            {({ errors, touched }) => (
+                <Card className="custom-form-card">
+                    <CardBody>
+                        <Form>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Name</Label>
+                                <Field
+                                    className="form-control"
+                                    name="name"
+                                    validate={validateName}
+                                />
+                                {errors.name && touched.name && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.name}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Price</Label>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Rp.</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Field
+                                        className="form-control"
+                                        name="price"
+                                        validate={validatePrice}
+                                    />
+                                </InputGroup>
+
+                                {errors.price && touched.price && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.price}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <FormGroup className="form-group has-float-label">
+                                <Label>Buying Price</Label>
+                                <InputGroup>
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>Rp.</InputGroupText>
+                                    </InputGroupAddon>
+                                    <Field
+                                        className="form-control"
+                                        name="buyingPrice"
+                                        validate={validatePrice}
+                                    />
+                                </InputGroup>
+
+                                {errors.buyingPrice && touched.buyingPrice && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.buyingPrice}
+                                    </div>
+                                )}
+                            </FormGroup>
+                            <div className="mt-3">
+                                <button
+                                    className={`btn btn-primary submit-button mr-2 ${
+                                        submitting ? 'disabled' : ''
+                                    }`}
+                                    type="submit"
+                                    disabled={submitting}>
+                                    <CustomSpinner
+                                        loading={submitting}
+                                        type="button"
+                                    />
+                                    <span
+                                        className={`${
+                                            submitting ? 'd-none' : ''
+                                        }`}>
+                                        {action ? action : 'Submit'}
+                                    </span>
+                                </button>
+                                <button
+                                    className="btn btn-secondary cancel-button"
+                                    type="button"
+                                    onClick={() => history.goBack()}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </Form>
+                    </CardBody>
+                </Card>
+            )}
+        </Formik>
     );
+};
+
+ProductForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

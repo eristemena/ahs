@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { postWithAuth } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { TransactionForm } from '../../components/Forms';
 import { connect } from 'react-redux';
 
-const AddTransaction = ({ alert, history }) => {
+const AddTransaction = ({ alert, history, user }) => {
     const [submitting, setSubmitting] = useState(false);
 
     const onSubmitHandler = (
@@ -51,4 +51,8 @@ const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
 });
 
-export default connect(null, mapDispatchToProps)(AddTransaction);
+const mapStateToProps = (state) => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddTransaction);

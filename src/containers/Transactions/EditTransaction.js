@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { get, put } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { TransactionForm } from '../../components/Forms';
@@ -6,12 +6,10 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/id';
 import { setLoading } from '../../redux/actions/loading';
+import CustomSpinner from '../../components/CustomSpinner';
 
-const EditTransaction = ({ alert, history }) => {
-    const [owned, setOwned] = useState([]);
-    const [loading, setLoading] = useState(true);
+const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
     const [submitting, setSubmitting] = useState(false);
-    const [id, setId] = useState('');
     const [date, setDate] = useState('');
     const [productId, setProductId] = useState('');
     const [quantity, setQuantity] = useState('');
@@ -86,23 +84,26 @@ const EditTransaction = ({ alert, history }) => {
             (error) => {
                 setSubmitting(false);
                 alert('Telah terjadi kesalahan');
+                console.log(error);
             }
         );
     };
     return (
-        <TransactionForm
-            stateProduct={owned}
-            loading={submitting}
-            action="Edit"
-            stateDate={date}
-            stateSelected={productId}
-            stateQuantity={quantity}
-            stateInfo={info}
-            stateType={type}
-            stateSelectedCustomer={customer}
-            onSubmit={onSubmitHandler}
-            history={history}
-        />
+        <Fragment>
+            <CustomSpinner loading={loading} type="page" />
+            <TransactionForm
+                submitting={submitting}
+                action="Edit"
+                stateDate={date}
+                stateSelected={productId}
+                stateQuantity={quantity}
+                stateInfo={info}
+                stateType={type}
+                stateSelectedCustomer={customer}
+                onSubmit={onSubmitHandler}
+                history={history}
+            />
+        </Fragment>
     );
 };
 
@@ -111,4 +112,9 @@ const mapDispatchToProps = (dispatch) => ({
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
-export default connect(null, mapDispatchToProps)(EditTransaction);
+const mapStateToProps = (state) => ({
+    loading: state.loading,
+    user: state.user
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditTransaction);

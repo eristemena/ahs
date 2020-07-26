@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, FormGroup, Button, Spinner } from 'reactstrap';
+import { Label, FormGroup } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CustomSpinner from '../CustomSpinner';
 
-function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
+function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
     const validateEmail = (value) => {
         let error;
         if (!value) {
@@ -77,22 +77,17 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
                             className="custom-login-form-forgot-password">
                             Lupa password?
                         </Link>
-                        <Button
-                            className={`custom-login-button px-4 py-2 ${
-                                loading ? 'disabled' : ''
+                        <button
+                            className={`btn btn-primary loggin-button ${
+                                loggingIn ? 'disabled' : ''
                             }`}
-                            size="md"
                             type="submit"
-                            disabled={loading}>
-                            <Spinner
-                                className={`${
-                                    !loading ? 'd-none' : ''
-                                } custom-loading-spinner`}
-                            />
-                            <span className={`${loading ? 'd-none' : ''}`}>
+                            disabled={loggingIn}>
+                            <CustomSpinner loading={loggingIn} type="button" />
+                            <span className={`${loggingIn ? 'd-none' : ''}`}>
                                 Login
                             </span>
-                        </Button>
+                        </button>
                     </div>
                 </Form>
             )}
@@ -102,10 +97,11 @@ function LoginForm({ onSubmit = () => {}, loading, errorMessage = {} }) {
 
 LoginForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
+    loggingIn: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => ({
-    loading: state.loading,
+    loggingIn: state.loading,
 });
 
 export default connect(mapStateToProps)(LoginForm);

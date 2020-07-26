@@ -7,7 +7,7 @@ $info-color: #17a2b8;
 $background-color: whitesmoke;
 
 $navbar-color: white;
-$separator-color-light: #b3b3b3;
+$separator-color: #b3b3b3;
 $sidenav-dark: $primary-color - rgb(68, 68, 68);
 $sidenav-light: $primary-color+rgb(22, 22, 22);
 
@@ -203,7 +203,7 @@ body {
                         font-size: 13px;
                         font-style: normal;
                         font-weight: 400;
-                        border-bottom: 1px solid $separator-color-light;
+                        border-bottom: 1px solid $separator-color;
                         color: $sidenav-dark;
                         transition: color $menu-collapse-time;
                         transition: background $menu-collapse-time;
@@ -303,9 +303,9 @@ body {
                 transform: translateX(120%);
 
                 &.show {
-                    animation: slide .7s ease forwards;
+                    animation: notification-slide .5s ease forwards;
 
-                    @keyframes slide {
+                    @keyframes notification-slide {
                         0% {
                             transform: translateX(120%)
                         }
@@ -343,26 +343,68 @@ body {
                 max-width: 1.5rem;
                 max-height: 1.5rem;
             }
+
+            .custom-login-card {
+                transform: translateY(0rem);
+                opacity: 0;
+                animation: custom-login-card-slide .5s ease forwards;
+
+                @keyframes custom-login-card-slide {
+                    0% {
+                        transform: translateY(1rem);
+                        opacity: 0;
+                    }
+    
+                    100% {
+                        transform: translateY(0rem);
+                        opacity: 1;
+                    }
+                }
+            }
         }
 
         .custom-table {
+
+            $transaction-table-width: 605px;
+            $product-table-width: 500px;
+            $customer-table-width: 498px;
+            $user-table-width: 433px;
+
+            .card {
+                &.transaction {
+                    min-width: $transaction-table-width + 40px;
+                }
+                &.product{
+                    min-width: $product-table-width + 40px;
+                }
+                &.customer {
+                    min-width: $customer-table-width + 40px;
+                }
+                &.user {
+                    min-width: $user-table-width + 40px;
+                }
+            }
 
             table {
                 border-collapse: separate;
                 border-spacing: 0px 0.6rem;
                 width: 100%;
 
-                &.transaction-table {
-                    min-width: 605px;
-                }
+                // &.transaction-table {
+                //     min-width: $transaction-table-width;
+                // }
 
-                &.product-table {
-                    min-width: 500px;
-                }
+                // &.product-table {
+                //     min-width: $product-table-width;
+                // }
 
-                &.customer-table {
-                    min-width: 498px;
-                }
+                // &.customer-table {
+                //     min-width: $customer-table-width;
+                // }
+
+                // &.user-table {
+                //     min-width: $user-table-width;
+                // }
 
                 thead th {
                     color: $text-light;
@@ -448,11 +490,11 @@ body {
         }
 
         .custom-form-card {
-            transform: translateY(3rem);
+            transform: translateY(0rem);
             opacity: 0;
-            animation: slide .5s ease forwards;
+            animation: custom-form-card-slide .5s ease forwards;
 
-            @keyframes slide {
+            @keyframes custom-form-card-slide {
                 0% {
                     transform: translateY(1rem);
                     opacity: 0;
@@ -470,7 +512,7 @@ body {
             padding: 0.5rem 1rem;
             font-size: 0.76rem;
             color: $danger-color;
-            background: $background-color;
+            background: white;
             border: 1px solid $danger-color;
             text-align: center;
             width: unset !important;
@@ -500,7 +542,7 @@ body {
             &::after {
                 top: -4px;
                 left: -2.5px;
-                border-bottom: solid 5px $background-color;
+                border-bottom: solid 5px white;
             }
         }
     }
@@ -511,7 +553,7 @@ body {
         box-shadow: none !important;
         box-shadow: initial !important;
         font-size: 0.8rem;
-        padding: 0.5rem 1.25rem 0.5rem 1.25rem;
+        padding: 0.5rem 1.25rem;
 
         &.btn-primary {
             background-color: $button-color;
@@ -526,6 +568,12 @@ body {
 
             &.disabled {
                 padding: 0 1.5rem;
+                &:hover {
+                    background-color: $button-color;
+                }
+                &.table-button {
+                    padding: 0.8rem 1.25rem;
+                }
             }
         }
 
@@ -562,6 +610,7 @@ body {
     .pagination-sm {
         .page-item {
             padding: 6px;
+            user-select: none;
 
             .page-link {
                 min-width: 30px;
@@ -622,6 +671,56 @@ body {
         .tooltip-body {
             color: $text-light;
             padding: 0.5rem 0.75rem;
+        }
+    }
+
+    .form-control {
+        border-radius: 0;
+        outline: initial !important;
+        box-shadow: initial !important;
+        font-size: 0.8rem;
+        border: 1px solid $separator-color;
+        background-color: white;
+        color: $text-light;
+        height: initial;
+        padding: 0.5rem 0.75rem;
+        line-height: 1;
+
+        &:focus, &:hover {
+            color: black;
+        }
+
+        &.date-picker, &.quantity-input {
+            width: 10rem;
+        }
+
+        &.quantity-input {
+            @media (max-width: 576px) {
+                width: 100%;
+            }
+        }
+    }
+
+    .input-group {
+        .input-group-prepend {
+            .input-group-text {
+                font-size: 0.8rem;
+                border-radius: 0 !important;
+                outline: initial !important;
+                box-shadow: initial !important;
+                border: 1px solid $separator-color;
+                background: white;
+                color: black;
+            }
+        }
+    }
+
+    .modal .modal-dialog .modal-content {
+        .modal-body {
+            .text {
+                font-size: 1.2em;
+                text-align: justify;
+            }
         }
     }
 

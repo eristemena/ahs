@@ -13,6 +13,8 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink,
+    Card,
+    CardBody,
 } from 'reactstrap';
 
 const GetCustomers = ({
@@ -115,7 +117,8 @@ const GetCustomers = ({
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
                 <h1>Customers</h1>
                 <button
-                    className="btn btn-primary font-weight-bold table-button"
+                    className={`btn btn-primary font-weight-bold table-button ${!checkAdminMerchant(user) ? 'disabled' : ''}`}
+                    disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/customers/add')}>
                     ADD CUSTOMER
                 </button>
@@ -135,90 +138,107 @@ const GetCustomers = ({
             </div>
             <Container fluid>
                 <div className="custom-table">
-                    <table className="customer-table">
-                        <thead>
-                            <tr className="text-center">
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                                {checkAdminMerchant(user) ? (
-                                    <th>Actions</th>
-                                ) : null}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!loading ? (
-                                customer && customer.data.length > 0 ? (
-                                    customer.data.map((custom) => (
-                                        <tr
-                                            key={custom.id}
-                                            className="text-center">
-                                            <td>{custom.name}</td>
-                                            <td> {custom.email || '~'} </td>
-                                            <td> {custom.phone} </td>
-                                            <td> {custom.address}</td>
-                                            {checkAdminMerchant(user) ? (
-                                                <td className="text-center">
-                                                    <Link
-                                                        to={`/customers/edit?id=${custom.id}`}
-                                                        className="mr-2">
-                                                        <i
-                                                            className="simple-icon-note edit-icon"
-                                                            title="Edit"></i>
-                                                    </Link>
-                                                    <i
-                                                        className="simple-icon-close delete-icon mr-2"
-                                                        data-toggle="modal"
-                                                        data-target="#modal"
-                                                        title="Delete"
-                                                        onClick={(e) =>
-                                                            setDelId(custom.id)
-                                                        }></i>
-                                                </td>
-                                            ) : null}
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td
-                                            colSpan={
-                                                checkAdminMerchant(user)
-                                                    ? 5
-                                                    : user.merchant_id === null
-                                                    ? 5
-                                                    : 4
-                                            }
-                                            className="text-center">
-                                            {queryName.length > 0
-                                                ? 'Pelanggan tidak ditemukan'
-                                                : checkAdminMerchant(user)
-                                                ? 'Belum ada pelanggan, silahkan tambahkan pelanggan'
-                                                : 'Belum ada pelanggan'}
-                                        </td>
+                    <Card className="customer">
+                        <CardBody>
+                            <table className="customer-table">
+                                <thead>
+                                    <tr className="text-center">
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        {checkAdminMerchant(user) ? (
+                                            <th>Actions</th>
+                                        ) : null}
                                     </tr>
-                                )
-                            ) : (
-                                <tr>
-                                    <td
-                                        colSpan={
-                                            checkAdminMerchant(user)
-                                                ? 5
-                                                : user.merchant_id === null
-                                                ? 5
-                                                : 4
-                                        }
-                                        className="text-center">
-                                        <CustomSpinner
-                                            loading={loading}
-                                            type="table"
-                                        />
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                    <div className="text-center">
+                                </thead>
+                                <tbody>
+                                    {!loading ? (
+                                        customer && customer.data.length > 0 ? (
+                                            customer.data.map((custom) => (
+                                                <tr
+                                                    key={custom.id}
+                                                    className="text-center">
+                                                    <td>{custom.name}</td>
+                                                    <td>
+                                                        {' '}
+                                                        {custom.email ||
+                                                            '~'}{' '}
+                                                    </td>
+                                                    <td> {custom.phone} </td>
+                                                    <td> {custom.address}</td>
+                                                    {checkAdminMerchant(
+                                                        user
+                                                    ) ? (
+                                                        <td className="text-center">
+                                                            <Link
+                                                                to={`/customers/edit?id=${custom.id}`}
+                                                                className="mr-2">
+                                                                <i
+                                                                    className="simple-icon-note edit-icon"
+                                                                    title="Edit"></i>
+                                                            </Link>
+                                                            <i
+                                                                className="simple-icon-close delete-icon"
+                                                                data-toggle="modal"
+                                                                data-target="#modal"
+                                                                title="Delete"
+                                                                onClick={(e) =>
+                                                                    setDelId(
+                                                                        custom.id
+                                                                    )
+                                                                }></i>
+                                                        </td>
+                                                    ) : null}
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td
+                                                    colSpan={
+                                                        checkAdminMerchant(user)
+                                                            ? 5
+                                                            : user.merchant_id ===
+                                                              null
+                                                            ? 5
+                                                            : 4
+                                                    }
+                                                    className="text-center">
+                                                    {queryName.length > 0
+                                                        ? 'Pelanggan tidak ditemukan'
+                                                        : checkAdminMerchant(
+                                                              user
+                                                          )
+                                                        ? 'Belum ada pelanggan, silahkan tambahkan pelanggan'
+                                                        : 'Belum ada pelanggan'}
+                                                </td>
+                                            </tr>
+                                        )
+                                    ) : (
+                                        <tr>
+                                            <td
+                                                colSpan={
+                                                    checkAdminMerchant(user)
+                                                        ? 5
+                                                        : user.merchant_id ===
+                                                          null
+                                                        ? 5
+                                                        : 4
+                                                }
+                                                className="text-center">
+                                                <CustomSpinner
+                                                    loading={loading}
+                                                    type="table"
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </CardBody>
+                    </Card>
+
+                    <div className="text-center mt-2">
                         <Pagination
                             className="d-inline-block"
                             size="sm"

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { ProductForm } from '../../components/Forms';
 import { put, get } from '../../axios';
 import { connect } from 'react-redux';
 import { addAlert } from '../../redux/actions/alert';
+import CustomSpinner from '../../components/CustomSpinner';
+import { setLoading } from '../../redux/actions/loading';
 
-const EditProduct = ({ user, history, alert }) => {
-    const [loading, setLoading] = useState(false);
+const EditProduct = ({ user, history, alert, loading, setLoading }) => {
     const [submitting, setSubmitting] = useState(false);
     const [id, setId] = useState('');
     const [name, setName] = useState('');
@@ -18,10 +19,6 @@ const EditProduct = ({ user, history, alert }) => {
             alert('Login sebagai admin merchant untuk menambahkan produk');
             history.push('/products/get');
         }
-        const prodNotFound = () => {
-            alert('Product not found');
-            history.push('/products/get');
-        };
 
         const search = history.location.search;
 
@@ -61,7 +58,7 @@ const EditProduct = ({ user, history, alert }) => {
     }, []);
 
     const submitHandler = (name, price, buying_price) => {
-        setLoading(true);
+        setSubmitting(true);
         put(
             `/products/${id}`,
             {
@@ -71,38 +68,39 @@ const EditProduct = ({ user, history, alert }) => {
             },
             (success) => {
                 alert('Produk berhasil diedit', 'success');
-                setLoading(false);
+                setSubmitting(false);
                 history.push('/products/get');
             },
             (error) => {
-                setLoading(false);
+                setSubmitting(false);
                 alert(`Telah terjadi kesalahan: ${error}`);
             }
         );
     };
-    return !loading ? (
-        <div>
+    return (
+        <Fragment>
+            <CustomSpinner loading={loading} type="page" />
             <ProductForm
                 onSubmit={submitHandler}
-                loading={submitting}
+                submitting={submitting}
                 stateName={name}
                 statePrice={price}
                 stateBuyingPrice={buyingPrice}
                 action="Edit"
                 history={history}
             />
-        </div>
-    ) : (
-        <div></div>
-    );
+        </Fragment>
+    )
 };
 
 const mapStateToProps = (state) => ({
     user: state.user,
+    loading: state.loading
 });
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
+    setLoading: (loading) => dispatch(setLoading(loading))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProduct);

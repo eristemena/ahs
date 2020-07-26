@@ -16,6 +16,8 @@ import {
     Pagination,
     PaginationItem,
     PaginationLink,
+    Card,
+    CardBody,
 } from 'reactstrap';
 
 const GetTransaction = ({
@@ -107,107 +109,127 @@ const GetTransaction = ({
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
                 <h1>Transactions</h1>
                 <button
-                    className="btn btn-primary font-weight-bold table-button"
+                    className={`btn btn-primary font-weight-bold table-button ${!checkAdminMerchant(user) ? 'disabled' : ''}`}
+                    disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/transactions/add')}>
                     ADD TRANSACTION
                 </button>
             </div>
             <Container fluid>
                 <div className="custom-table">
-                    <table className="transaction-table">
-                        <thead>
-                            <tr className="text-center">
-                                <th>Date</th>
-                                <th>Product Name</th>
-                                <th>Type</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Customer</th>
-                                {checkAdminMerchant(user) ? (
-                                    <th>Actions</th>
-                                ) : null}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!loading ? (
-                                transaction &&
-                                transaction.data &&
-                                transaction.data.length > 0 ? (
-                                    transaction.data.map((tran) => (
-                                        <tr
-                                            key={tran.id}
-                                            role="row"
-                                            className="text-center">
-                                            <td>
-                                                {moment(tran.date).format('LL')}
-                                            </td>
-                                            <td>{tran.product.name}</td>
-                                            <td>
-                                                {tran.type === 'sell'
-                                                    ? 'Jual'
-                                                    : 'Beli'}
-                                            </td>
-                                            <td>{tran.quantity}</td>
-                                            <td>
-                                                Rp.{' '}
-                                                {formatPrice(
-                                                    tran.type === 'sell'
-                                                        ? tran.price
-                                                        : tran.buying_price
-                                                )}
-                                            </td>
-                                            <td>
-                                                {tran.customer
-                                                    ? tran.customer.name
-                                                    : '~'}
-                                            </td>
-                                            {checkAdminMerchant(user) ? (
-                                                <td>
-                                                    <Link
-                                                        to={`/transactions/edit?id=${tran.id}`}
-                                                        className="mr-2">
-                                                        <i
-                                                            className="simple-icon-note edit-icon"
-                                                            title="Edit"></i>
-                                                    </Link>
-                                                    <i
-                                                        className="simple-icon-close delete-icon mr-2"
-                                                        data-toggle="modal"
-                                                        data-target="#modal"
-                                                        title="Delete"
-                                                        onClick={(e) =>
-                                                            setDelId(tran.id)
-                                                        }></i>
-                                                    {tran.info ? (
-                                                        <Fragment>
-                                                            <InfoTooltip
-                                                                info={tran.info}
-                                                            />
-                                                        </Fragment>
-                                                    ) : null}
-                                                </td>
-                                            ) : null}
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr>
-                                        <td colSpan="7" className="text-center">
-                                            Belum ada transaksi, silahkan
-                                            tambahkan transaksi
-                                        </td>
+                    <Card className="transaction">
+                        <CardBody>
+                            <table className="transaction-table">
+                                <thead>
+                                    <tr className="text-center">
+                                        <th>Date</th>
+                                        <th>Product Name</th>
+                                        <th>Type</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Customer</th>
+                                        {checkAdminMerchant(user) ? (
+                                            <th>Actions</th>
+                                        ) : null}
                                     </tr>
-                                )
-                            ) : (
-                                <tr className="align-middle">
-                                    <td colSpan="7" className="text-center">
-                                        <CustomSpinner loading={loading} type="table" />
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                    {!loading ? (
+                                        transaction &&
+                                        transaction.data &&
+                                        transaction.data.length > 0 ? (
+                                            transaction.data.map((tran) => (
+                                                <tr
+                                                    key={tran.id}
+                                                    role="row"
+                                                    className="text-center">
+                                                    <td>
+                                                        {moment(
+                                                            tran.date
+                                                        ).format('LL')}
+                                                    </td>
+                                                    <td>{tran.product.name}</td>
+                                                    <td>
+                                                        {tran.type === 'sell'
+                                                            ? 'Jual'
+                                                            : 'Beli'}
+                                                    </td>
+                                                    <td>{tran.quantity}</td>
+                                                    <td>
+                                                        Rp.{' '}
+                                                        {formatPrice(
+                                                            tran.type === 'sell'
+                                                                ? tran.price
+                                                                : tran.buying_price
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {tran.customer
+                                                            ? tran.customer.name
+                                                            : '~'}
+                                                    </td>
+                                                    {checkAdminMerchant(
+                                                        user
+                                                    ) ? (
+                                                        <td>
+                                                            <Link
+                                                                to={`/transactions/edit?id=${tran.id}`}
+                                                                className="mr-2">
+                                                                <i
+                                                                    className="simple-icon-note edit-icon"
+                                                                    title="Edit"></i>
+                                                            </Link>
+                                                            <i
+                                                                className={`simple-icon-close delete-icon ${tran.info ? 'mr-2' : ''}`}
+                                                                data-toggle="modal"
+                                                                data-target="#modal"
+                                                                title="Delete"
+                                                                onClick={(e) =>
+                                                                    setDelId(
+                                                                        tran.id
+                                                                    )
+                                                                }></i>
+                                                            {tran.info ? (
+                                                                <Fragment>
+                                                                    <InfoTooltip
+                                                                        info={
+                                                                            tran.info
+                                                                        }
+                                                                    />
+                                                                </Fragment>
+                                                            ) : null}
+                                                        </td>
+                                                    ) : null}
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td
+                                                    colSpan="7"
+                                                    className="text-center">
+                                                    Belum ada transaksi,
+                                                    silahkan tambahkan transaksi
+                                                </td>
+                                            </tr>
+                                        )
+                                    ) : (
+                                        <tr className="align-middle">
+                                            <td
+                                                colSpan="7"
+                                                className="text-center">
+                                                <CustomSpinner
+                                                    loading={loading}
+                                                    type="table"
+                                                />
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </CardBody>
+                    </Card>
 
-                    <div className="text-center">
+                    <div className="text-center mt-2">
                         <Pagination
                             className="d-inline-block"
                             size="sm"
@@ -216,14 +238,18 @@ const GetTransaction = ({
                                 className={`previous-page ${
                                     activeNav('prev') ? 'disabled' : ''
                                 }`}>
-                                <PaginationLink disabled={activeNav('prev')} onClick={() => setPage(page - 1)}>
+                                <PaginationLink
+                                    disabled={activeNav('prev')}
+                                    onClick={() => setPage(page - 1)}>
                                     <i className="simple-icon-arrow-left" />
                                 </PaginationLink>
                             </PaginationItem>
                             {totalPage.map((number) => (
                                 <PaginationItem
                                     className={`goto-page ${
-                                        activePage(number) ? 'disabled active' : ''
+                                        activePage(number)
+                                            ? 'disabled active'
+                                            : ''
                                     }`}
                                     key={number}>
                                     <PaginationLink
@@ -237,7 +263,9 @@ const GetTransaction = ({
                                 className={`next-page ${
                                     activeNav('next') ? 'disabled' : ''
                                 }`}>
-                                <PaginationLink disabled={activeNav('next')} onClick={() => setPage(page + 1)}>
+                                <PaginationLink
+                                    disabled={activeNav('next')}
+                                    onClick={() => setPage(page + 1)}>
                                     <i className="simple-icon-arrow-right" />
                                 </PaginationLink>
                             </PaginationItem>

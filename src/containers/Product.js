@@ -20,7 +20,7 @@ const Product = ({history, user, alert}) => {
         <Switch>
             <Route
                 path="/products/get"
-                component={(props) => <GetProducts {...props} user={me} />}
+                component={GetProducts}
             />
             <Route path="/products/add" component={AddProduct} />
             <Route path="/products/edit" component={EditProduct} />

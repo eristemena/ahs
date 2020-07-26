@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ProductForm } from '../../components/Forms';
 import { postWithAuth } from '../../axios';
 import { connect } from 'react-redux';
 import { addAlert } from '../../redux/actions/alert';
 
-const AddProduct = ({ user, history, alert }) => {
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        if (user.merchant_id === null || user.group_id !== 1) {
-            history.push('/products/get');
-            alert('Login sebagai admin merchant untuk menambahkan produk');
-        }
-    }, []);
+const AddProduct = ({ history, alert }) => {
+    const [submitting, setSubmitting] = useState(false);
 
     const submitHandler = (name, price, buying_price) => {
-        setLoading(true);
+        setSubmitting(true);
         postWithAuth(
             '/products',
             {
@@ -25,12 +18,12 @@ const AddProduct = ({ user, history, alert }) => {
             },
             (success) => {
                 alert('Produk berhasil ditambahkan', 'success');
-                setLoading(false);
+                setSubmitting(false);
                 history.push('/products/get');
             },
             (error) => {
                 console.log(error);
-                setLoading(false);
+                setSubmitting(false);
                 alert(`Telah terjadi kesalahan: ${error}`);
             }
         );
@@ -39,19 +32,15 @@ const AddProduct = ({ user, history, alert }) => {
         <div>
             <ProductForm
                 onSubmit={submitHandler}
-                loading={loading}
+                submitting={submitting}
                 history={history}
             />
         </div>
     );
 };
 
-const mapStateToProps = (state) => ({
-    user: state.user,
-});
-
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddProduct);
+export default connect(null, mapDispatchToProps)(AddProduct);
