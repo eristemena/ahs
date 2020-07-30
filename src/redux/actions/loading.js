@@ -1,4 +1,4 @@
-import { LOADING_START, LOADING_END } from "../actionTypes";
+import { LOADING_START, LOADING_END } from '../actionTypes';
 
 export const setLoading = (loading) => (dispatch) => {
     if (loading) {

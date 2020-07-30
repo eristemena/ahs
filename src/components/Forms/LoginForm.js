@@ -5,31 +5,14 @@ import { Formik, Form, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import CustomSpinner from '../CustomSpinner';
+import * as Yup from 'yup';
 
 function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
-    const validateEmail = (value) => {
-        let error;
-        if (!value) {
-            error = 'Silakan masukkan alamat email Anda';
-        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-            error = 'Alamat email salah';
-        } else if (errorMessage.emailNotFound) {
-            error = 'Email tidak ditemukan';
-        }
-        return error;
-    };
 
-    const validatePassword = (value) => {
-        let error;
-        if (!value) {
-            error = 'Silakan masukkan kata sandi Anda';
-        } else if (value.length < 4) {
-            error = 'Kata sandi harus lebih dari 3 karakter';
-        } else if (errorMessage.wrongPassword) {
-            error = 'Kata sandi salah';
-        }
-        return error;
-    };
+    const schema = Yup.object().shape({
+        email: Yup.string().email("Email tidak valid").required("Email perlu diisi"),
+        password: Yup.string().required("Password perlu diisi")
+    });
 
     const submitHandler = ({ email, password }) => {
         onSubmit(email, password);
@@ -41,7 +24,8 @@ function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
                 email: process.env.REACT_APP_EMAIL || '',
                 password: process.env.REACT_APP_PASSWORD || '',
             }}
-            onSubmit={submitHandler}>
+            onSubmit={submitHandler}
+            validationSchema={schema}>
             {({ errors, touched }) => (
                 <Form>
                     <FormGroup className="form-group has-float-label">
@@ -49,7 +33,6 @@ function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
                         <Field
                             className="form-control"
                             name="email"
-                            validate={validateEmail}
                         />
                         {errors.email && touched.email && (
                             <div className="invalid-feedback d-block">
@@ -63,7 +46,6 @@ function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
                             className="form-control"
                             type="password"
                             name="password"
-                            validate={validatePassword}
                         />
                         {errors.password && touched.password && (
                             <div className="invalid-feedback d-block">
@@ -71,14 +53,14 @@ function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
                             </div>
                         )}
                     </FormGroup>
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
                         <Link
                             to="#"
                             className="custom-login-form-forgot-password">
                             Lupa password?
                         </Link>
                         <button
-                            className={`btn btn-primary loggin-button ${
+                            className={`btn btn-primary login-button ${
                                 loggingIn ? 'disabled' : ''
                             }`}
                             type="submit"

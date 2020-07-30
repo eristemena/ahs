@@ -109,7 +109,9 @@ const GetTransaction = ({
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
                 <h1>Transactions</h1>
                 <button
-                    className={`btn btn-primary font-weight-bold table-button ${!checkAdminMerchant(user) ? 'disabled' : ''}`}
+                    className={`btn btn-primary font-weight-bold table-button ${
+                        !checkAdminMerchant(user) ? 'disabled' : ''
+                    }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/transactions/add')}>
                     ADD TRANSACTION
@@ -180,7 +182,11 @@ const GetTransaction = ({
                                                                     title="Edit"></i>
                                                             </Link>
                                                             <i
-                                                                className={`simple-icon-close delete-icon ${tran.info ? 'mr-2' : ''}`}
+                                                                className={`simple-icon-close delete-icon ${
+                                                                    tran.info
+                                                                        ? 'mr-2'
+                                                                        : ''
+                                                                }`}
                                                                 data-toggle="modal"
                                                                 data-target="#modal"
                                                                 title="Delete"
@@ -228,49 +234,46 @@ const GetTransaction = ({
                             </table>
                         </CardBody>
                     </Card>
-
-                    <div className="text-center mt-2">
-                        <Pagination
-                            className="d-inline-block"
-                            size="sm"
-                            listClassName="justify-content-center">
+                </div>
+                <div className="text-center mt-2">
+                    <Pagination
+                        className="d-inline-block"
+                        size="sm"
+                        listClassName="justify-content-center">
+                        <PaginationItem
+                            className={`previous-page ${
+                                activeNav('prev') ? 'disabled' : ''
+                            }`}>
+                            <PaginationLink
+                                disabled={activeNav('prev')}
+                                onClick={() => setPage(page - 1)}>
+                                <i className="simple-icon-arrow-left" />
+                            </PaginationLink>
+                        </PaginationItem>
+                        {totalPage.map((number) => (
                             <PaginationItem
-                                className={`previous-page ${
-                                    activeNav('prev') ? 'disabled' : ''
-                                }`}>
+                                className={`goto-page ${
+                                    activePage(number) ? 'disabled active' : ''
+                                }`}
+                                key={number}>
                                 <PaginationLink
-                                    disabled={activeNav('prev')}
-                                    onClick={() => setPage(page - 1)}>
-                                    <i className="simple-icon-arrow-left" />
+                                    disabled={activePage(number)}
+                                    onClick={() => setPage(number)}>
+                                    {number}
                                 </PaginationLink>
                             </PaginationItem>
-                            {totalPage.map((number) => (
-                                <PaginationItem
-                                    className={`goto-page ${
-                                        activePage(number)
-                                            ? 'disabled active'
-                                            : ''
-                                    }`}
-                                    key={number}>
-                                    <PaginationLink
-                                        disabled={activePage(number)}
-                                        onClick={() => setPage(number)}>
-                                        {number}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            ))}
-                            <PaginationItem
-                                className={`next-page ${
-                                    activeNav('next') ? 'disabled' : ''
-                                }`}>
-                                <PaginationLink
-                                    disabled={activeNav('next')}
-                                    onClick={() => setPage(page + 1)}>
-                                    <i className="simple-icon-arrow-right" />
-                                </PaginationLink>
-                            </PaginationItem>
-                        </Pagination>
-                    </div>
+                        ))}
+                        <PaginationItem
+                            className={`next-page ${
+                                activeNav('next') ? 'disabled' : ''
+                            }`}>
+                            <PaginationLink
+                                disabled={activeNav('next')}
+                                onClick={() => setPage(page + 1)}>
+                                <i className="simple-icon-arrow-right" />
+                            </PaginationLink>
+                        </PaginationItem>
+                    </Pagination>
                 </div>
             </Container>
 

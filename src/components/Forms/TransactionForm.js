@@ -125,6 +125,7 @@ const TransactionForm = ({
                         <ReactDatePicker
                             selected={date}
                             locale="id"
+                            id="date"
                             dateFormat="dd MMMM yyyy"
                             className="form-control date-picker"
                             placeholderText="--Pilih tanggal--"
@@ -212,9 +213,9 @@ const TransactionForm = ({
                         />
                     </div>
                     <div className={`form-group ${type === 'buy' && 'd-none'}`}>
-                        <label htmlFor="product">Pelanggan:</label>
+                        <label htmlFor="customer">Pelanggan:</label>
                         <select
-                            id="product"
+                            id="customer"
                             className="form-control"
                             onChange={(e) => {
                                 setSelectedCustomer(`${e.target.value}`);
@@ -237,7 +238,7 @@ const TransactionForm = ({
                         <textarea
                             className="form-control mb-4"
                             id="info"
-                            rows="2"
+                            rows="4"
                             maxLength="150"
                             value={info}
                             onChange={(e) => {

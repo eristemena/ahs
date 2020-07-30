@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { NavLink, withRouter} from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/user';
 import { setMenuState } from '../../redux/actions/menu';
@@ -10,14 +10,34 @@ import {
     DropdownMenu,
 } from 'reactstrap';
 import { MenuIcon } from '../../components/svg';
+import 'flag-icon-css/css/flag-icon.css';
+import { setLanguage } from '../../redux/actions/language';
 
 function NavBar({
     user,
     logout,
     history,
     menu,
-    setMenuState
+    setMenuState,
+    language,
+    setLanguage,
 }) {
+    const checkLanguage = (lang) => {
+        if (lang === 'en') {
+            return 'flag-icon-gb';
+        } else {
+            return 'flag-icon-id';
+        }
+    };
+
+    const changeLanguage = () => {
+        if (language === 'en') {
+            setLanguage('id')
+        } else {
+            setLanguage('en')
+        }
+    }
+
     const logoutHandler = (e) => {
         e.preventDefault();
 
@@ -29,9 +49,9 @@ function NavBar({
         e.preventDefault();
 
         if (menu) {
-            setMenuState(false)
+            setMenuState(false);
         } else {
-            setMenuState(true)
+            setMenuState(true);
         }
     };
 
@@ -44,7 +64,7 @@ function NavBar({
                             to="#"
                             location={{}}
                             className="menu-button d-block"
-                            onClick={menuButtonClick} >
+                            onClick={menuButtonClick}>
                             <MenuIcon />
                         </NavLink>
                     </div>
@@ -64,10 +84,21 @@ function NavBar({
                                     <i className="iconsminds-male-2 default-profile-picture"></i>
                                 </DropdownToggle>
                                 <DropdownMenu className="" right>
+                                    <DropdownItem onClick={changeLanguage}>
+                                        <div className="d-flex justify-content-between">
+                                            <span>Language</span>
+                                            <span
+                                                className={`flag-icon ${checkLanguage(
+                                                    language
+                                                )}`}></span>
+                                        </div>
+                                    </DropdownItem>
                                     <DropdownItem onClick={logoutHandler}>
                                         <div className="d-flex justify-content-between">
                                             <span>Log Out</span>
-                                            <i className="simple-icon-logout" style={{marginTop: 3}} ></i>
+                                            <i
+                                                className="simple-icon-logout"
+                                                style={{ marginTop: 3 }}></i>
                                         </div>
                                     </DropdownItem>
                                 </DropdownMenu>
@@ -83,11 +114,13 @@ function NavBar({
 const mapStateToProps = (state) => ({
     user: state.user,
     menu: state.menu,
+    language: state.language,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     logout: () => dispatch(logout()),
     setMenuState: (menu) => dispatch(setMenuState(menu)),
+    setLanguage: (lang) => dispatch(setLanguage(lang)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));

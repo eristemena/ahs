@@ -1,15 +1,15 @@
-import { get } from "../../axios";
+import { MERCHANT_SET } from '../actionTypes';
+import { get, postWithAuth, post } from '../../axios'
 import { addAlert } from "./alert";
-import { PRODUCT_GET } from '../actionTypes';
 import { setLoading } from './loading';
 
-export const getProducts = (page, name) => (dispatch) => {
+export const getMerchants = (page = 1, name) => (dispatch) => {
     dispatch(setLoading(true))
     get(
-        `/products?limit=7&page=${page}${name ? `&name=${name}` : ''}`,
-         ({ data, totalPage, totalData, page }) => {
+        `/merchants?page=${page}${name ? `&name=${name}` : ''}`,
+        ({data, page, totalData, totalPage}) => {
             dispatch({
-                type: PRODUCT_GET,
+                type: MERCHANT_SET,
                 payload: {
                     totalPage,
                     totalData,
@@ -20,8 +20,8 @@ export const getProducts = (page, name) => (dispatch) => {
             dispatch(setLoading(false))
         },
         (error) => {
-            dispatch(addAlert("Telah terjadi kesalahan"));
+            dispatch(addAlert('Telah terjadi kesalahan'));
             dispatch(setLoading(false))
         }
-    );
+    )
 };

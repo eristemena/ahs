@@ -7,6 +7,9 @@ import { stock } from './stock';
 import { loading } from './loading';
 import { customer } from './customer';
 import { menu } from './menu';
+import { merchant } from './merchant';
+import { language } from './language';
+import { sale } from './sale';
 
 export default combineReducers({
     alert,
@@ -16,5 +19,8 @@ export default combineReducers({
     stock,
     loading,
     customer,
-    menu
+    menu,
+    merchant,
+    language,
+    sale
 });

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { postWithAuth } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { TransactionForm } from '../../components/Forms';
 import { connect } from 'react-redux';
+import CustomSpinner from '../../components/CustomSpinner';
 
-const AddTransaction = ({ alert, history, user }) => {
+const AddTransaction = ({ alert, history, user, loading }) => {
     const [submitting, setSubmitting] = useState(false);
 
     const onSubmitHandler = (
@@ -39,11 +40,15 @@ const AddTransaction = ({ alert, history, user }) => {
         );
     };
     return (
-        <TransactionForm
-            loading={submitting}
+        <Fragment>
+            <CustomSpinner loading={loading} type="page" />
+            <TransactionForm
+            submitting={submitting}
             onSubmit={onSubmitHandler}
             history={history}
-        />
+            />
+        </Fragment>
+        
     );
 };
 
@@ -52,7 +57,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const mapStateToProps = (state) => ({
-    user: state.user
+    user: state.user,
+    loading: state.loading
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTransaction);

@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700");
+$custom-font: "Nunito",
+sans-serif;
 
 $primary-color: #008ecc;
 $secondary-color: #73c2fb;
@@ -13,11 +15,9 @@ $sidenav-light: $primary-color+rgb(22, 22, 22);
 
 $text-light: grey;
 
-$navbar-logo: url('https://img2.pngdownload.id/20181124/izv/kisspng-aqua-logo-water-text-brand-5bf9b66fcec8a9.246932661543091823847.jpg');
 $full-height: 100vh;
 $full-width: 100vw;
 $logo: url('https://vectorlogo4u.com/wp-content/uploads/2019/09/Aqua-Logo-Vector-2019-520x245.png');
-$default-user-profile-picture: url('https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png');
 
 $main-menu-item-height: 110px;
 $main-menu-width: 120px;
@@ -41,7 +41,7 @@ $main-margin-md: 40px;
 $main-margin-xs: 15px;
 
 body {
-    font-family: "Nunito", sans-serif;
+    font-family: $custom-font;
     font-size: 0.8rem;
     font-weight: 400;
     background-color: $background-color;
@@ -65,8 +65,8 @@ body {
             }
 
             &.button-loading-spinner {
-                height: 1.5rem;
-                width: 1.5rem;
+                height: 1.75rem;
+                width: 1.75rem;
                 margin-top: 5px;
                 border-top-color: white;
                 animation: rotate 1.2s ease infinite;
@@ -128,10 +128,12 @@ body {
 
                     button.dropdown-item {
                         transition: background-color $menu-collapse-time;
+                        color: black;
 
                         &:active {
                             background-color: rgb(235, 235, 235);
                             outline: none;
+
                         }
                     }
                 }
@@ -354,7 +356,7 @@ body {
                         transform: translateY(1rem);
                         opacity: 0;
                     }
-    
+
                     100% {
                         transform: translateY(0rem);
                         opacity: 1;
@@ -365,23 +367,32 @@ body {
 
         .custom-table {
 
-            $transaction-table-width: 605px;
-            $product-table-width: 500px;
-            $customer-table-width: 498px;
-            $user-table-width: 433px;
+            $transaction-table-width: 605px + 40px;
+            $product-table-width: 500px + 40px;
+            $customer-table-width: 498px + 40px;
+            $user-table-width: 433px + 40px;
+            $merchant-table-width: 331px + 40px;
+            overflow-x: auto;
 
             .card {
                 &.transaction {
-                    min-width: $transaction-table-width + 40px;
+                    min-width: $transaction-table-width;
                 }
-                &.product{
-                    min-width: $product-table-width + 40px;
+
+                &.product {
+                    min-width: $product-table-width;
                 }
+
                 &.customer {
-                    min-width: $customer-table-width + 40px;
+                    min-width: $customer-table-width;
                 }
+
                 &.user {
-                    min-width: $user-table-width + 40px;
+                    min-width: $user-table-width;
+                }
+
+                &.merchant {
+                    min-width: $merchant-table-width;
                 }
             }
 
@@ -389,22 +400,6 @@ body {
                 border-collapse: separate;
                 border-spacing: 0px 0.6rem;
                 width: 100%;
-
-                // &.transaction-table {
-                //     min-width: $transaction-table-width;
-                // }
-
-                // &.product-table {
-                //     min-width: $product-table-width;
-                // }
-
-                // &.customer-table {
-                //     min-width: $customer-table-width;
-                // }
-
-                // &.user-table {
-                //     min-width: $user-table-width;
-                // }
 
                 thead th {
                     color: $text-light;
@@ -568,9 +563,11 @@ body {
 
             &.disabled {
                 padding: 0 1.5rem;
+
                 &:hover {
                     background-color: $button-color;
                 }
+
                 &.table-button {
                     padding: 0.8rem 1.25rem;
                 }
@@ -581,28 +578,22 @@ body {
             box-shadow: none;
         }
 
-        &.table-button {
-            @media (max-width: 576px) {
-                display: block;
-                width: 100%;
-                padding: .75rem 1.25rem .75rem 1.25rem;
-            }
+        @media (max-width: 576px) {
+            display: block;
+            width: 100%;
+            padding: .75rem 1.25rem;
         }
-
+        
         &.submit-button {
             @media (max-width: 576px) {
-                display: block;
-                width: 100%;
-                padding: .75rem 1.25rem .75rem 1.25rem;
                 margin-bottom: .75rem;
+                
             }
         }
 
-        &.cancel-button {
+        &.login-button {
             @media (max-width: 576px) {
-                display: block;
-                width: 100%;
-                padding: .75rem 1.25rem .75rem 1.25rem;
+                margin-top: .5rem;
             }
         }
     }
@@ -686,11 +677,17 @@ body {
         padding: 0.5rem 0.75rem;
         line-height: 1;
 
-        &:focus, &:hover {
+        &:focus,
+        &:hover {
             color: black;
         }
 
-        &.date-picker, &.quantity-input {
+        &:focus {
+            border-bottom: 2px solid $secondary-color;
+        }
+
+        &.date-picker,
+        &.quantity-input {
             width: 10rem;
         }
 
@@ -698,6 +695,11 @@ body {
             @media (max-width: 576px) {
                 width: 100%;
             }
+        }
+
+        @media (max-width: 576px) {
+            height: 3rem;
+            font-size: 1rem;
         }
     }
 
@@ -721,6 +723,51 @@ body {
                 font-size: 1.2em;
                 text-align: justify;
             }
+        }
+    }
+
+    .react-datepicker {
+        font-family: $custom-font;
+
+        .react-datepicker__triangle {
+            border-bottom-color: white !important;
+        }
+
+        .react-datepicker__month-container {
+            .react-datepicker__header {
+                background-color: white !important;
+                border-bottom: none;
+            }
+
+            .react-datepicker__month .react-datepicker__day {
+                font-weight: lighter;
+
+                &.react-datepicker__day--today {
+                    font-weight: bolder;
+                }
+                &:hover {
+                    background-color: $primary-color;
+                    color: white;
+                    border-radius: 0;
+                }
+
+                &.react-datepicker__day--disabled {
+                    &:hover {
+                        color: $text-light;
+                        background-color: initial;
+                    }
+
+                    &:focus,
+                    &:active {
+                        outline: none;
+                    }
+                }
+
+            }
+        }
+
+        .react-datepicker__today-button {
+            background-color: white;
         }
     }
 

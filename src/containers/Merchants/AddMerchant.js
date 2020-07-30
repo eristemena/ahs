@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { RegisterForm } from '../../components/Forms';
 
 const AddMerchant = ({ alert, history }) => {
-    const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     const onSubmitHandler = (name, ahs, email, password) => {
-        setLoading(true);
+        setSubmitting(true);
         postWithAuth(
             '/merchants',
             {
@@ -25,22 +25,23 @@ const AddMerchant = ({ alert, history }) => {
                         merchant_id: data.id,
                     },
                     (success) => {
-                        setLoading(false);
+                        setSubmitting(false);
                         alert('Merchant berhasil ditambahkan', 'success');
-                        history.push('/merchants/get');
+                        history.goBack();
                     },
                     (error) => {
-                        console.log(error);
-                        alert('Telah terjadi kesalahan');
+                        setSubmitting(false);
+                        alert(`Telah terjadi kesalahan${error && error.message ? ': ' + error.message : ''}`);
                     }
                 );
             },
             (error) => {
-                alert('Telah terjadi kesalahan');
+                setSubmitting(false);
+                alert(`Telah terjadi kesalahan${error && error.message ? ': ' + error.message : ''}`);
             }
         );
     };
-    return <RegisterForm loading={loading} onSubmit={onSubmitHandler} />;
+    return <RegisterForm submitting={submitting} onSubmit={onSubmitHandler} />;
 };
 
 const mapDispatchToProps = (dispatch) => ({

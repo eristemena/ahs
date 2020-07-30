@@ -1,13 +1,13 @@
-import { STOCKS_ADD, STOCKS_REMOVE } from '../actionTypes';
+import { SALES_ADD, SALES_REMOVE } from '../actionTypes';
 
 const initialState = {};
 
-export const stock = (state = initialState, action) => {
+export const sale = (state = initialState, action) => {
     switch (action.type) {
-        case STOCKS_ADD:
+        case SALES_ADD:
             return action.payload;
 
-        case STOCKS_REMOVE:
+        case SALES_REMOVE:
             return initialState;
 
         default:

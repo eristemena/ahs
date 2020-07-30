@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { addAlert } from '../../redux/actions/alert';
 import PropTypes from 'prop-types';
@@ -13,6 +13,7 @@ import {
 } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
 import CustomSpinner from '../CustomSpinner';
+import * as Yup from 'yup';
 
 const ProductForm = ({
     onSubmit = () => {},
@@ -23,26 +24,12 @@ const ProductForm = ({
     history,
     action,
 }) => {
-    
-    const validateName = (value) => {
-        let error;
-        if (!value) {
-            error = 'Nama perlu diisi';
-        } else if (value.length < 3) {
-            error = 'Nama harus lebih dari 3 huruf';
-        }
-        return error;
-    };
 
-    const validatePrice = (value) => {
-        let error;
-        if (!value) {
-            error = 'Harga jual perlu diisi';
-        } else if (isNaN(value)) {
-            error = 'Harga harus angka';
-        }
-        return error;
-    };
+    const schema = Yup.object().shape({
+        name: Yup.string().min(4, "Nama harus lebih dari 3 karakter").required("Nama harus diisi"),
+        price: Yup.number().integer().required("Harga jual harus diisi"),
+        buying_price: Yup.number().integer().required("Harga beli harus diisi")
+    })
 
     const submitHandler = ({ name, price, buyingPrice }) => {
         onSubmit(name, price * 1, buyingPrice * 1);
@@ -53,20 +40,20 @@ const ProductForm = ({
             initialValues={{
                 name: stateName || '',
                 price: statePrice || '',
-                buyingPrice: stateBuyingPrice || '',
+                buying_price: stateBuyingPrice || '',
             }}
             onSubmit={submitHandler}
-            enableReinitialize>
+            enableReinitialize
+            validationSchema={schema}>
             {({ errors, touched }) => (
                 <Card className="custom-form-card">
                     <CardBody>
                         <Form>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup>
                                 <Label>Name</Label>
                                 <Field
                                     className="form-control"
                                     name="name"
-                                    validate={validateName}
                                 />
                                 {errors.name && touched.name && (
                                     <div className="invalid-feedback d-block">
@@ -74,7 +61,7 @@ const ProductForm = ({
                                     </div>
                                 )}
                             </FormGroup>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup>
                                 <Label>Price</Label>
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
@@ -83,7 +70,6 @@ const ProductForm = ({
                                     <Field
                                         className="form-control"
                                         name="price"
-                                        validate={validatePrice}
                                     />
                                 </InputGroup>
 
@@ -93,7 +79,7 @@ const ProductForm = ({
                                     </div>
                                 )}
                             </FormGroup>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup>
                                 <Label>Buying Price</Label>
                                 <InputGroup>
                                     <InputGroupAddon addonType="prepend">
@@ -101,14 +87,13 @@ const ProductForm = ({
                                     </InputGroupAddon>
                                     <Field
                                         className="form-control"
-                                        name="buyingPrice"
-                                        validate={validatePrice}
+                                        name="buying_price"
                                     />
                                 </InputGroup>
 
-                                {errors.buyingPrice && touched.buyingPrice && (
+                                {errors.buying_price && touched.buying_price && (
                                     <div className="invalid-feedback d-block">
-                                        {errors.buyingPrice}
+                                        {errors.buying_price}
                                     </div>
                                 )}
                             </FormGroup>
@@ -147,7 +132,6 @@ const ProductForm = ({
 
 ProductForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
 };
 

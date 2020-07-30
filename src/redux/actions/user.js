@@ -8,7 +8,9 @@ import {
     TRANSACTION_REMOVE,
     STOCKS_REMOVE,
     CUSTOMER_REMOVE,
-    SET_MENU_CLOSE
+    SET_MENU_CLOSE,
+    LOADING_END,
+    SALES_REMOVE
 } from '../actionTypes';
 
 export const login = (email, password) => (dispatch) => {
@@ -60,4 +62,6 @@ export const logout = () => (dispatch) => {
     dispatch({ type: STOCKS_REMOVE });
     dispatch({ type: CUSTOMER_REMOVE });
     dispatch({ type: SET_MENU_CLOSE });
+    dispatch({ type: LOADING_END });
+    dispatch({ type: SALES_REMOVE });
 };

@@ -3,8 +3,7 @@ import { addAlert } from '../../redux/actions/alert';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getProducts } from '../../redux/actions/product';
-import { formatPrice } from '../../utilities';
-import { checkAdminMerchant } from '../../utilities';
+import { formatPrice, checkAdminMerchant } from '../../utilities';
 import { setLoading } from '../../redux/actions/loading';
 import DeleteModal from '../../components/DeleteModal';
 import { del } from '../../axios';
@@ -118,7 +117,9 @@ const GetProducts = ({
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
                 <h1>Products</h1>
                 <button
-                    className={`btn btn-primary font-weight-bold table-button ${!checkAdminMerchant(user) ? 'disabled' : ''}`}
+                    className={`btn btn-primary font-weight-bold table-button ${
+                        !checkAdminMerchant(user) ? 'disabled' : ''
+                    }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/products/add')}>
                     ADD PRODUCT
@@ -253,48 +254,46 @@ const GetProducts = ({
                             </table>
                         </CardBody>
                     </Card>
-                    <div className="text-center mt-2">
-                        <Pagination
-                            className="d-inline-block"
-                            size="sm"
-                            listClassName="justify-content-center">
+                </div>
+                <div className="text-center mt-2">
+                    <Pagination
+                        className="d-inline-block"
+                        size="sm"
+                        listClassName="justify-content-center">
+                        <PaginationItem
+                            className={`previous-page ${
+                                activeNav('prev') ? 'disabled' : ''
+                            }`}>
+                            <PaginationLink
+                                disabled={activeNav('prev')}
+                                onClick={() => setPage(page - 1)}>
+                                <i className="simple-icon-arrow-left" />
+                            </PaginationLink>
+                        </PaginationItem>
+                        {totalPage.map((number) => (
                             <PaginationItem
-                                className={`previous-page ${
-                                    activeNav('prev') ? 'disabled' : ''
-                                }`}>
+                                className={`goto-page ${
+                                    activePage(number) ? 'disabled active' : ''
+                                }`}
+                                key={number}>
                                 <PaginationLink
-                                    disabled={activeNav('prev')}
-                                    onClick={() => setPage(page - 1)}>
-                                    <i className="simple-icon-arrow-left" />
+                                    disabled={activePage(number)}
+                                    onClick={() => setPage(number)}>
+                                    {number}
                                 </PaginationLink>
                             </PaginationItem>
-                            {totalPage.map((number) => (
-                                <PaginationItem
-                                    className={`goto-page ${
-                                        activePage(number)
-                                            ? 'disabled active'
-                                            : ''
-                                    }`}
-                                    key={number}>
-                                    <PaginationLink
-                                        disabled={activePage(number)}
-                                        onClick={() => setPage(number)}>
-                                        {number}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            ))}
-                            <PaginationItem
-                                className={`next-page ${
-                                    activeNav('next') ? 'disabled' : ''
-                                }`}>
-                                <PaginationLink
-                                    disabled={activeNav('next')}
-                                    onClick={() => setPage(page + 1)}>
-                                    <i className="simple-icon-arrow-right" />
-                                </PaginationLink>
-                            </PaginationItem>
-                        </Pagination>
-                    </div>
+                        ))}
+                        <PaginationItem
+                            className={`next-page ${
+                                activeNav('next') ? 'disabled' : ''
+                            }`}>
+                            <PaginationLink
+                                disabled={activeNav('next')}
+                                onClick={() => setPage(page + 1)}>
+                                <i className="simple-icon-arrow-right" />
+                            </PaginationLink>
+                        </PaginationItem>
+                    </Pagination>
                 </div>
             </Container>
             <DeleteModal
