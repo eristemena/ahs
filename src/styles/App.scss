@@ -11,7 +11,7 @@ $background-color: whitesmoke;
 $navbar-color: white;
 $separator-color: #b3b3b3;
 $sidenav-dark: $primary-color - rgb(68, 68, 68);
-$sidenav-light: $primary-color+rgb(22, 22, 22);
+$sidenav-light: $primary-color + rgb(22, 22, 22);
 
 $text-light: grey;
 
@@ -119,25 +119,6 @@ body {
 
             .default-profile-picture {
                 font-size: 40px;
-            }
-
-            .user .dropdown {
-                >.dropdown-menu-right {
-                    border-radius: $navbar-border-radius;
-
-
-                    button.dropdown-item {
-                        transition: background-color $menu-collapse-time;
-                        color: black;
-
-                        &:active {
-                            background-color: rgb(235, 235, 235);
-                            outline: none;
-
-                        }
-                    }
-                }
-
             }
 
             .name {
@@ -574,6 +555,23 @@ body {
             }
         }
 
+        &.dropdown-button {
+            &.dropdown-button-primary {
+                box-shadow: 0 3px 10px rgba($color: #000000, $alpha: 0.1) !important;
+                &.outline {
+                    border: .05rem solid $primary-color;
+                    background-color: white;
+                    color: $primary-color;
+                    transition: all $menu-collapse-time;
+
+                    &:hover, &[aria-expanded="true"] {
+                        background-color: $primary-color;
+                        color: white;
+                    }
+                }
+            }
+        }
+
         &.nav-profile-picture:focus {
             box-shadow: none;
         }
@@ -596,6 +594,30 @@ body {
                 margin-top: .5rem;
             }
         }
+    }
+
+    .dropdown {
+        >.dropdown-menu-right {
+            border-radius: $navbar-border-radius;
+
+            &.show {
+                outline: none;
+            }
+
+
+            button.dropdown-item {
+                user-select: none;
+                transition: background-color $menu-collapse-time;
+                color: black;
+
+                &:active {
+                    background-color: rgb(235, 235, 235);
+                    outline: none;
+
+                }
+            }
+        }
+
     }
 
     .pagination-sm {

@@ -18,11 +18,7 @@ function Home({ merchant_id, loading, history }) {
                         <h1 className="">Welcome Admin</h1>
                     )}
                 </Row>
-                <Row>
-                    <Col>
-                        <GetSales />
-                    </Col>
-                </Row>
+                <GetSales />
             </Container>
         </Fragment>
     );

@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
+    Row,
+    Col,
     Card,
     CardBody,
     CardTitle,
@@ -8,51 +10,159 @@ import {
     DropdownMenu,
     DropdownItem,
 } from 'reactstrap';
-import { Line } from 'react-chartjs-2';
+import { LineChart, PieChart } from '../../components/Charts';
 import { connect } from 'react-redux';
 import { getSales } from '../../redux/actions/sale';
 
 const GetSales = ({ sale, getSales }) => {
+    const [graphWeekCode, setGraphWeekCode] = useState(1);
+
     const defBottomLables = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const views = [
+        {
+            code: 1,
+            name: 'This Week',
+        },
+        {
+            code: 2,
+            name: 'Last week',
+        },
+    ];
 
     useEffect(() => {
-        getSales();
-    }, []);
+        getSales(graphWeekCode);
+    }, [graphWeekCode]);
+
+    const lineChartDataMapping = (sales) => {
+        return [
+            {
+                data: sales.data.map(
+                    ({ detail }) =>
+                        detail.sells
+                            .map(({ quantity }) => quantity)
+                            .reduce((a, b) => a + b, 0) * -1
+                ),
+                label: 'Sales',
+                color: {
+                    red: 0,
+                    green: 142,
+                    blue: 204,
+                },
+            },
+            {
+                data: sales.data.map(({ detail }) =>
+                    detail.buys
+                        .map(({ quantity }) => quantity)
+                        .reduce((a, b) => a + b, 0)
+                ),
+                label: 'Buys',
+                color: {
+                    red: 0,
+                    green: 202,
+                    blue: 204,
+                },
+            },
+            {
+                data: sales.data.map((data) => data.sales),
+                label: 'Total',
+                color: {
+                    red: 128,
+                    green: 128,
+                    blue: 128,
+                },
+            },
+        ];
+    };
+
+    const doughnutChartDataMapping = (sales) => {
+        return [
+            {
+                label: 'Sells',
+                data: sales.data
+                    .map(({ detail }) =>
+                        detail.sells
+                            .map(({ quantity }) => quantity)
+                            .reduce((a, b) => a + b, 0)
+                    )
+                    .reduce((a, b) => a + b, 0),
+                color: {
+                    red: 0,
+                    green: 142,
+                    blue: 204,
+                },
+            },
+            {
+                label: 'Buys',
+                data: sales.data
+                    .map(({ detail }) =>
+                        detail.buys
+                            .map(({ quantity }) => quantity)
+                            .reduce((a, b) => a + b, 0)
+                    )
+                    .reduce((a, b) => a + b, 0),
+                color: {
+                    red: 0,
+                    green: 202,
+                    blue: 204,
+                },
+            },
+        ];
+    };
 
     return (
-        <Card className="shadow mx-2 custom-chart position-relative">
+        <Card className="shadow">
             <CardBody>
-                <CardTitle className="mb-3">
-                    <div className="d-flex justify-content-between">
-                        <h3>Sales</h3>
-                    </div>
+                <CardTitle className="d-md-flex justify-content-between">
+                    <h3>Sales</h3>
+                    <UncontrolledDropdown>
+                        <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle dropdown-button dropdown-button-primary outline">
+                            <i className="mr-2">
+                                {views[graphWeekCode - 1].name}
+                            </i>
+                            <i className="simple-icon-arrow-down mt-1"></i>
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                            {views.map((view) => (
+                                <DropdownItem
+                                    key={view.code}
+                                    onClick={() => setGraphWeekCode(view.code)}>
+                                    {view.name}
+                                </DropdownItem>
+                            ))}
+                        </DropdownMenu>
+                    </UncontrolledDropdown>
                 </CardTitle>
-                <Line
-                    data={{
-                        labels: sale.data
-                            ? sale.data.map((sal) => sal.day)
-                            : defBottomLables,
-                        datasets: [
-                            {
-                                data: sale.data
-                                    ? sale.data.map((sal) => sal.sales)
-                                    : [],
-                                backgroundColor: 'rgba(0, 142, 204, 0.1)',
-                                borderColor: 'rgba(0, 142, 204, 1)',
-                                pointRadius: 7,
-                                pointHoverRadius: 9,
-                                pointBackgroundColor: 'rgba(255, 255, 255, 1)',
-                                pointHoverBackgroundColor:
-                                    'rgba(0, 142, 204, 1)',
-                            },
-                        ],
-                    }}
-                    options={{
-                        scales: { xAxes: [{ gridLines: { display: false } }] },
-                    }}
-                    height={120}
-                    legend={{ display: false }}
-                />
+                <Row>
+                    <Col
+                        sm={12}
+                        md={8}
+                        className="mb-3 mb-md-0 d-none d-sm-block">
+                        <LineChart
+                            viewName="Line"
+                            viewCode={graphWeekCode}
+                            setViewCode={setGraphWeekCode}
+                            view={views}
+                            labels={
+                                sale.data
+                                    ? sale.data.map((s) => s.day)
+                                    : defBottomLables
+                            }
+                            data={sale.data ? lineChartDataMapping(sale) : []}
+                            displayLegend={true}
+                            legends={['Sales', 'Buys']}
+                            title="Quantity"
+                        />
+                    </Col>
+                    <Col md={4}>
+                        <PieChart
+                            viewName="Doughnut"
+                            displayLegend={true}
+                            labels={['Sells', 'Buys']}
+                            data={sale.data ? doughnutChartDataMapping(sale) : []}
+                            title="Quantity"
+                        />
+                    </Col>
+                </Row>
             </CardBody>
         </Card>
     );
@@ -65,4 +175,5 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getSales: (code) => dispatch(getSales(code)),
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(GetSales);
