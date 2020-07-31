@@ -1,32 +1,25 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { GetStocks, GetSales } from './Stocks';
-import { Container, Row, Col } from 'reactstrap';
-import CustomSpinner from '../components/CustomSpinner';
+import { Container, Row } from 'reactstrap';
 
-function Home({ merchant_id, loading, history }) {
-    const [stockView, setStockView] = useState();
-
+function Home({ user }) {
     return (
-        <Fragment>
-            <CustomSpinner loading={loading} type="page" />
-            <Container fluid>
-                <Row xs="1" sm="1" md="3" lg="3">
-                    {merchant_id ? (
-                        <GetStocks />
-                    ) : (
-                        <h1 className="">Welcome Admin</h1>
-                    )}
-                </Row>
-                <GetSales />
-            </Container>
-        </Fragment>
+        <Container fluid>
+            <Row xs="1" sm="1" md="3" lg="3">
+                {user.merchant_id ? (
+                    <GetStocks />
+                ) : (
+                    <h1 className="">Welcome Admin</h1>
+                )}
+            </Row>
+            <GetSales />
+        </Container>
     );
 }
 
 const mapStateToProps = (state) => ({
-    merchant_id: state.user.merchant_id,
-    loading: state.loading,
+    user: state.user,
 });
 
 export default connect(mapStateToProps)(Home);

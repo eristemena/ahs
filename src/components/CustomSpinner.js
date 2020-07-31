@@ -15,6 +15,10 @@ const CustomSpinner = ({loading, type}) => {
             return (
                 <div className={`custom-spinner button-loading-spinner ${!loading ? 'd-none' : ''}`}></div>
             )
+        case 'card':
+            return (
+                <div className={`custom-spinner card-loading-spinner ${!loading ? 'd-none' : ''}`}></div>
+            )
         default:
             break;
     }

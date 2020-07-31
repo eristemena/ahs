@@ -9,6 +9,7 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
+    Input,
 } from 'reactstrap';
 import { LineChart, PieChart } from '../../components/Charts';
 import { connect } from 'react-redux';
@@ -112,7 +113,7 @@ const GetSales = ({ sale, getSales }) => {
     return (
         <Card className="shadow">
             <CardBody>
-                <CardTitle className="d-md-flex justify-content-between">
+                <CardTitle className="d-flex justify-content-between">
                     <h3>Sales</h3>
                     <UncontrolledDropdown>
                         <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle dropdown-button dropdown-button-primary outline">
@@ -133,32 +134,35 @@ const GetSales = ({ sale, getSales }) => {
                     </UncontrolledDropdown>
                 </CardTitle>
                 <Row>
-                    <Col
-                        sm={12}
-                        md={8}
-                        className="mb-3 mb-md-0 d-none d-sm-block">
-                        <LineChart
-                            viewName="Line"
-                            viewCode={graphWeekCode}
-                            setViewCode={setGraphWeekCode}
-                            view={views}
-                            labels={
-                                sale.data
-                                    ? sale.data.map((s) => s.day)
-                                    : defBottomLables
-                            }
-                            data={sale.data ? lineChartDataMapping(sale) : []}
-                            displayLegend={true}
-                            legends={['Sales', 'Buys']}
-                            title="Quantity"
-                        />
+                    <Col md={8} className="mb-3 mb-md-0 d-none d-sm-block">
+                        <div className="d-flex">
+                            <LineChart
+                                viewName="Line"
+                                viewCode={graphWeekCode}
+                                setViewCode={setGraphWeekCode}
+                                view={views}
+                                labels={
+                                    sale.data
+                                        ? sale.data.map((s) => s.day)
+                                        : defBottomLables
+                                }
+                                data={
+                                    sale.data ? lineChartDataMapping(sale) : []
+                                }
+                                displayLegend={true}
+                                legends={['Sales', 'Buys']}
+                                title="Quantity"
+                            />
+                        </div>
                     </Col>
                     <Col md={4}>
                         <PieChart
                             viewName="Doughnut"
                             displayLegend={true}
                             labels={['Sells', 'Buys']}
-                            data={sale.data ? doughnutChartDataMapping(sale) : []}
+                            data={
+                                sale.data ? doughnutChartDataMapping(sale) : []
+                            }
                             title="Quantity"
                         />
                     </Col>

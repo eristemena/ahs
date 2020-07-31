@@ -17,7 +17,7 @@ export const getSales = (week_code = 1) => (dispatch) => {
             dispatch(setLoading(false));
         },
         (error) => {
-            dispatch(setLoading(true));
+            dispatch(setLoading(false));
             dispatch(addAlert('Telah terjadi kesalahan'));
         }
     );

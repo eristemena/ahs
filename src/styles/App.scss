@@ -11,7 +11,7 @@ $background-color: whitesmoke;
 $navbar-color: white;
 $separator-color: #b3b3b3;
 $sidenav-dark: $primary-color - rgb(68, 68, 68);
-$sidenav-light: $primary-color + rgb(22, 22, 22);
+$sidenav-light: $primary-color+rgb(22, 22, 22);
 
 $text-light: grey;
 
@@ -82,6 +82,13 @@ body {
                 width: 70px;
                 height: 70px;
                 border-width: .25rem;
+            }
+
+            &.card-loading-spinner {
+                height: 48px;
+                width: 48px;
+                margin-top: 1.2rem;
+                margin: .75rem auto;
             }
 
             @keyframes rotate {
@@ -521,6 +528,13 @@ body {
                 border-bottom: solid 5px white;
             }
         }
+
+        .input-range-vertical {
+            writing-mode: vertical-lr;
+            -webkit-appearance: slider-vertical;
+            width: 10px;
+            outline: none;
+        }
     }
 
     .btn {
@@ -558,13 +572,15 @@ body {
         &.dropdown-button {
             &.dropdown-button-primary {
                 box-shadow: 0 3px 10px rgba($color: #000000, $alpha: 0.1) !important;
+
                 &.outline {
                     border: .05rem solid $primary-color;
                     background-color: white;
                     color: $primary-color;
                     transition: all $menu-collapse-time;
 
-                    &:hover, &[aria-expanded="true"] {
+                    &:hover,
+                    &[aria-expanded="true"] {
                         background-color: $primary-color;
                         color: white;
                     }
@@ -581,11 +597,11 @@ body {
             width: 100%;
             padding: .75rem 1.25rem;
         }
-        
+
         &.submit-button {
             @media (max-width: 576px) {
                 margin-bottom: .75rem;
-                
+
             }
         }
 
@@ -767,6 +783,7 @@ body {
                 &.react-datepicker__day--today {
                     font-weight: bolder;
                 }
+
                 &:hover {
                     background-color: $primary-color;
                     color: white;

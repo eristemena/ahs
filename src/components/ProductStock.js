@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Card, CardBody } from 'reactstrap';
+import { Card } from 'reactstrap';
 
 const ProductStock = ({ product_name, stock }) => {
     return (
-        <Card body className="shadow mx-2 mb-2">
+        <Card body className="shadow mx-2 mb-2 position-relative">
             <h5
                 className={`card-title ${stock > 0 && 'text-success'} ${
                     stock === 0 && 'text-secondary'
