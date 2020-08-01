@@ -9,7 +9,7 @@ const PieChart = ({
     displayLegend = false,
     title = '',
 }) => {
-    console.log(data.map(({label}) => label))
+    // console.log(data.map(({label}) => label))
     return (
         <Card className="mx-2 mb-2 h-100 custom-chart">
             <CardBody>

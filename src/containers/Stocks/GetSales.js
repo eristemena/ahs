@@ -107,7 +107,7 @@ const GetSales = ({ sale, getSales, stock }) => {
                     setViewCode={setGraphWeekCode}
                     view={views}
                     labels={
-                        sale.data
+                        sale.data && sale.data.data 
                             ? sale.data.data.map((s) => s.day)
                             : defBottomLables
                     }
