@@ -10,8 +10,8 @@ const StockPieChart = ({ stock }) => {
             data: stocc.stock,
             color: {
                 red: 0,
-                green: 142 + (40 * index),
-                blue: 204
+                green: 20 * index < 151 ? 104 + (20 * index) : 104 - (20 * index),
+                blue: 104 + (10 * index)
             }
         })) : []
     }
