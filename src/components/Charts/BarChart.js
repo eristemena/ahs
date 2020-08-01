@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { Line } from 'react-chartjs-2';
 
-const LineChart = ({
+const BarChart = ({
     viewName = '',
     data = [],
     labels = [],
     displayLegend = false,
     legends = [],
-    title = '',
+    customYAxis = () => {},
 }) => {
+    const [windowWidth, setWindowWidth] = useState(undefined);
     return (
-        <Card className="mx-2 mb-2 custom-chart h-100 w-100">
+        <Card className="custom-chart">
             <CardBody>
                 <CardTitle className="mb-3">
                     <h5 className="text-center">{viewName}</h5>
@@ -26,30 +27,33 @@ const LineChart = ({
                                     ? data.map(({ data, label, color }) => ({
                                           data: data,
                                           label: label,
-                                          type: 'line',
-                                          backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.1)`,
+                                          type: 'bar',
+                                          backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.7)`,
                                           borderColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 1)`,
-                                          pointRadius: 7,
-                                          pointBorderWidth: 2,
-                                          pointHoverRadius: 9,
-                                          pointBackgroundColor: `white`,
-                                          pointHoverBackgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 1)`,
+                                          borderSkipped: false,
                                       }))
                                     : [],
                         }}
                         options={{
                             scales: {
-                                xAxes: [{ gridLines: { display: false } }],
+                                xAxes: [{ gridLines: { display: false }, ticks: {autoSkip: false} }],
+                                yAxes: [
+                                    {
+                                        ticks: {
+                                            callback: (label, value) => {
+                                                if (value >= 0 && customYAxis) {
+                                                    return `Rp. ${customYAxis(
+                                                        label
+                                                    )}`;
+                                                }
+                                            },
+                                            min: 0,
+                                        },
+                                    },
+                                ],
                             },
-                            title: {
-                                display: true,
-                                text: title,
-                                position: 'left',
-                                fontFamily: "'Nunito', sans-serif",
-                            },
-                            maintainAspectRatio: true
                         }}
-                        height={120}
+                        height={160}
                         legend={{
                             display:
                                 legends.length > 0 && displayLegend
@@ -63,8 +67,8 @@ const LineChart = ({
     );
 };
 
-LineChart.propTypes = {
-    viewName: PropTypes.string.isRequired,
+BarChart.propTypes = {
+    viewName: PropTypes.string,
     data: PropTypes.array.isRequired,
     labels: PropTypes.array.isRequired,
     displayLegend: PropTypes.bool,
@@ -72,4 +76,4 @@ LineChart.propTypes = {
     title: PropTypes.string,
 };
 
-export default LineChart;
+export default BarChart;

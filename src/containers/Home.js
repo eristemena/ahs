@@ -1,19 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { GetStocks, GetSales } from './Stocks';
-import { Container, Row } from 'reactstrap';
+import { GetStocks, GetSales, StockPieChart } from './Stocks';
+import { Container, Row, Col } from 'reactstrap';
 
 function Home({ user }) {
     return (
         <Container fluid>
-            <Row xs="1" sm="1" md="3" lg="3">
+            <Row xs="1" sm="2" md="4" lg="5">
                 {user.merchant_id ? (
                     <GetStocks />
                 ) : (
                     <h1 className="">Welcome Admin</h1>
                 )}
             </Row>
-            <GetSales />
+            <Row>
+                <Col md={8}>
+                    <GetSales />
+                </Col>
+                <Col md={4}>
+                    <StockPieChart />
+                </Col>
+            </Row>
         </Container>
     );
 }

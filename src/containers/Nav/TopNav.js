@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/user';
@@ -22,6 +22,28 @@ function NavBar({
     language,
     setLanguage,
 }) {
+    const [windowWidth, setWindowWidth] = useState(undefined);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+        
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        if (windowWidth > 992) {
+            setMenuState(true)
+        } else {
+            setMenuState(false)
+        }
+    }, [windowWidth > 992])
+
     const checkLanguage = (lang) => {
         if (lang === 'en') {
             return 'flag-icon-gb';
@@ -32,11 +54,11 @@ function NavBar({
 
     const changeLanguage = () => {
         if (language === 'en') {
-            setLanguage('id')
+            setLanguage('id');
         } else {
-            setLanguage('en')
+            setLanguage('en');
         }
-    }
+    };
 
     const logoutHandler = (e) => {
         e.preventDefault();
@@ -68,7 +90,7 @@ function NavBar({
                             <MenuIcon />
                         </NavLink>
                     </div>
-                    <NavLink className="navbar-logo" to="/">
+                    <NavLink className="navbar-logo h-100" to="/">
                         <span className="logo-mobile d-block" />
                     </NavLink>
 
