@@ -31,8 +31,9 @@ const ProductForm = ({
         buying_price: Yup.number().integer().required("Harga beli harus diisi")
     })
 
-    const submitHandler = ({ name, price, buyingPrice }) => {
-        onSubmit(name, price * 1, buyingPrice * 1);
+    const submitHandler = ({ name, price, buying_price }) => {
+        console.log(name, price, buying_price)
+        onSubmit(name, price * 1, buying_price * 1);
     };
 
     return (

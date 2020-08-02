@@ -9,6 +9,7 @@ const AddProduct = ({ history, alert }) => {
 
     const submitHandler = (name, price, buying_price) => {
         setSubmitting(true);
+        // console.log(name, price, buying_price)
         postWithAuth(
             '/products',
             {
@@ -24,7 +25,7 @@ const AddProduct = ({ history, alert }) => {
             (error) => {
                 console.log(error);
                 setSubmitting(false);
-                alert(`Telah terjadi kesalahan: ${error}`);
+                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     };
