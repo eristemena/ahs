@@ -14,7 +14,7 @@ const GetStocks = ({ stock, getStocks }) => {
         <Fragment>
             {stock.data ?
                 stock.data.map((own) => (
-                    <Col key={own.product_id}>
+                    <Col key={own.product_id} className="p-2">
                         <ProductStock
                             product_name={own.name}
                             stock={own.stock}

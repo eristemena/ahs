@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Switch, Route, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import NotFound from './NotFound';
@@ -15,12 +15,31 @@ import { Row, Col } from 'reactstrap';
 import { setMenuState } from '../redux/actions/menu';
 
 const Content = ({ user, menu, history, setMenuState }) => {
+    const [windowWidth, setWindowWidth] = useState(undefined);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         if (!user) {
             history.push('/');
         }
     }, []);
+
+    const closeMenu = () => {
+        if (windowWidth < 992) {
+            setMenuState(false)
+        }
+    }
 
     return (
         <div className="main-container">
@@ -31,7 +50,7 @@ const Content = ({ user, menu, history, setMenuState }) => {
                 <Fragment>
                     <Navigation />
                     <main
-                        onClick={() => setMenuState(false)}
+                        onClick={closeMenu}
                         className={`${menu ? 'sidenav-open' : ''}`}>
                         <div className="container-fluid p-4 content-container">
                             <Row>

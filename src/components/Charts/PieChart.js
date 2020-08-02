@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { Doughnut } from 'react-chartjs-2';
+import { longFunction } from './PieChartCenterText';
 
 const PieChart = ({
     viewName = '',
@@ -9,7 +10,12 @@ const PieChart = ({
     displayLegend = false,
     title = '',
 }) => {
-    // console.log(data.map(({label}) => label))
+    const [centerText, setCenterText] = useState('');
+
+    useEffect(() => {
+        longFunction()
+    }, [])
+
     return (
         <Card className="mx-2 mb-2 h-100 custom-chart">
             <CardBody>
@@ -39,7 +45,6 @@ const PieChart = ({
                                 hoverBorderColor: data.map(
                                     () => 'rgba(0, 0, 0, 0)'
                                 ),
-                                
                             },
                         ],
                     }}
@@ -48,10 +53,38 @@ const PieChart = ({
                             position: 'bottom',
                             labels: { usePointStyle: true },
                         },
+                        tooltips: {
+                            callbacks: {
+                                label: function (tooltipModel, data) {
+                                    let { labels, datasets } = data;
+                                    let { index } = tooltipModel;
+                                    const percentage = (
+                                        (datasets[0].data[index] /
+                                            datasets[0].data.reduce(
+                                                (a, b) => a + b,
+                                                0
+                                            )) *
+                                        100
+                                    ).toFixed(2);
+                                    setCenterText(`${labels[index]}: ${percentage}%`)
+                                    return `${labels[index]}: ${datasets[0].data[index]}`;
+                                },
+                            },
+                        },
                         title: {
                             display: title.length > 0,
                             text: title,
                             position: 'top',
+                        },
+                        elements: {
+                            center: {
+                                text: centerText,
+                                color: '#008ecc',
+                                fontStyle: 'Nunito',
+                                sidePadding: 20,
+                                minFontSize: 17,
+                                lineHeight: 25,
+                            },
                         },
                     }}
                     height={300}

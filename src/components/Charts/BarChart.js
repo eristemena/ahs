@@ -25,13 +25,12 @@ const BarChart = ({
                             datasets:
                                 data.length > 0
                                     ? data.map(({ data, label, color }) => ({
-                                          data: data,
-                                          label: label,
-                                          type: 'bar',
-                                          backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.7)`,
-                                          borderColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 1)`,
-                                          borderSkipped: false,
-                                      }))
+                                        data: data,
+                                        label: label,
+                                        type:"bar",
+                                        backgroundColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 0.7)`,
+                                        borderColor: `rgba(${color.red}, ${color.green}, ${color.blue}, 1)`,
+                                    }))
                                     : [],
                         }}
                         options={{
@@ -49,6 +48,7 @@ const BarChart = ({
                                             },
                                             min: 0,
                                         },
+                                        
                                     },
                                 ],
                             },

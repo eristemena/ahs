@@ -5,7 +5,7 @@ import { Card, CardBody } from 'reactstrap';
 
 const ProductStock = ({ product_name, stock }) => {
     return (
-        <Card className="w-100">
+        <Card className="w-100 shadow">
             <CardBody>
                 <h5
                     className={`card-title ${stock > 0 && 'text-success'} ${
