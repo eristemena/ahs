@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { CustomerForm } from '../../components/Forms';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { postWithAuth } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 
@@ -24,7 +23,7 @@ const AddCustomer = ({ history, alert }) => {
                 history.push('/customers/get')
             },
             (error) => {
-                alert('Telah terjadi kesalahan');
+                alert(`Telah terjadi kesalahan: ${error.message}`);
                 setSubmitting(false);
             }
         );

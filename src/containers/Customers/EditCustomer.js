@@ -45,7 +45,7 @@ const EditCustomer = ({ history, alert, setLoading, loading }) => {
             },
             (error) => {
                 history.push('/customers/get');
-                alert('Telah terjadi kesalahan');
+                alert(`Telah terjadi kesalahan: ${error.message}`);
                 setLoading(false);
             }
         );
@@ -68,7 +68,7 @@ const EditCustomer = ({ history, alert, setLoading, loading }) => {
                 history.push('/customers/get');
             },
             (error) => {
-                alert('Telah terjadi kesalahan');
+                alert(`Telah terjadi kesalahan: ${error.message}`);
                 setSubmitting(false);
             }
         );

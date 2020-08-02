@@ -22,8 +22,6 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
 
         const search = history.location.search;
 
-        
-
         if (!search.length > 0) {
             history.push('/products/get');
             return alert('Telah terjadi kesalahan');
@@ -46,9 +44,9 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
             `/products?id=${queryId}`,
             ({ data }) => {
                 setLoading(false);
-                console.log(data)
+                console.log(data);
                 const product = data[0];
-                
+
                 setName(product.name);
                 setPrice(product.price);
                 setBuyingPrice(product.buying_price);
@@ -56,7 +54,7 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
             (error) => {
                 setLoading(false);
                 history.push('/products/get');
-                alert('Telah terjadi kesalahan');
+                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     }, []);
@@ -77,7 +75,7 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
             },
             (error) => {
                 setSubmitting(false);
-                alert(`Telah terjadi kesalahan: ${error}`);
+                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     };
@@ -94,17 +92,17 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
                 history={history}
             />
         </Fragment>
-    )
+    );
 };
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    loading: state.loading
+    loading: state.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
-    setLoading: (loading) => dispatch(setLoading(loading))
+    setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProduct);

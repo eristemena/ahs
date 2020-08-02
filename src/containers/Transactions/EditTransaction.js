@@ -83,8 +83,7 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
             },
             (error) => {
                 setSubmitting(false);
-                alert('Telah terjadi kesalahan');
-                console.log(error);
+                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     };

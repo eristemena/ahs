@@ -35,7 +35,7 @@ const AddTransaction = ({ alert, history, user, loading }) => {
             },
             (error) => {
                 setSubmitting(false);
-                alert('Telah terjadi kesalahan');
+                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     };
