@@ -17,7 +17,7 @@ const CustomerForm = ({
 }) => {
 
     const schema = Yup.object().shape({
-        name: Yup.string().min(4, "Nama harus lebih dari 3 karakter").required("Nama harus diisi"),
+        name: Yup.string().required("Nama harus diisi"),
         email: Yup.string().email('Email tidak valid'),
         phone: Yup.number().required("Nomor telepon perlu diisi"),
         address: Yup.string().min(4, "Alamat harus lebih dari 3 karakter").required("Alamat harus diisi")

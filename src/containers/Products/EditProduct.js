@@ -22,6 +22,8 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
 
         const search = history.location.search;
 
+        
+
         if (!search.length > 0) {
             history.push('/products/get');
             return alert('Telah terjadi kesalahan');
@@ -34,7 +36,7 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
 
         const queryId = search.replace('?id=', '');
 
-        if (!queryId.match(/^\d+$/)) {
+        if (isNaN(queryId)) {
             history.push('/products/get');
             return alert('Telah terjadi kesalahan');
         }
@@ -44,7 +46,9 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
             `/products?id=${queryId}`,
             ({ data }) => {
                 setLoading(false);
+                console.log(data)
                 const product = data[0];
+                
                 setName(product.name);
                 setPrice(product.price);
                 setBuyingPrice(product.buying_price);
