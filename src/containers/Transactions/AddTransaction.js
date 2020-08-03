@@ -13,11 +13,10 @@ const AddTransaction = ({ alert, history, user, loading }) => {
         product_id,
         type,
         quantity,
-        info,
-        customer_id
+        customer_id,
+        info
     ) => {
         setSubmitting(true);
-        console.log(customer_id, type);
         postWithAuth(
             '/transactions',
             {
@@ -42,13 +41,14 @@ const AddTransaction = ({ alert, history, user, loading }) => {
     return (
         <Fragment>
             <CustomSpinner loading={loading} type="page" />
-            <TransactionForm
-            submitting={submitting}
-            onSubmit={onSubmitHandler}
-            history={history}
-            />
+            {!loading ? (
+                <TransactionForm
+                    submitting={submitting}
+                    onSubmit={onSubmitHandler}
+                    history={history}
+                />
+            ) : null}
         </Fragment>
-        
     );
 };
 
@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    loading: state.loading
-})
+    loading: state.loading,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddTransaction);

@@ -13,7 +13,7 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
     const [date, setDate] = useState('');
     const [productId, setProductId] = useState('');
     const [quantity, setQuantity] = useState('');
-    const [info, setInfo] = useState('');
+    const [info, setInfo] = useState(null);
     const [type, setType] = useState('');
     const [customer, setCustomer] = useState('');
 
@@ -41,17 +41,17 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
             ({ data }) => {
                 const item = data[0];
                 setDate(new Date(item.date));
-                setProductId(item.product_id);
+                setProductId(item.product_id * 1);
                 setQuantity(item.quantity * 1);
                 setType(item.type);
                 if (item.info) {
                     setInfo(item.info);
                 }
-                setCustomer(item.customer ? `${item.customer.id}` : '');
+                setCustomer(item.customer ? item.customer.id * 1 : '');
                 setLoading(false);
             },
             (error) => {
-                alert('Telah terjadi kesalahan');
+                alert(`Telah terjadi kesalahan: ${error.message}`);
                 setLoading(false);
             }
         );
@@ -62,10 +62,11 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
         product_id,
         type,
         quantity,
+        customer_id,
         info,
-        customer_id
     ) => {
         setSubmitting(true);
+        // console.log(type, customer_id)
         put(
             `/transactions/${history.location.search.replace('?id=', '')}`,
             {

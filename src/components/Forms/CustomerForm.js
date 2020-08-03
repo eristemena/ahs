@@ -42,7 +42,7 @@ const CustomerForm = ({
                 <Card className="custom-form-card">
                     <CardBody>
                         <Form>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup className="form-group">
                                 <Label>Name</Label>
                                 <Field
                                     className="form-control"
@@ -54,7 +54,7 @@ const CustomerForm = ({
                                     </div>
                                 )}
                             </FormGroup>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup className="form-group">
                                 <Label>Email</Label>
                                 <Field
                                     className="form-control"
@@ -66,7 +66,7 @@ const CustomerForm = ({
                                     </div>
                                 )}
                             </FormGroup>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup className="form-group">
                                 <Label>Phone</Label>
                                 <Field
                                     className="form-control"
@@ -78,7 +78,7 @@ const CustomerForm = ({
                                     </div>
                                 )}
                             </FormGroup>
-                            <FormGroup className="form-group has-float-label">
+                            <FormGroup className="form-group">
                                 <Label>Address</Label>
                                 <Field
                                     className="form-control"

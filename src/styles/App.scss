@@ -533,13 +533,6 @@ body {
             }
         }
 
-        .input-range-vertical {
-            writing-mode: vertical-lr;
-            -webkit-appearance: slider-vertical;
-            width: 10px;
-            outline: none;
-        }
-
         .custom-select-not-bootstrap {
             &.product-sales-select {
                 border-radius: 50px;
@@ -571,6 +564,95 @@ body {
 
             }
         }
+
+        .custom-form-check {
+            .form-check-label {
+                margin-top: 3.2px;
+
+                @media (max-width: 576px) {
+                    font-size: 1rem;
+                }
+            }
+        }
+
+        .custom-searchable-select {
+            outline: initial;
+            box-shadow: none;
+
+            &.__value-container {
+                outline: initial;
+                box-shadow: none;
+                padding: 0.75rem 0.75rem 0.4rem 0.75rem;
+                background: white;
+                padding-top: 2px;
+                padding-bottom: 2px;
+                padding-left: 9px;
+
+                @media (max-width: 576px) {
+                    height: 3rem;
+                    font-size: 1rem;
+                }
+            }
+
+            &.__single-value,
+            &.__multi-value__label {
+                bottom: initial;
+            }
+
+            &.__control {
+                border-radius: 0px;
+                background: white;
+                outline: initial;
+                box-shadow: none;
+
+                &.__control--is-focused {
+                    border: 1px solid $secondary-color;
+
+                    &.__control--menu-is-open {
+                        border-bottom: none;
+
+                    }
+                }
+
+                svg {
+                    transition: transform $menu-collapse-time;
+                }
+
+                &.__control--menu-is-open svg {
+                    transform: rotateZ(180deg);
+                }
+            }
+
+            &.__indicator-separator {
+                display: none;
+            }
+
+            &.__menu {
+                margin: 0;
+                border-radius: 0;
+                border: 1px solid $secondary-color;
+                border-top: none;
+
+                .__option {
+                    background: white;
+                    color: black;
+
+                    &:hover {
+                        background: $secondary-color;
+                        color: black;
+                    }
+
+                    &.__option--is-selected {
+                        background-color: $primary-color;
+                        color: white;
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: 1rem;
+                    }
+                }
+            }
+        }
     }
 
     .btn {
@@ -594,6 +676,10 @@ body {
 
             &.disabled {
                 padding: 0 1.5rem;
+
+                &.button-waiting-for-confirmation {
+                    padding: .5rem 1.25rem !important;
+                }
 
                 &:hover {
                     background-color: $button-color;
@@ -760,11 +846,6 @@ body {
             border-bottom: 2px solid $secondary-color;
         }
 
-        &.date-picker,
-        &.quantity-input {
-            width: 10rem;
-        }
-
         &.quantity-input {
             @media (max-width: 576px) {
                 width: 100%;
@@ -800,11 +881,24 @@ body {
         }
     }
 
+    .react-datepicker-wrapper {
+        width: 100% !important;
+
+        .react-datepicker__input-container {
+            width: 100% !important;
+
+            input {
+                width: 100% !important;
+            }
+        }
+    }
+
     .react-datepicker {
         font-family: $custom-font;
 
         .react-datepicker__triangle {
             border-bottom-color: white !important;
+            left: 50% !important;
         }
 
         .react-datepicker__month-container {

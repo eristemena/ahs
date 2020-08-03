@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { addAlert } from '../../redux/actions/alert';
+import * as Yup from 'yup';
+import { Formik, Form, Field } from 'formik';
+import Select from 'react-select';
+import { FormGroup, Label } from 'reactstrap';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -24,108 +28,83 @@ const TransactionForm = ({
     action,
     alert,
     history,
-    setLoading,
 }) => {
-    const [date, setDate] = useState(new Date());
-    const [selected, setSelected] = useState('');
-    const [selectedCustomer, setSelectedCustomer] = useState('');
-    const [quantity, setQuantity] = useState(1);
-    const [type, setType] = useState('');
-    const [info, setInfo] = useState('');
-    const [maxInfo, setMaxInfo] = useState(
-        stateInfo.length ? 150 - stateInfo.length : 150
-    );
     const [owned, setOwned] = useState([]);
+    const [loadingOwned, setLoadingOwned] = useState(false);
     const [ownedCustomers, setOwnedCustomers] = useState([]);
+    const [loadingOwnedCustomer, setLoadingOwnedCustomer] = useState(false);
+
+    const schema = Yup.object().shape({
+        date: Yup.date().required('Tanggal perlu dipilih'),
+        product_id: Yup.number().integer().required('Produk perlu dipilih'),
+        type: Yup.string()
+            .required('Tipe transaksi perlu dipilih')
+            .default('sell'),
+        quantity: Yup.number().positive().required('Jumlah barang perlu diisi'),
+        customer_id: Yup.number().when('type', {
+            is: (val) =>
+                val && val.length > 0 && val === 'sell' ? true : false,
+            then: Yup.number()
+                .integer()
+                .positive('Pelanggan perlu dipilih')
+                .required('Pelanggan perlu dipilih'),
+        }),
+        info: Yup.string().optional(),
+    });
 
     useEffect(() => {
-        setDate(stateDate);
-        setQuantity(stateQuantity);
-        setSelected(`${stateSelected}`);
-        setType(stateType);
-        setInfo(stateInfo);
-        setSelectedCustomer(stateSelectedCustomer);
-    }, [
-        stateDate,
-        stateQuantity,
-        stateSelected,
-        stateType,
-        stateInfo,
-        stateSelectedCustomer,
-    ]);
-
-    useEffect(() => {
-        setLoading(true);
+        setLoadingOwned(true);
+        setLoadingOwnedCustomer(true);
         get(
             '/products',
             ({ data }) => {
                 if (!data.length > 0) {
-                    history.push('/transactions/get');
+                    history.goBack();
                     return alert('Anda belum memiliki produk');
                 }
-                setOwned(data);
-                get(
-                    `/customers`,
-                    ({ data }) => {
-                        setOwnedCustomers(data);
-                        setLoading(false);
-                    },
-                    (error) => {
-                        history.push('/transactions/get');
-                        alert('Telah terjadi kesalahan');
-                        setLoading(false);
-                    }
+                setOwned(
+                    data.map(({ id, name }) => ({ value: id, label: name }))
                 );
+                setLoadingOwned(false);
             },
             (error) => {
-                history.push('/transactions/get');
+                history.goBack();
                 alert('Telah terjadi kesalahan');
-                setLoading(false);
+                setLoadingOwned(false);
+            }
+        );
+        get(
+            `/customers`,
+            ({ data }) => {
+                setOwnedCustomers(
+                    data.map(({ id, name }) => ({
+                        value: id,
+                        label: name,
+                    }))
+                );
+                setLoadingOwnedCustomer(false);
+            },
+            (error) => {
+                history.goBack();
+                alert('Telah terjadi kesalahan');
+                setLoadingOwnedCustomer(false);
             }
         );
     }, []);
 
-    const submitHandler = (e) => {
-        e.preventDefault();
-
-        let today = moment(date).format('YYYY-MM-DD');
-
-        if (!today.length > 0 || !date) {
-            return alert('Tanggal perlu dipilih');
-        } else if (!selected.length > 0) {
-            return alert('Produk perlu dipilih');
-        } else if (!type.length > 0) {
-            return alert('Jenis transaksi perlu dipilih');
-        }
-
-        if (selectedCustomer !== undefined) {
-            if (type === 'sell' && !selectedCustomer.length > 0) {
-                return alert('Pelanggan perlu dipilih');
-            }
-        }
-
-        onSubmit(
-            today,
-            selected * 1,
-            type,
-            quantity * 1,
-            /\S/.test(info) && info.length > 0 ? info : null,
-            selectedCustomer ? selectedCustomer : null
-        );
-    };
-
-    return (
+    const form = (errors, touched, setValues, values) => (
         <Card className="custom-form-card">
             <CardBody>
-                <form onSubmit={submitHandler} className="mt-2">
-                    <div className="form-group">
-                        <label htmlFor="date" className="d-block">
-                            Tanggal:
-                        </label>
+                <Form>
+                    <FormGroup>
+                        <Label className="d-block" for="date">
+                            Date:
+                        </Label>
                         <ReactDatePicker
-                            selected={date}
+                            selected={values.date}
                             locale="id"
                             id="date"
+                            name="date"
                             dateFormat="dd MMMM yyyy"
                             className="form-control date-picker"
                             placeholderText="--Pilih tanggal--"
@@ -134,127 +113,178 @@ const TransactionForm = ({
                             todayButton={`Hari ini (${moment(new Date()).format(
                                 'DD MMMM'
                             )})`}
-                            onChange={(e) => setDate(e)}
+                            onChange={(e) => setValues({ ...values, date: e })}
                         />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="product">Produk:</label>
-                        <select
-                            id="product"
-                            className="form-control"
-                            onChange={(e) => {
-                                setSelected(e.target.value);
-                            }}
-                            value={selected}>
-                            <option value="" disabled>
-                                --Pilih produk--
-                            </option>
-                            {owned.map((product) => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Tipe transaksi:</label>
-                        <div className="form-check p-0">
-                            <div className="form-check-inline">
-                                <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="type"
-                                    id="buy"
-                                    value="buy"
-                                    checked={type === 'buy'}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setType(e.target.value);
-                                            setSelectedCustomer(undefined);
-                                        }
-                                    }}
-                                />
-                                <label
-                                    htmlFor="buy"
-                                    className="form-check-label">
-                                    Beli
-                                </label>
-                                <input
-                                    className="form-check-input ml-3"
-                                    type="radio"
-                                    name="type"
-                                    id="sell"
-                                    value="sell"
-                                    checked={type === 'sell'}
-                                    onChange={(e) => {
-                                        if (e.target.checked) {
-                                            setType(e.target.value);
-                                            setSelectedCustomer('');
-                                        }
-                                    }}
-                                />
-                                <label
-                                    htmlFor="sell"
-                                    className="form-check-label">
-                                    Jual
-                                </label>
+                        {errors.date && touched.date ? (
+                            <div className="invalid-feedback d-block">
+                                {errors.date}
                             </div>
+                        ) : null}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label className="d-block" for="product">
+                            Product:
+                        </Label>
+                        <Select
+                            id="product"
+                            classNamePrefix="custom-searchable-select "
+                            isLoading={loadingOwned}
+                            isDisabled={loadingOwned}
+                            noOptionsMessage={() => 'Produk tidak ditemukan'}
+                            name="product_id"
+                            options={owned}
+                            value={{
+                                value: values.product_id,
+                                label:
+                                    values.product_id > 0
+                                        ? owned.map((own) => {
+                                              if (
+                                                  own.value ===
+                                                  values.product_id
+                                              ) {
+                                                  return own.label;
+                                              }
+                                          })
+                                        : '--Pilih produk--',
+                            }}
+                            onChange={(e) =>
+                                setValues({
+                                    ...values,
+                                    product_id: e.value,
+                                })
+                            }
+                            isSearchable
+                        />
+                        {errors.product_id && touched.product_id ? (
+                            <div className="invalid-feedback d-block">
+                                {errors.product_id}
+                            </div>
+                        ) : null}
+                    </FormGroup>
+                    <FormGroup>
+                        <Label className="d-block">Type:</Label>
+                        <div className="form-check form-check-inline align-middle custom-form-check">
+                            <Field
+                                type="radio"
+                                name="type"
+                                value="sell"
+                                id="sell"
+                                className="form-check-input"
+                            />
+                            <Label for="sell" className="form-check-label">
+                                Sell
+                            </Label>
                         </div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="quantity">Jumlah barang:</label>
-                        <input
-                            type="number"
-                            className="form-control quantity-input"
-                            id="quantity"
-                            min="0"
-                            value={`${quantity}`}
-                            onChange={(e) => setQuantity(e.target.value)}
-                        />
-                    </div>
-                    <div className={`form-group ${type === 'buy' && 'd-none'}`}>
-                        <label htmlFor="customer">Pelanggan:</label>
-                        <select
-                            id="customer"
+                        <div className="form-check form-check-inline align-middle custom-form-check">
+                            <Field
+                                type="radio"
+                                name="type"
+                                value="buy"
+                                id="buy"
+                                className="form-check-input"
+                                onChange={() =>
+                                    setValues({
+                                        ...values,
+                                        customer_id: 0,
+                                        type: 'buy',
+                                    })
+                                }
+                            />
+                            <Label for="buy" className="form-check-label">
+                                Buy
+                            </Label>
+                        </div>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="quantity">Quantity:</Label>
+                        <Field
                             className="form-control"
-                            onChange={(e) => {
-                                setSelectedCustomer(`${e.target.value}`);
-                            }}
-                            value={selectedCustomer}>
-                            <option value="" disabled>
-                                --Pilih pelanggan--
-                            </option>
-                            {ownedCustomers.map((customer) => (
-                                <option key={customer.id} value={customer.id}>
-                                    {customer.name} (Telepon: {customer.phone})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label htmlFor="info">
-                            Info tambahan ({`${maxInfo}`}):
-                        </label>
-                        <textarea
-                            className="form-control mb-4"
-                            id="info"
-                            rows="4"
-                            maxLength="150"
-                            value={info}
-                            onChange={(e) => {
-                                setInfo(e.target.value);
-                                setMaxInfo(150 - e.target.value.length);
-                            }}
-                            placeholder={`--Tambahkan info/catatan khusus untuk transaksi ini (contoh: 'Belum dibayar')-- `}
+                            id="quantity"
+                            type="number"
+                            min="0"
+                            name="quantity"
                         />
-                    </div>
+                        {errors.quantity && touched.quantity ? (
+                            <div className="invalid-feedback d-block">
+                                {errors.quantity}
+                            </div>
+                        ) : null}
+                    </FormGroup>
+                    {values.type === 'sell' ? (
+                        <FormGroup>
+                            <Label className="d-block" for="customer">
+                                Customer:
+                            </Label>
+                            <Select
+                                id="customer"
+                                classNamePrefix="custom-searchable-select "
+                                isLoading={loadingOwnedCustomer}
+                                isDisabled={loadingOwnedCustomer}
+                                noOptionsMessage={() =>
+                                    'Pelanggan tidak ditemukan'
+                                }
+                                name="product_id"
+                                options={ownedCustomers}
+                                value={{
+                                    value: values.customer_id,
+                                    label:
+                                        values.customer_id > 0
+                                            ? ownedCustomers.map((own) => {
+                                                  if (
+                                                      own.value ===
+                                                      values.customer_id
+                                                  ) {
+                                                      return own.label;
+                                                  }
+                                              })
+                                            : '--Pilih pelanggan--',
+                                }}
+                                onChange={(e) =>
+                                    setValues({
+                                        ...values,
+                                        customer_id: e.value,
+                                    })
+                                }
+                                isSearchable
+                            />
+                            {errors.customer_id && touched.customer_id ? (
+                                <div className="invalid-feedback d-block">
+                                    {errors.customer_id}
+                                </div>
+                            ) : null}
+                        </FormGroup>
+                    ) : null}
+                    <FormGroup>
+                        <Label for="info">Additional Info:</Label>
+                        <Field
+                            className="form-control"
+                            id="info"
+                            name="info"
+                            as="textarea"
+                            maxLength="150"
+                            cols="5"
+                            placeholder="--Add some additional info here--"
+                        />
+                    </FormGroup>
                     <div className="mt-3">
                         <button
                             className={`btn btn-primary submit-button mr-2 ${
-                                submitting ? 'disabled' : ''
+                                submitting ||
+                                loadingOwnedCustomer ||
+                                loadingOwned
+                                    ? 'disabled'
+                                    : ''
+                            } ${
+                                loadingOwnedCustomer || loadingOwned
+                                    ? 'button-waiting-for-confirmation'
+                                    : ''
                             }`}
                             type="submit"
-                            disabled={submitting}>
+                            disabled={
+                                submitting ||
+                                loadingOwnedCustomer ||
+                                loadingOwned
+                            }>
                             <CustomSpinner loading={submitting} type="button" />
                             <span className={`${submitting ? 'd-none' : ''}`}>
                                 {action ? action : 'Submit'}
@@ -267,9 +297,49 @@ const TransactionForm = ({
                             Cancel
                         </button>
                     </div>
-                </form>
+                </Form>
             </CardBody>
         </Card>
+    );
+
+    const submitHandler = ({
+        date,
+        product_id,
+        type,
+        quantity,
+        customer_id,
+        info,
+    }) => {
+        const dateSend = moment(date).format('YYYY-MM-DD');
+        onSubmit(
+            dateSend,
+            product_id,
+            type,
+            quantity,
+            !customer_id || typeof customer_id === 'string'
+                ? null
+                : customer_id,
+            info.length === 0 ? null : info
+        );
+    };
+
+    return (
+        <Formik
+            initialValues={{
+                date: stateDate || '',
+                product_id: stateSelected || '',
+                type: stateType || 'sell',
+                quantity: stateQuantity || 1,
+                customer_id: stateSelectedCustomer || '',
+                info: stateInfo || '',
+            }}
+            enableReinitialize
+            onSubmit={submitHandler}
+            validationSchema={schema}>
+            {({ errors, touched, setValues, values }) => (
+                <Fragment>{form(errors, touched, setValues, values)}</Fragment>
+            )}
+        </Formik>
     );
 };
 
