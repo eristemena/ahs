@@ -267,21 +267,6 @@ body {
                     margin-left: 0rem;
                 }
 
-                .foreground-shadow {
-                    position: absolute;
-                    width: 0;
-                    height: 100%;
-                    background-color: rgba($color: black, $alpha: 0);
-                    transition: all $menu-collapse-time;
-                    top: 0%;
-                    left: 0%;
-
-                    &.sidenav-open {
-                        width: 100%;
-                        background-color: rgba($color: black, $alpha: 0.2);
-                    }
-                }
-
             }
 
 

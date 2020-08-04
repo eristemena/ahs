@@ -22,7 +22,13 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
     }, []);
 
     const activeLinks = (path) => {
-        if (history.location.pathname === path) {
+        if (path === '/') {
+            if (history.location.pathname === '/') {
+                return 'active';
+            } else {
+                return '';
+            }
+        } else if (history.location.pathname.includes(path)) {
             return 'active';
         } else {
             return '';
@@ -48,8 +54,7 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
                             suppressScrollX: true,
                             wheelPropagation: false,
                             wheelSpeed: 0.3,
-                        }}
-                        >
+                        }}>
                         <Nav vertical className="list-unstyled">
                             <NavItem className={`${activeLinks('/')}`}>
                                 <a href="/" onClick={setMenuClose}>
@@ -63,14 +68,13 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
                                     <Label>Users</Label>
                                 </a>
                             </NavItem>
-                            <NavItem className={activeLinks('/products/get')}>
+                            <NavItem className={activeLinks('/products')}>
                                 <a href="/products/get" onClick={setMenuClose}>
                                     <i className="iconsminds-folder"></i>
                                     <Label>Products</Label>
                                 </a>
                             </NavItem>
-                            <NavItem
-                                className={activeLinks('/transactions/get')}>
+                            <NavItem className={activeLinks('/transactions')}>
                                 <a
                                     href="/transactions/get"
                                     onClick={setMenuClose}>
@@ -78,10 +82,8 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
                                     <Label>Transactions</Label>
                                 </a>
                             </NavItem>
-                            <NavItem className={activeLinks('/customers/get')}>
-                                <a
-                                    href="/customers/get"
-                                    onClick={setMenuClose}>
+                            <NavItem className={activeLinks('/customers')}>
+                                <a href="/customers/get" onClick={setMenuClose}>
                                     <i className="iconsminds-male-female"></i>
                                     <Label>Customers</Label>
                                 </a>
@@ -114,4 +116,6 @@ const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SideNav));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(SideNav)
+);

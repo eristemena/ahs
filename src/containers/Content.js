@@ -88,7 +88,6 @@ const Content = ({ user, menu, history, setMenuState }) => {
                                 </Col>
                             </Row>
                         </div>
-                        <div className={`foreground-shadow ${menu ? 'sidenav-open' : ''}`}></div>
                     </main>
                     
                 </Fragment>
