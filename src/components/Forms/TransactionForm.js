@@ -13,7 +13,8 @@ import 'moment/locale/id';
 import { setLoading } from '../../redux/actions/loading';
 import { get } from '../../axios';
 import { Card, CardBody } from 'reactstrap';
-import CustomSpinner from '../CustomSpinner';
+import { intlMessage } from '../../language';
+import SubmitAndCancelButton from './SubmitAndCancelButtons';
 registerLocale('id', id);
 
 const TransactionForm = ({
@@ -28,26 +29,31 @@ const TransactionForm = ({
     action,
     alert,
     history,
+    language,
 }) => {
     const [owned, setOwned] = useState([]);
     const [loadingOwned, setLoadingOwned] = useState(false);
     const [ownedCustomers, setOwnedCustomers] = useState([]);
     const [loadingOwnedCustomer, setLoadingOwnedCustomer] = useState(false);
 
+    const {
+        transactions: { form: transactionForm },
+    } = intlMessage(language);
+
     const schema = Yup.object().shape({
-        date: Yup.date().required('Tanggal perlu dipilih'),
-        product_id: Yup.number().integer().required('Produk perlu dipilih'),
-        type: Yup.string()
-            .required('Tipe transaksi perlu dipilih')
-            .default('sell'),
-        quantity: Yup.number().positive().required('Jumlah barang perlu diisi'),
+        date: Yup.date().required(transactionForm.error.date),
+        product_id: Yup.number()
+            .integer()
+            .required(transactionForm.error.product),
+        type: Yup.string().default('sell'),
+        quantity: Yup.number().positive().required(),
         customer_id: Yup.number().when('type', {
             is: (val) =>
                 val && val.length > 0 && val === 'sell' ? true : false,
             then: Yup.number()
                 .integer()
-                .positive('Pelanggan perlu dipilih')
-                .required('Pelanggan perlu dipilih'),
+                .positive()
+                .required(transactionForm.error.customer),
         }),
         info: Yup.string().optional(),
     });
@@ -98,7 +104,7 @@ const TransactionForm = ({
                 <Form>
                     <FormGroup>
                         <Label className="d-block" for="date">
-                            Date:
+                            {transactionForm.date.label}
                         </Label>
                         <ReactDatePicker
                             selected={values.date}
@@ -107,7 +113,7 @@ const TransactionForm = ({
                             name="date"
                             dateFormat="dd MMMM yyyy"
                             className="form-control date-picker"
-                            placeholderText="--Pilih tanggal--"
+                            placeholderText={transactionForm.date.placeholder}
                             disabledKeyboardNavigation
                             maxDate={new Date()}
                             todayButton={`Hari ini (${moment(new Date()).format(
@@ -123,7 +129,7 @@ const TransactionForm = ({
                     </FormGroup>
                     <FormGroup>
                         <Label className="d-block" for="product">
-                            Product:
+                            {transactionForm.product.label}
                         </Label>
                         <Select
                             id="product"
@@ -145,7 +151,7 @@ const TransactionForm = ({
                                                   return own.label;
                                               }
                                           })
-                                        : '--Pilih produk--',
+                                        : transactionForm.product.placeholder,
                             }}
                             onChange={(e) =>
                                 setValues({
@@ -162,7 +168,9 @@ const TransactionForm = ({
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label className="d-block">Type:</Label>
+                        <Label className="d-block">
+                            {transactionForm.type.label}
+                        </Label>
                         <div className="form-check form-check-inline align-middle custom-form-check">
                             <Field
                                 type="radio"
@@ -172,7 +180,7 @@ const TransactionForm = ({
                                 className="form-check-input"
                             />
                             <Label for="sell" className="form-check-label">
-                                Sell
+                                {transactionForm.type.sell}
                             </Label>
                         </div>
                         <div className="form-check form-check-inline align-middle custom-form-check">
@@ -191,12 +199,14 @@ const TransactionForm = ({
                                 }
                             />
                             <Label for="buy" className="form-check-label">
-                                Buy
+                                {transactionForm.type.buy}
                             </Label>
                         </div>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="quantity">Quantity:</Label>
+                        <Label for="quantity">
+                            {transactionForm.quantity.label}
+                        </Label>
                         <Field
                             className="form-control"
                             id="quantity"
@@ -213,7 +223,7 @@ const TransactionForm = ({
                     {values.type === 'sell' ? (
                         <FormGroup>
                             <Label className="d-block" for="customer">
-                                Customer:
+                                {transactionForm.customer.label}
                             </Label>
                             <Select
                                 id="customer"
@@ -237,7 +247,8 @@ const TransactionForm = ({
                                                       return own.label;
                                                   }
                                               })
-                                            : '--Pilih pelanggan--',
+                                            : transactionForm.customer
+                                                  .placeholder,
                                 }}
                                 onChange={(e) =>
                                     setValues({
@@ -255,7 +266,7 @@ const TransactionForm = ({
                         </FormGroup>
                     ) : null}
                     <FormGroup>
-                        <Label for="info">Additional Info:</Label>
+                        <Label for="info">{transactionForm.info.label}</Label>
                         <Field
                             className="form-control"
                             id="info"
@@ -263,40 +274,16 @@ const TransactionForm = ({
                             as="textarea"
                             maxLength="150"
                             cols="5"
-                            placeholder="--Add some additional info here--"
+                            placeholder={transactionForm.info.placeholder}
                         />
                     </FormGroup>
-                    <div className="mt-3">
-                        <button
-                            className={`btn btn-primary submit-button mr-2 ${
-                                submitting ||
-                                loadingOwnedCustomer ||
-                                loadingOwned
-                                    ? 'disabled'
-                                    : ''
-                            } ${
-                                loadingOwnedCustomer || loadingOwned
-                                    ? 'button-waiting-for-confirmation'
-                                    : ''
-                            }`}
-                            type="submit"
-                            disabled={
-                                submitting ||
-                                loadingOwnedCustomer ||
-                                loadingOwned
-                            }>
-                            <CustomSpinner loading={submitting} type="button" />
-                            <span className={`${submitting ? 'd-none' : ''}`}>
-                                {action ? action : 'Submit'}
-                            </span>
-                        </button>
-                        <button
-                            className="btn btn-secondary cancel-button"
-                            type="button"
-                            onClick={() => history.goBack()}>
-                            Cancel
-                        </button>
-                    </div>
+                    <SubmitAndCancelButton
+                        submitting={submitting}
+                        loading1={loadingOwned}
+                        loading2={loadingOwnedCustomer}
+                        action={action}
+                        history={history}
+                    />
                 </Form>
             </CardBody>
         </Card>
@@ -351,6 +338,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
     customer: state.customer,
     loading: state.loading,
+    language: state.language,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionForm);

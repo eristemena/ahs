@@ -6,9 +6,8 @@ import { getTransactions } from '../../redux/actions/transaction';
 import moment from 'moment';
 import 'moment/locale/id';
 import { del } from '../../axios';
-import InfoTooltip from '../../components/InfoTooltip';
 import { formatPrice, checkAdminMerchant } from '../../utilities';
-import DeleteModal from '../../components/DeleteModal';
+import { DeleteModal, InfoTooltip } from '../../components';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
 import {
@@ -19,6 +18,7 @@ import {
     Card,
     CardBody,
 } from 'reactstrap';
+import { intlMessage } from '../../language';
 
 const GetTransaction = ({
     alert,
@@ -28,6 +28,7 @@ const GetTransaction = ({
     user,
     loading,
     setLoading,
+    language,
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
@@ -104,17 +105,24 @@ const GetTransaction = ({
         );
     };
 
+    const {
+        transactions: {
+            get: { title, add_transaction, table },
+        },
+        action,
+    } = intlMessage(language);
+
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1>Transactions</h1>
+                <h1>{title}</h1>
                 <button
                     className={`btn btn-primary font-weight-bold table-button ${
                         !checkAdminMerchant(user) ? 'disabled' : ''
                     }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/transactions/add')}>
-                    ADD TRANSACTION
+                    {add_transaction}
                 </button>
             </div>
             <Container fluid>
@@ -124,14 +132,14 @@ const GetTransaction = ({
                             <table className="transaction-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>Date</th>
-                                        <th>Product Name</th>
-                                        <th>Type</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Customer</th>
+                                        <th>{table.date}</th>
+                                        <th>{table.name}</th>
+                                        <th>{table.type}</th>
+                                        <th>{table.quantity}</th>
+                                        <th>{table.price}</th>
+                                        <th>{table.customer}</th>
                                         {checkAdminMerchant(user) ? (
-                                            <th>Actions</th>
+                                            <th>{action.action}</th>
                                         ) : null}
                                     </tr>
                                 </thead>
@@ -179,7 +187,9 @@ const GetTransaction = ({
                                                                 className="mr-2">
                                                                 <i
                                                                     className="simple-icon-note edit-icon"
-                                                                    title="Edit"></i>
+                                                                    title={
+                                                                        action.edit
+                                                                    }></i>
                                                             </Link>
                                                             <i
                                                                 className={`simple-icon-close delete-icon ${
@@ -189,7 +199,9 @@ const GetTransaction = ({
                                                                 }`}
                                                                 data-toggle="modal"
                                                                 data-target="#modal"
-                                                                title="Delete"
+                                                                title={
+                                                                    action.delete
+                                                                }
                                                                 onClick={(e) =>
                                                                     setDelId(
                                                                         tran.id
@@ -292,6 +304,7 @@ const mapStateToProps = (state) => ({
     transaction: state.transaction,
     user: state.user,
     loading: state.loading,
+    language: state.language,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetTransaction);

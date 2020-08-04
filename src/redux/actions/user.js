@@ -10,7 +10,8 @@ import {
     CUSTOMER_REMOVE,
     SET_MENU_CLOSE,
     LOADING_END,
-    SALES_REMOVE
+    SALES_REMOVE,
+    SET_LANG_ID
 } from '../actionTypes';
 
 export const login = (email, password) => (dispatch) => {
@@ -64,4 +65,5 @@ export const logout = () => (dispatch) => {
     dispatch({ type: SET_MENU_CLOSE });
     dispatch({ type: LOADING_END });
     dispatch({ type: SALES_REMOVE });
+    dispatch({ type: SET_LANG_ID });
 };

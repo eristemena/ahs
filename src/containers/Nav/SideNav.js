@@ -41,13 +41,15 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
 
     return (
         <div className="side-nav">
-            <div className={`main-menu ${!menu ? 'main-hidden' : ''} shadow`}>
+            <div className={`main-menu ${!menu ? 'main-hidden' : ''}`}>
                 <div className="scroll">
                     <PerfectScrollbar
                         options={{
                             suppressScrollX: true,
                             wheelPropagation: false,
-                        }}>
+                            wheelSpeed: 0.3,
+                        }}
+                        >
                         <Nav vertical className="list-unstyled">
                             <NavItem className={`${activeLinks('/')}`}>
                                 <a href="/" onClick={setMenuClose}>

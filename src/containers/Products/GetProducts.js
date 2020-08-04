@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getProducts } from '../../redux/actions/product';
 import { formatPrice, checkAdminMerchant } from '../../utilities';
 import { setLoading } from '../../redux/actions/loading';
-import DeleteModal from '../../components/DeleteModal';
+import { DeleteModal, TableSearchbar } from '../../components';
 import { del } from '../../axios';
 import CustomSpinner from '../../components/CustomSpinner';
 import {
@@ -16,6 +16,7 @@ import {
     Card,
     CardBody,
 } from 'reactstrap';
+import { intlMessage } from '../../language';
 
 const GetProducts = ({
     history,
@@ -25,6 +26,7 @@ const GetProducts = ({
     product,
     loading,
     setLoading,
+    language,
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
@@ -112,32 +114,30 @@ const GetProducts = ({
         }
     };
 
+    const {
+        products: {
+            get: { title, add_product, table },
+        },
+        action,
+    } = intlMessage(language);
+
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1>Products</h1>
+                <h1>{title}</h1>
                 <button
                     className={`btn btn-primary font-weight-bold table-button ${
                         !checkAdminMerchant(user) ? 'disabled' : ''
                     }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/products/add')}>
-                    ADD PRODUCT
+                    {add_product}
                 </button>
             </div>
-            <div className="custom-table-searchbar mb-3">
-                <form onSubmit={searchName}>
-                    <input
-                        type="text"
-                        className="d-inline"
-                        onChange={inputOnChange}
-                        placeholder="Search"
-                    />
-                    <i
-                        className="simple-icon-magnifier"
-                        onClick={searchName}></i>
-                </form>
-            </div>
+            <TableSearchbar
+                searchName={searchName}
+                inputOnChange={inputOnChange}
+            />
             <Container fluid>
                 <div className="custom-table">
                     <Card className="product">
@@ -145,15 +145,19 @@ const GetProducts = ({
                             <table className="product-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>ID</th>
-                                        <th>Product Name</th>
-                                        <th>Price</th>
-                                        <th>Buying Price</th>
+                                        <th>{table.id}</th>
+                                        <th>{table.name}</th>
+                                        <th>{table.price}</th>
+                                        <th>
+                                            {table.buying_price}
+                                        </th>
                                         {user.merchant_id === null ? (
-                                            <th>Merchant</th>
+                                            <th>
+                                                {table.merchant}
+                                            </th>
                                         ) : null}
                                         {checkAdminMerchant(user) ? (
-                                            <th>Actions</th>
+                                            <th>{action.action}</th>
                                         ) : null}
                                     </tr>
                                 </thead>
@@ -193,13 +197,17 @@ const GetProducts = ({
                                                                 className="mr-2">
                                                                 <i
                                                                     className="simple-icon-note edit-icon"
-                                                                    title="Edit"></i>
+                                                                    title={
+                                                                        action.edit
+                                                                    }></i>
                                                             </Link>
                                                             <i
                                                                 className="simple-icon-close delete-icon"
                                                                 data-toggle="modal"
                                                                 data-target="#modal"
-                                                                title="Delete"
+                                                                title={
+                                                                    action.delete
+                                                                }
                                                                 onClick={(e) =>
                                                                     setDelId(
                                                                         product.id
@@ -314,6 +322,7 @@ const mapStateToProps = (state) => ({
     product: state.product,
     loading: state.loading,
     user: state.user,
+    language: state.language,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetProducts);

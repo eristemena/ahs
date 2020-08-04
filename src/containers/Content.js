@@ -37,9 +37,9 @@ const Content = ({ user, menu, history, setMenuState }) => {
 
     const closeMenu = () => {
         if (windowWidth < 992) {
-            setMenuState(false)
+            setMenuState(false);
         }
-    }
+    };
 
     return (
         <div className="main-container">
@@ -88,7 +88,9 @@ const Content = ({ user, menu, history, setMenuState }) => {
                                 </Col>
                             </Row>
                         </div>
+                        <div className={`foreground-shadow ${menu ? 'sidenav-open' : ''}`}></div>
                     </main>
+                    
                 </Fragment>
             ) : (
                 <Login />
@@ -106,4 +108,6 @@ const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Content));
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(Content)
+);

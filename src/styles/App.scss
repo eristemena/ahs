@@ -160,6 +160,7 @@ body {
                 border-bottom-right-radius: $navbar-border-radius;
                 padding-bottom: 10px;
                 left: 0;
+                box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 
                 .scroll {
                     padding-right: unset;
@@ -173,6 +174,7 @@ body {
 
                 &.main-hidden {
                     transform: translateX(-$main-menu-width);
+                    box-shadow: 0 .5rem 1rem transparent;
                 }
 
                 ul li {
@@ -240,6 +242,7 @@ body {
         }
 
         main {
+            position: relative;
             height: 100%;
             margin-top: 6rem;
             margin-left: 0rem;
@@ -258,6 +261,30 @@ body {
             .card {
                 border-radius: $navbar-border-radius;
             }
+
+            @media (max-width: 576px) {
+                &.sidenav-open {
+                    margin-left: 0rem;
+                }
+
+                .foreground-shadow {
+                    position: absolute;
+                    width: 0;
+                    height: 100%;
+                    background-color: rgba($color: black, $alpha: 0);
+                    transition: all $menu-collapse-time;
+                    top: 0%;
+                    left: 0%;
+
+                    &.sidenav-open {
+                        width: 100%;
+                        background-color: rgba($color: black, $alpha: 0.2);
+                    }
+                }
+
+            }
+
+
         }
 
         .menu-button {
@@ -359,11 +386,11 @@ body {
 
         .custom-table {
 
-            $transaction-table-width: 605px + 40px;
-            $product-table-width: 500px + 40px;
-            $customer-table-width: 498px + 40px;
-            $user-table-width: 433px + 40px;
-            $merchant-table-width: 331px + 40px;
+            $transaction-table-width: 645px;
+            $product-table-width: 540px;
+            $customer-table-width: 780px;
+            $user-table-width: 473px;
+            $merchant-table-width: 371px;
             overflow-x: auto;
 
             .card {
@@ -462,7 +489,7 @@ body {
                 outline: initial !important;
                 border: 1px solid #8f8f8f;
                 border-radius: 15px;
-                padding: 0.25rem 0.75rem 0.25rem 0.75rem;
+                padding: 0.25rem 0.75rem;
                 font-size: 0.76rem;
                 line-height: 1.3;
                 color: #3a3a3a;
@@ -473,6 +500,20 @@ body {
                 position: absolute;
                 top: 7.2px;
                 left: 8.7rem;
+            }
+
+            @media (max-width: 576px) {
+                input {
+                    width: 100%;
+                    padding: 0.6rem 0.75rem;
+                    font-size: 1rem;
+                }
+
+                .simple-icon-magnifier {
+                    left: 88%;
+                    font-size: 1.2rem;
+                    top: .7rem;
+                }
             }
         }
 
@@ -751,7 +792,6 @@ body {
                 &:active {
                     background-color: rgb(235, 235, 235);
                     outline: none;
-
                 }
             }
         }

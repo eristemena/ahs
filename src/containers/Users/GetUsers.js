@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
 import { Container, Card, CardBody } from 'reactstrap';
+import { intlMessage } from '../../language';
 
-const GetUsers = ({ alert, loading, setLoading }) => {
+const GetUsers = ({ alert, loading, setLoading, language }) => {
     const [users, setList] = useState([]);
     const [d, setD] = useState('d-none');
 
@@ -26,10 +27,12 @@ const GetUsers = ({ alert, loading, setLoading }) => {
         );
     }, []);
 
+    const intlText = intlMessage(language)
+
     return (
         <div className="container-fluid">
             <div className="mb-3">
-                <h1>Users</h1>
+                <h1>{intlText.users.title}</h1>
             </div>
             <Container fluid>
                 <div className="custom-table">
@@ -38,10 +41,10 @@ const GetUsers = ({ alert, loading, setLoading }) => {
                             <table className="users-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Merchant</th>
+                                        <th>{intlText.users.table.id}</th>
+                                        <th>{intlText.users.table.name}</th>
+                                        <th>{intlText.users.table.email}</th>
+                                        <th>{intlText.users.table.merchant}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -89,6 +92,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const mapStateToProps = (state) => ({
     loading: state.loading,
+    language: state.language
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetUsers);

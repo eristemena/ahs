@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getCustomers } from '../../redux/actions/customer';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import DeleteModal from '../../components/DeleteModal';
+import { DeleteModal, TableSearchbar } from '../../components/';
 import { setLoading } from '../../redux/actions/loading';
 import { del } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
@@ -16,6 +16,7 @@ import {
     Card,
     CardBody,
 } from 'reactstrap';
+import { intlMessage } from '../../language';
 
 const GetCustomers = ({
     customer,
@@ -25,6 +26,7 @@ const GetCustomers = ({
     history,
     alert,
     setLoading,
+    language,
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
@@ -112,32 +114,30 @@ const GetCustomers = ({
         }
     };
 
+    const {
+        customers: {
+            get: { title, add_transaction, table },
+        },
+        action,
+    } = intlMessage(language);
+
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1>Customers</h1>
+                <h1>{title}</h1>
                 <button
                     className={`btn btn-primary font-weight-bold table-button ${
                         !checkAdminMerchant(user) ? 'disabled' : ''
                     }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/customers/add')}>
-                    ADD CUSTOMER
+                    {add_transaction}
                 </button>
             </div>
-            <div className="custom-table-searchbar mb-3">
-                <form onSubmit={searchName}>
-                    <input
-                        type="text"
-                        className="d-inline"
-                        onChange={inputOnChange}
-                        placeholder="Search"
-                    />
-                    <i
-                        className="simple-icon-magnifier"
-                        onClick={searchName}></i>
-                </form>
-            </div>
+            <TableSearchbar
+                searchName={searchName}
+                inputOnChange={inputOnChange}
+            />
             <Container fluid>
                 <div className="custom-table">
                     <Card className="customer">
@@ -145,12 +145,12 @@ const GetCustomers = ({
                             <table className="customer-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Address</th>
+                                        <th>{table.name}</th>
+                                        <th>{table.email}</th>
+                                        <th>{table.phone}</th>
+                                        <th>{table.address}</th>
                                         {checkAdminMerchant(user) ? (
-                                            <th>Actions</th>
+                                            <th>{action.action}</th>
                                         ) : null}
                                     </tr>
                                 </thead>
@@ -178,13 +178,17 @@ const GetCustomers = ({
                                                                 className="mr-2">
                                                                 <i
                                                                     className="simple-icon-note edit-icon"
-                                                                    title="Edit"></i>
+                                                                    title={
+                                                                        action.edit
+                                                                    }></i>
                                                             </Link>
                                                             <i
                                                                 className="simple-icon-close delete-icon"
                                                                 data-toggle="modal"
                                                                 data-target="#modal"
-                                                                title="Delete"
+                                                                title={
+                                                                    action.delete
+                                                                }
                                                                 onClick={(e) =>
                                                                     setDelId(
                                                                         custom.id
@@ -293,6 +297,7 @@ const mapStateToProps = (state) => ({
     customer: state.customer,
     loading: state.loading,
     user: state.user,
+    language: state.language,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -12,6 +12,7 @@ import {
 import { MenuIcon } from '../../components/svg';
 import 'flag-icon-css/css/flag-icon.css';
 import { setLanguage } from '../../redux/actions/language';
+import { intlMessage } from '../../language';
 
 function NavBar({
     user,
@@ -32,17 +33,17 @@ function NavBar({
         window.addEventListener('resize', handleResize);
 
         handleResize();
-        
+
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     useEffect(() => {
         if (windowWidth > 992) {
-            setMenuState(true)
+            setMenuState(true);
         } else {
-            setMenuState(false)
+            setMenuState(false);
         }
-    }, [windowWidth > 992])
+    }, [windowWidth > 992]);
 
     const checkLanguage = (lang) => {
         if (lang === 'en') {
@@ -77,6 +78,8 @@ function NavBar({
         }
     };
 
+    const intlText = intlMessage(language)
+
     return (
         <Fragment>
             {user ? (
@@ -105,10 +108,10 @@ function NavBar({
                                     </p>
                                     <i className="iconsminds-male-2 default-profile-picture"></i>
                                 </DropdownToggle>
-                                <DropdownMenu className="" right>
+                                <DropdownMenu className="topnav-dropdown" right>
                                     <DropdownItem onClick={changeLanguage}>
                                         <div className="d-flex justify-content-between">
-                                            <span>Language</span>
+                                            <span>{intlText.topnav.language}</span>
                                             <span
                                                 className={`flag-icon ${checkLanguage(
                                                     language
@@ -117,7 +120,7 @@ function NavBar({
                                     </DropdownItem>
                                     <DropdownItem onClick={logoutHandler}>
                                         <div className="d-flex justify-content-between">
-                                            <span>Log Out</span>
+                                            <span>{intlText.topnav.logout}</span>
                                             <i
                                                 className="simple-icon-logout"
                                                 style={{ marginTop: 3 }}></i>
