@@ -2,20 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { getCustomers } from '../../redux/actions/customer';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DeleteModal, TableSearchbar } from '../../components/';
+import {
+    DeleteModal,
+    TableSearchbar,
+    CustomPagination,
+} from '../../components/';
 import { setLoading } from '../../redux/actions/loading';
 import { del } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { checkAdminMerchant } from '../../utilities';
 import CustomSpinner from '../../components/CustomSpinner';
-import {
-    Container,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Card,
-    CardBody,
-} from 'reactstrap';
+import { Container, Card, CardBody,  } from 'reactstrap';
 import { intlMessage } from '../../language';
 
 const GetCustomers = ({
@@ -134,10 +131,13 @@ const GetCustomers = ({
                     {add_transaction}
                 </button>
             </div>
-            <TableSearchbar
-                searchName={searchName}
-                inputOnChange={inputOnChange}
-            />
+            <div className="d-flex flex-column flex-md-row">
+                <TableSearchbar
+                    searchName={searchName}
+                    inputOnChange={inputOnChange}
+                />
+                
+            </div>
             <Container fluid>
                 <div className="custom-table">
                     <Card className="customer">
@@ -244,46 +244,13 @@ const GetCustomers = ({
                         </CardBody>
                     </Card>
                 </div>
-                <div className="text-center mt-2">
-                    <Pagination
-                        className="d-inline-block"
-                        size="sm"
-                        listClassName="justify-content-center">
-                        <PaginationItem
-                            className={`previous-page ${
-                                activeNav('prev') ? 'disabled' : ''
-                            }`}>
-                            <PaginationLink
-                                disabled={activeNav('prev')}
-                                onClick={() => setPage(page - 1)}>
-                                <i className="simple-icon-arrow-left" />
-                            </PaginationLink>
-                        </PaginationItem>
-                        {totalPage.map((number) => (
-                            <PaginationItem
-                                className={`goto-page ${
-                                    activePage(number) ? 'disabled active' : ''
-                                }`}
-                                key={number}>
-                                <PaginationLink
-                                    disabled={activePage(number)}
-                                    onClick={() => setPage(number)}>
-                                    {number}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem
-                            className={`next-page ${
-                                activeNav('next') ? 'disabled' : ''
-                            }`}>
-                            <PaginationLink
-                                disabled={activeNav('next')}
-                                onClick={() => setPage(page + 1)}>
-                                <i className="simple-icon-arrow-right" />
-                            </PaginationLink>
-                        </PaginationItem>
-                    </Pagination>
-                </div>
+                <CustomPagination
+                    pages={totalPage}
+                    currentPage={page}
+                    activeNav={activeNav}
+                    activePage={activePage}
+                    setPage={setPage}
+                />
             </Container>
             <DeleteModal
                 deleteHandler={deleteHandler}

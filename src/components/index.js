@@ -4,6 +4,7 @@ import DeleteModal from './DeleteModal';
 import InfoTooltip from './InfoTooltip';
 import ProductStock from './ProductStock';
 import TableSearchbar from './TableSearchbar';
+import CustomPagination from './CustomPagination'
 
 export {
     Alerts,
@@ -12,4 +13,5 @@ export {
     InfoTooltip,
     ProductStock,
     TableSearchbar,
+    CustomPagination
 };

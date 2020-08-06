@@ -5,17 +5,14 @@ import { connect } from 'react-redux';
 import { getProducts } from '../../redux/actions/product';
 import { formatPrice, checkAdminMerchant } from '../../utilities';
 import { setLoading } from '../../redux/actions/loading';
-import { DeleteModal, TableSearchbar } from '../../components';
+import {
+    DeleteModal,
+    TableSearchbar,
+    CustomPagination,
+} from '../../components';
 import { del } from '../../axios';
 import CustomSpinner from '../../components/CustomSpinner';
-import {
-    Container,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Card,
-    CardBody,
-} from 'reactstrap';
+import { Container, Card, CardBody } from 'reactstrap';
 import { intlMessage } from '../../language';
 
 const GetProducts = ({
@@ -148,13 +145,9 @@ const GetProducts = ({
                                         <th>{table.id}</th>
                                         <th>{table.name}</th>
                                         <th>{table.price}</th>
-                                        <th>
-                                            {table.buying_price}
-                                        </th>
+                                        <th>{table.buying_price}</th>
                                         {user.merchant_id === null ? (
-                                            <th>
-                                                {table.merchant}
-                                            </th>
+                                            <th>{table.merchant}</th>
                                         ) : null}
                                         {checkAdminMerchant(user) ? (
                                             <th>{action.action}</th>
@@ -263,46 +256,13 @@ const GetProducts = ({
                         </CardBody>
                     </Card>
                 </div>
-                <div className="text-center mt-2">
-                    <Pagination
-                        className="d-inline-block"
-                        size="sm"
-                        listClassName="justify-content-center">
-                        <PaginationItem
-                            className={`previous-page ${
-                                activeNav('prev') ? 'disabled' : ''
-                            }`}>
-                            <PaginationLink
-                                disabled={activeNav('prev')}
-                                onClick={() => setPage(page - 1)}>
-                                <i className="simple-icon-arrow-left" />
-                            </PaginationLink>
-                        </PaginationItem>
-                        {totalPage.map((number) => (
-                            <PaginationItem
-                                className={`goto-page ${
-                                    activePage(number) ? 'disabled active' : ''
-                                }`}
-                                key={number}>
-                                <PaginationLink
-                                    disabled={activePage(number)}
-                                    onClick={() => setPage(number)}>
-                                    {number}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem
-                            className={`next-page ${
-                                activeNav('next') ? 'disabled' : ''
-                            }`}>
-                            <PaginationLink
-                                disabled={activeNav('next')}
-                                onClick={() => setPage(page + 1)}>
-                                <i className="simple-icon-arrow-right" />
-                            </PaginationLink>
-                        </PaginationItem>
-                    </Pagination>
-                </div>
+                <CustomPagination
+                    pages={totalPage}
+                    currentPage={page}
+                    activeNav={activeNav}
+                    activePage={activePage}
+                    setPage={setPage}
+                />
             </Container>
             <DeleteModal
                 deleteHandler={deleteHandler}

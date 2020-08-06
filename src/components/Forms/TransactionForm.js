@@ -109,6 +109,7 @@ const TransactionForm = ({
                         <ReactDatePicker
                             selected={values.date}
                             locale="id"
+                            popperPlacement="bottom"
                             id="date"
                             name="date"
                             dateFormat="dd MMMM yyyy"

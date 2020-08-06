@@ -3,10 +3,10 @@ import { addAlert } from './alert';
 import { setLoading } from './loading';
 import { TRANSACTION_ADD } from '../actionTypes';
 
-export const getTransactions = (page) => (dispatch) => {
+export const getTransactions = (page, sort, date) => (dispatch) => {
     dispatch(setLoading(true))
     get(
-        `/transactions?limit=7&page=${page}`,
+        `/transactions?limit=7&page=${page}${sort ? `&sort=${sort}-desc` : ''}${date ? `&date=${date}` : ''}`,
         ({data, page, totalPage, totalData}) => {
             dispatch({
                 type: TRANSACTION_ADD,

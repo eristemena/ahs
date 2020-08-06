@@ -5,10 +5,10 @@ module.exports = {
     sidenav: {
         dashboard: 'Home',
         users: 'Users',
-        products: 'Product',
+        products: 'Products',
         transactions: 'Transactions',
-        customers: 'Customer',
-        merchant: 'Merchant',
+        customers: 'Customers',
+        merchant: 'Merchants',
     },
     topnav: {
         language: 'Language',

@@ -3,22 +3,27 @@ import { addAlert } from '../../redux/actions/alert';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getTransactions } from '../../redux/actions/transaction';
+import ReactDatePicker, { registerLocale, ReactDatePickerProps } from 'react-datepicker';
+import id from 'date-fns/locale/id';
+import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { del } from '../../axios';
 import { formatPrice, checkAdminMerchant } from '../../utilities';
-import { DeleteModal, InfoTooltip } from '../../components';
+import { DeleteModal, InfoTooltip, CustomPagination } from '../../components';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
 import {
     Container,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
     Card,
     CardBody,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
 } from 'reactstrap';
 import { intlMessage } from '../../language';
+registerLocale('id', id);
 
 const GetTransaction = ({
     alert,
@@ -33,10 +38,16 @@ const GetTransaction = ({
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
     const [delId, setDelId] = useState(-1);
+    const [sortBy, setSortBy] = useState('date');
+    const [dateSearch, setDateSearch] = useState(null);
 
     useEffect(() => {
-        getTransaction(page);
-    }, [page]);
+        getTransaction(
+            page,
+            sortBy,
+            dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null
+        );
+    }, [page, sortBy, dateSearch]);
 
     useEffect(() => {
         if (loading) {
@@ -124,6 +135,53 @@ const GetTransaction = ({
                     onClick={() => history.push('/transactions/add')}>
                     {add_transaction}
                 </button>
+            </div>
+            <div className="d-flex flex-column flex-sm-row mb-3">
+                <UncontrolledDropdown>
+                    <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle sorting-button">
+                        <i className="mr-2">
+                            Order by:{' '}
+                            {sortBy === 'date' ? 'Date' : 'Modified At'}
+                        </i>
+                        <i className="simple-icon-arrow-down arrow"></i>
+                    </DropdownToggle>
+                    <DropdownMenu right={false} className="sort-dropdown">
+                        <DropdownItem onClick={() => setSortBy('date')}>
+                            Date
+                        </DropdownItem>
+                        <DropdownItem onClick={() => setSortBy('updated_at')}>
+                            Modified At
+                        </DropdownItem>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+                <ReactDatePicker
+                    locale="id"
+                    value={
+                        dateSearch
+                            ? moment(dateSearch).format('DD MMMM yyyy')
+                            : ''
+                    }
+                    selected={dateSearch}
+                    className="form-control"
+                    wrapperClassName="transaction-table-datepicker"
+                    todayButton={`Hari ini (${moment(new Date()).format(
+                        'DD MMMM'
+                    )})`}
+                    placeholderText="Pilih hari"
+                    disabledKeyboardNavigation
+                    onChange={(e) => {
+                        setDateSearch(e);
+                        setPage(1)
+                    }}
+                    maxDate={new Date()}
+                    popperPlacement="bottom"
+                    popperModifiers={{
+                        flip: {
+                            enabled: false
+                        }
+                    }}
+                    isClearable
+                />
             </div>
             <Container fluid>
                 <div className="custom-table">
@@ -247,46 +305,13 @@ const GetTransaction = ({
                         </CardBody>
                     </Card>
                 </div>
-                <div className="text-center mt-2">
-                    <Pagination
-                        className="d-inline-block"
-                        size="sm"
-                        listClassName="justify-content-center">
-                        <PaginationItem
-                            className={`previous-page ${
-                                activeNav('prev') ? 'disabled' : ''
-                            }`}>
-                            <PaginationLink
-                                disabled={activeNav('prev')}
-                                onClick={() => setPage(page - 1)}>
-                                <i className="simple-icon-arrow-left" />
-                            </PaginationLink>
-                        </PaginationItem>
-                        {totalPage.map((number) => (
-                            <PaginationItem
-                                className={`goto-page ${
-                                    activePage(number) ? 'disabled active' : ''
-                                }`}
-                                key={number}>
-                                <PaginationLink
-                                    disabled={activePage(number)}
-                                    onClick={() => setPage(number)}>
-                                    {number}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
-                        <PaginationItem
-                            className={`next-page ${
-                                activeNav('next') ? 'disabled' : ''
-                            }`}>
-                            <PaginationLink
-                                disabled={activeNav('next')}
-                                onClick={() => setPage(page + 1)}>
-                                <i className="simple-icon-arrow-right" />
-                            </PaginationLink>
-                        </PaginationItem>
-                    </Pagination>
-                </div>
+                <CustomPagination
+                    currentPage={page}
+                    pages={totalPage}
+                    activePage={activePage}
+                    setPage={setPage}
+                    activeNav={activeNav}
+                />
             </Container>
 
             <DeleteModal deleteHandler={deleteData} />
@@ -296,7 +321,8 @@ const GetTransaction = ({
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
-    getTransaction: (page) => dispatch(getTransactions(page)),
+    getTransaction: (page, sort, date) =>
+        dispatch(getTransactions(page, sort, date)),
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 

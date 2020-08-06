@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { Nav, NavItem, Label, NavLink } from 'reactstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Nav, NavItem, Label } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setMenuState } from '../../redux/actions/menu';
+import { intlMessage } from '../../language';
 
-const SideNav = ({ user, menu, setMenuState, history }) => {
+const SideNav = ({ user, menu, setMenuState, history, language }) => {
     const [windowWidth, setWindowWidth] = useState(undefined);
 
     useEffect(() => {
@@ -45,6 +46,8 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
         }
     };
 
+    const {sidenav} = intlMessage(language)
+
     return (
         <div className="side-nav">
             <div className={`main-menu ${!menu ? 'main-hidden' : ''}`}>
@@ -59,19 +62,19 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
                             <NavItem className={`${activeLinks('/')}`}>
                                 <a href="/" onClick={setMenuClose}>
                                     <i className="iconsminds-home"></i>
-                                    <Label>Dashboard</Label>
+                                    <Label>{sidenav.dashboard}</Label>
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/users')}>
                                 <a href="/users" onClick={setMenuClose}>
                                     <i className="iconsminds-administrator"></i>
-                                    <Label>Users</Label>
+                                    <Label>{sidenav.users}</Label>
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/products')}>
                                 <a href="/products/get" onClick={setMenuClose}>
                                     <i className="iconsminds-folder"></i>
-                                    <Label>Products</Label>
+                                    <Label>{sidenav.products}</Label>
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/transactions')}>
@@ -79,13 +82,13 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
                                     href="/transactions/get"
                                     onClick={setMenuClose}>
                                     <i className="iconsminds-cash-register-2"></i>
-                                    <Label>Transactions</Label>
+                                    <Label>{sidenav.transactions}</Label>
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/customers')}>
                                 <a href="/customers/get" onClick={setMenuClose}>
                                     <i className="iconsminds-male-female"></i>
-                                    <Label>Customers</Label>
+                                    <Label>{sidenav.customers}</Label>
                                 </a>
                             </NavItem>
                             {user && user.merchant_id === null ? (
@@ -95,7 +98,7 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
                                         href="/merchants/get"
                                         onClick={setMenuClose}>
                                         <i className="iconsminds-shop"></i>
-                                        <Label>Merchants</Label>
+                                        <Label>{sidenav.merchant}</Label>
                                     </a>
                                 </NavItem>
                             ) : null}
@@ -110,6 +113,7 @@ const SideNav = ({ user, menu, setMenuState, history }) => {
 const mapStateToProps = (state) => ({
     user: state.user,
     menu: state.menu,
+    language: state.language,
 });
 
 const mapDispatchToProps = (dispatch) => ({
