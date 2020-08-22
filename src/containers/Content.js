@@ -11,8 +11,10 @@ import Transaction from './Transaction';
 import Customer from './Customer';
 import Alerts from '../components/Alerts';
 import Navigation from './Navigation';
+import GallonsStocks from './GallonStocks'
 import { Row, Col } from 'reactstrap';
 import { setMenuState } from '../redux/actions/menu';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 const Content = ({ user, menu, history, setMenuState }) => {
     const [windowWidth, setWindowWidth] = useState(undefined);
@@ -82,6 +84,10 @@ const Content = ({ user, menu, history, setMenuState }) => {
                                             path="/customers"
                                             component={Customer}
                                         />
+                                        <Route
+                                            path="/gallons"
+                                            component={GallonsStocks}
+                                        />
 
                                         <Route component={NotFound} />
                                     </Switch>
@@ -89,7 +95,6 @@ const Content = ({ user, menu, history, setMenuState }) => {
                             </Row>
                         </div>
                     </main>
-                    
                 </Fragment>
             ) : (
                 <Login />

@@ -184,8 +184,8 @@ const GetCustomers = ({
                                                             </Link>
                                                             <i
                                                                 className="simple-icon-close delete-icon"
-                                                                data-toggle="modal"
-                                                                data-target="#modal"
+                                                                data-toggle="delete-modal"
+                                                                data-target="#delete-modal"
                                                                 title={
                                                                     action.delete
                                                                 }

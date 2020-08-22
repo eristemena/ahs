@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 
 const StockPieChart = ({ stock }) => {
     const pieChartDataMap = (stocks) => {
-        return stocks.data ? stocks.data.map((stocc, index) => ({
+        return stocks.data ? stocks.data.map((stocc) => ({
             label: stocc.name,
             data: stocc.stock,
             color: {
-                red: 0,
-                green: 20 * index < 151 ? 104 + (20 * index) : 104 - (20 * index),
-                blue: 104 + (10 * index)
+                red: Math.random() * 255,
+                green: Math.random() * 255,
+                blue: Math.random() * 255
             }
         })) : []
     }

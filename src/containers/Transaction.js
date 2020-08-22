@@ -7,6 +7,7 @@ import {
     AddTransaction,
     EditTransaction,
 } from './Transactions';
+import NotFound from './NotFound';
 
 const Transaction = ({ user, alert, history }) => {
     useEffect(() => {
@@ -20,9 +21,10 @@ const Transaction = ({ user, alert, history }) => {
     }, []);
     return (
         <Switch>
-            <Route path="/transactions/get" component={GetTransaction} />
+            <Route path="/transactions/get" exact component={GetTransaction} />
             <Route path="/transactions/add" exact component={AddTransaction} />
             <Route path="/transactions/edit" component={EditTransaction} />
+            <Route component={NotFound} />
         </Switch>
     );
 };

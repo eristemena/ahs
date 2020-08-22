@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
@@ -9,6 +9,58 @@ const CustomPagination = ({
     pages,
     currentPage,
 }) => {
+    const paginationComponent = (number) => (
+        <PaginationItem
+            className={`goto-page ${
+                activePage(number) ? 'disabled active' : ''
+            }`}
+            key={number}>
+            <PaginationLink
+                disabled={activePage(number)}
+                onClick={() => setPage(number)}>
+                {number}
+            </PaginationLink>
+        </PaginationItem>
+    );
+
+    const normalPages = (pages) => {
+        if (pages.length > 4) {
+            if (currentPage !== 1 && currentPage !== pages.length) {
+                return (
+                    <Fragment>
+                        {pages.map((number) => {
+                            if (
+                                number >= currentPage - 1 &&
+                                number <= currentPage + 1
+                            ) {
+                                return paginationComponent(number);
+                            }
+                        })}
+                    </Fragment>
+                );
+            } else {
+                return (
+                    <Fragment>
+                        {pages.map((number) =>
+                            currentPage === pages.length
+                                ? number > pages.length - 3
+                                    ? paginationComponent(number)
+                                    : null
+                                : number < 4
+                                ? paginationComponent(number)
+                                : null
+                        )}
+                    </Fragment>
+                );
+            }
+        } else {
+            return (
+                <Fragment>
+                    {pages.map((number) => paginationComponent(number))}
+                </Fragment>
+            );
+        }
+    };
     return (
         <div className="text-center mt-2 custom-pagination">
             <Pagination
@@ -35,19 +87,7 @@ const CustomPagination = ({
                         <i className="simple-icon-arrow-left" />
                     </PaginationLink>
                 </PaginationItem>
-                {pages.map((number) => (
-                    <PaginationItem
-                        className={`goto-page ${
-                            activePage(number) ? 'disabled active' : ''
-                        }`}
-                        key={number}>
-                        <PaginationLink
-                            disabled={activePage(number)}
-                            onClick={() => setPage(number)}>
-                            {number}
-                        </PaginationLink>
-                    </PaginationItem>
-                ))}
+                {normalPages(pages)}
                 <PaginationItem
                     className={`next-page ${
                         activeNav('next') ? 'disabled' : ''

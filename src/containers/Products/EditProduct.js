@@ -43,13 +43,11 @@ const EditProduct = ({ user, history, alert, loading, setLoading }) => {
         get(
             `/products?id=${queryId}`,
             ({ data }) => {
-                setLoading(false);
-                console.log(data);
                 const product = data[0];
-
                 setName(product.name);
                 setPrice(product.price);
                 setBuyingPrice(product.buying_price);
+                setLoading(false);
             },
             (error) => {
                 setLoading(false);

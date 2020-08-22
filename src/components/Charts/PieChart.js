@@ -30,7 +30,7 @@ const PieChart = ({
                                 data: data.map(({ data }) => data),
                                 backgroundColor: data.map(
                                     ({ color }) =>
-                                        `rgba(${color.red}, ${color.green}, ${color.blue}, 0.3)`
+                                        `rgba(${color.red}, ${color.green}, ${color.blue}, 0.5)`
                                 ),
                                 hoverBackgroundColor: data.map(
                                     ({ color }) =>
@@ -38,12 +38,12 @@ const PieChart = ({
                                 ),
                                 borderColor: data.map(
                                     ({ color }) =>
-                                        `rgba(${color.red}, ${color.green}, ${color.blue}, 0.7`
+                                        `rgba(${color.red}, ${color.green}, ${color.blue}, 0.1)`
                                 ),
                                 borderAlign: 'inner',
-                                borderWidth: 3,
+                                borderWidth: 4,
                                 hoverBorderColor: data.map(
-                                    () => 'rgba(0, 0, 0, 0)'
+                                    () => 'rgba(255, 255, 255, 1)'
                                 ),
                             },
                         ],

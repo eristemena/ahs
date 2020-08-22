@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import ProductStock from '../../components/ProductStock';
-import { getStocks } from '../../redux/actions/stock';
+import { getStocks } from '../../redux/actions/product_stock';
 import { Col } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 

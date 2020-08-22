@@ -66,7 +66,6 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
         info,
     ) => {
         setSubmitting(true);
-        // console.log(type, customer_id)
         put(
             `/transactions/${history.location.search.replace('?id=', '')}`,
             {

@@ -1,7 +1,20 @@
-import React from "react";
+import React from 'react';
+import { connect } from 'react-redux';
+import { intlMessage } from '../language';
 
-function NotFound() {
-    return <div>Not found</div>;
+function NotFound({ language }) {
+    const { not_found } = intlMessage(language);
+    return (
+        <div className="not-found">
+            <h1>{not_found[0]}</h1>
+            <h4>{not_found[1]}</h4>
+            <small>{not_found[2]}</small>
+        </div>
+    );
 }
 
-export default NotFound;
+const mapStateToProps = (state) => ({
+    language: state.language,
+});
+
+export default connect(mapStateToProps)(NotFound);

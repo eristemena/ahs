@@ -1,22 +1,21 @@
+import { FETCH_STOCKS } from '../actionTypes';
 import { get } from '../../axios';
-import { addAlert } from './alert';
 import { setLoading } from './loading';
 import { logout } from './user';
-import { TRANSACTION_ADD } from '../actionTypes';
+import { addAlert } from './alert';
 
-export const getTransactions = (page, sort, date, limit) => (dispatch) => {
+export const fetchStocks = (page, limit, sort, date) => (dispatch) => {
     dispatch(setLoading(true));
     get(
-        `/transactions?limit=${limit}&page=${page}${sort ? `&sort=${sort}-desc` : ''}${
-            date ? `&date=${date}` : ''
-        }`,
-        ({ data, page, totalPage, totalData }) => {
+        `/stocks?limit=${limit ? limit : 8}&page=${page}${
+            sort ? `&sort=${sort}-desc` : ''
+        }${date ? `&date=${date}` : ''}`,
+        ({ data, totalData, totalPage }) => {
             dispatch({
-                type: TRANSACTION_ADD,
+                type: FETCH_STOCKS,
                 payload: {
-                    totalPage,
                     totalData,
-                    page,
+                    totalPage,
                     data,
                 },
             });
@@ -39,5 +38,5 @@ export const getTransactions = (page, sort, date, limit) => (dispatch) => {
             }
             dispatch(setLoading(false));
         }
-    );
+    )
 };

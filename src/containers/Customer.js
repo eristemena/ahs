@@ -1,14 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Switch, Route } from 'react-router-dom';
-import { GetCustomers, AddCustomer, EditCustomer } from './Customers'
+import { Switch, Route } from 'react-router-dom';
+import { GetCustomers, AddCustomer, EditCustomer } from './Customers';
+import NotFound from './NotFound';
 
 const Customer = () => {
     return (
         <Switch>
-            <Route path="/customers/get" component={GetCustomers} />
+            <Route path="/customers/get" exact component={GetCustomers} />
             <Route path="/customers/add" exact component={AddCustomer} />
             <Route path="/customers/edit" component={EditCustomer} />
+            <Route component={NotFound} />
         </Switch>
     );
 };

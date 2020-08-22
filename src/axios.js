@@ -24,14 +24,17 @@ export const get = async (path, success = () => {}, error = () => {}) => {
             error(resp.data);
         }
     } catch (err) {
-        console.log(err)
         if (
             err.response &&
             err.response.data &&
             err.response.data.message === 'jwt expired'
         ) {
             // refresh token
-            await refreshToken();
+            await refreshToken(
+                (msg) => {
+                    error(msg)
+                }
+            );
 
             // re-run
             await get(path, success, error);
@@ -92,7 +95,11 @@ export const postWithAuth = async (
             err.response.data.message === 'jwt expired'
         ) {
             // refresh token
-            await refreshToken();
+            await refreshToken(
+                (msg) => {
+                    error(msg)
+                }
+            );
 
             // re-run
             await postWithAuth(path, payload, success, error);
@@ -102,7 +109,7 @@ export const postWithAuth = async (
     }
 };
 
-const refreshToken = async () => {
+const refreshToken = async (error = () => {}) => {
     let config = {};
 
     let token = localStorage.getItem('refreshToken');
@@ -120,10 +127,13 @@ const refreshToken = async () => {
             config
         );
 
-        let newToken = resp.data.token;
-        localStorage.setItem('token', newToken);
+        if (resp.status === 200) {
+            localStorage.setItem('token', resp.data.token);
+        } else {
+            error(resp.data)
+        }
     } catch (err) {
-        console.log(err);
+        error(err.response && err.response.data)
     }
 };
 
@@ -159,7 +169,11 @@ export const put = async (
             err.response.data.message === 'jwt expired'
         ) {
             // refresh token
-            await refreshToken();
+            await refreshToken(
+                (msg) => {
+                    error(msg)
+                }
+            );
 
             // re-run
             await put(path, payload, success, error);
@@ -200,7 +214,11 @@ export const del = async (
             err.response.data.message === 'jwt expired'
         ) {
             // refresh token
-            await refreshToken();
+            await refreshToken(
+                (msg) => {
+                    error(msg)
+                }
+            );
 
             // re-run
             await del(path, success, error);

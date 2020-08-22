@@ -1,16 +1,16 @@
 import React, { useState, Fragment } from 'react';
 import { postWithAuth } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
-import { TransactionForm } from '../../components/Forms';
+import { StockForm } from '../../components/Forms';
 import { connect } from 'react-redux';
 import CustomSpinner from '../../components/CustomSpinner';
 
-const AddTransaction = ({ alert, history, loading }) => {
+const AddStock = ({ alert, history, loading }) => {
     const [submitting, setSubmitting] = useState(false);
 
     const onSubmitHandler = (
         date,
-        product_id,
+        gallon_id,
         type,
         quantity,
         customer_id,
@@ -18,10 +18,10 @@ const AddTransaction = ({ alert, history, loading }) => {
     ) => {
         setSubmitting(true);
         postWithAuth(
-            '/transactions',
+            '/stocks',
             {
                 date,
-                product_id,
+                gallon_id,
                 type,
                 quantity,
                 info,
@@ -30,25 +30,25 @@ const AddTransaction = ({ alert, history, loading }) => {
             (success) => {
                 setSubmitting(false);
                 alert('Transaksi berhasil ditambahkan', 'success');
-                history.push('/transactions/get');
+                history.goBack();
             },
             (error) => {
                 setSubmitting(false);
-                alert(`Telah terjadi kesalahan: ${error.message}`);
+                alert(`Telah terjadi kesalahan: ${error && error.message}`);
             }
         );
     };
-    
     return (
         <Fragment>
-            <CustomSpinner loading={loading} type="page" />
             {!loading ? (
-                <TransactionForm
+                <StockForm
                     submitting={submitting}
                     onSubmit={onSubmitHandler}
                     history={history}
                 />
-            ) : null}
+            ) : (
+                <CustomSpinner loading={loading} type="page" />
+            )}
         </Fragment>
     );
 };
@@ -62,4 +62,4 @@ const mapStateToProps = (state) => ({
     loading: state.loading,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddTransaction);
+export default connect(mapStateToProps, mapDispatchToProps)(AddStock);

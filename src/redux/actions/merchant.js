@@ -1,13 +1,14 @@
 import { MERCHANT_SET } from '../actionTypes';
-import { get, postWithAuth, post } from '../../axios'
-import { addAlert } from "./alert";
+import { get } from '../../axios';
+import { addAlert } from './alert';
+import { logout } from './user';
 import { setLoading } from './loading';
 
 export const getMerchants = (page = 1, name) => (dispatch) => {
-    dispatch(setLoading(true))
+    dispatch(setLoading(true));
     get(
         `/merchants?page=${page}${name ? `&name=${name}` : ''}`,
-        ({data, page, totalData, totalPage}) => {
+        ({ data, page, totalData, totalPage }) => {
             dispatch({
                 type: MERCHANT_SET,
                 payload: {
@@ -15,13 +16,26 @@ export const getMerchants = (page = 1, name) => (dispatch) => {
                     totalData,
                     page,
                     data,
-                }
+                },
             });
-            dispatch(setLoading(false))
+            dispatch(setLoading(false));
         },
         (error) => {
-            dispatch(addAlert('Telah terjadi kesalahan'));
-            dispatch(setLoading(false))
+            if (error) {
+                if (error.message === 'jwt expired, please login.') {
+                    dispatch(
+                        addAlert(
+                            'Anda belum login setelah seminggu. Harap login lagi.'
+                        )
+                    );
+                    dispatch(logout());
+                } else if (error.message !== 'Need authorization header') {
+                    dispatch(addAlert(`Terjadi kesalahan: ${error.message}`));
+                }
+            } else {
+                dispatch(addAlert('Terjadi kesalahan'));
+            }
+            dispatch(setLoading(false));
         }
-    )
+    );
 };

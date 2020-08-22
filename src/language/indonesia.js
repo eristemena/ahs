@@ -165,5 +165,10 @@ module.exports = {
             edit: 'Konsumen berhasil diedit',
             delete: 'Konsumen berhasil dihapus',
         }
-    }
+    },
+    not_found: [
+        `Oops!`,
+        `Kami tidak dapat menemukan halaman yang Anda cari.`,
+        'Mungkin aja page-nya belum dibikin?'
+    ]
 };

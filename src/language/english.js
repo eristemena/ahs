@@ -165,5 +165,10 @@ module.exports = {
             edit: 'Konsumen edited successfully',
             delete: 'Konsumen deleted successfully',
         }
-    }
+    },
+    not_found: [
+        `Oops!`,
+        `We can't find the page you're looking for.`,
+        'Maybe it never exists at all?'
+    ]
 };

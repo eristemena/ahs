@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import AddMerchant from './Merchants/AddMerchant';
 import { addAlert } from '../redux/actions/alert';
 import GetMerchants from './Merchants/GetMerchants';
+import NotFound from './NotFound';
 
 const Merchant = ({ user, history, alert }) => {
     useEffect(() => {
@@ -21,6 +22,7 @@ const Merchant = ({ user, history, alert }) => {
         <Switch>
             <Route path="/merchants/get" component={GetMerchants} />
             <Route path="/merchants/add" exact component={AddMerchant} />
+            <Route component={NotFound} />
         </Switch>
     );
 };

@@ -1,13 +1,14 @@
-import { get } from "../../axios";
-import { addAlert } from "./alert";
+import { get } from '../../axios';
+import { addAlert } from './alert';
 import { PRODUCT_GET } from '../actionTypes';
+import { logout } from './user';
 import { setLoading } from './loading';
 
 export const getProducts = (page, name) => (dispatch) => {
-    dispatch(setLoading(true))
+    dispatch(setLoading(true));
     get(
         `/products?limit=7&page=${page}${name ? `&name=${name}` : ''}`,
-         ({ data, totalPage, totalData, page }) => {
+        ({ data, totalPage, totalData, page }) => {
             dispatch({
                 type: PRODUCT_GET,
                 payload: {
@@ -15,13 +16,26 @@ export const getProducts = (page, name) => (dispatch) => {
                     totalData,
                     page,
                     data,
-                }
+                },
             });
-            dispatch(setLoading(false))
+            dispatch(setLoading(false));
         },
         (error) => {
-            dispatch(addAlert("Telah terjadi kesalahan"));
-            dispatch(setLoading(false))
+            if (error) {
+                if (error.message === 'jwt expired, please login.') {
+                    dispatch(
+                        addAlert(
+                            'Anda belum login setelah seminggu. Harap login lagi.'
+                        )
+                    );
+                    dispatch(logout());
+                } else if (error.message !== 'Need authorization header') {
+                    dispatch(addAlert(`Terjadi kesalahan: ${error.message}`));
+                }
+            } else {
+                dispatch(addAlert('Terjadi kesalahan'));
+            }
+            dispatch(setLoading(false));
         }
     );
 };

@@ -8,7 +8,7 @@ export const transaction = (state = initialState, action) => {
             return action.payload;
 
         case TRANSACTION_REMOVE:
-            return null;
+            return {};
 
         default:
             return state;

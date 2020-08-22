@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { Label, FormGroup } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import CustomSpinner from '../CustomSpinner';
 import * as Yup from 'yup';
 
-function LoginForm({ onSubmit = () => {}, loggingIn, errorMessage = {} }) {
+function LoginForm({ onSubmit = () => {}, loggingIn }) {
 
     const schema = Yup.object().shape({
         email: Yup.string().email("Email tidak valid").required("Email perlu diisi"),

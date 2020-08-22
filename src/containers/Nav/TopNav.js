@@ -13,6 +13,8 @@ import { MenuIcon } from '../../components/svg';
 import 'flag-icon-css/css/flag-icon.css';
 import { setLanguage } from '../../redux/actions/language';
 import { intlMessage } from '../../language';
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 function NavBar({
     user,
@@ -78,7 +80,7 @@ function NavBar({
         }
     };
 
-    const intlText = intlMessage(language)
+    const intlText = intlMessage(language);
 
     return (
         <Fragment>
@@ -97,7 +99,7 @@ function NavBar({
                         <span className="logo-mobile d-block" />
                     </NavLink>
 
-                    <div className="navbar-right">
+                    <div className="navbar-right d-flex">
                         <div className="user d-inline-block">
                             <UncontrolledDropdown className="dropdown-menu-right">
                                 <DropdownToggle
@@ -111,7 +113,9 @@ function NavBar({
                                 <DropdownMenu className="topnav-dropdown" right>
                                     <DropdownItem onClick={changeLanguage}>
                                         <div className="d-flex justify-content-between">
-                                            <span>{intlText.topnav.language}</span>
+                                            <span>
+                                                {intlText.topnav.language}
+                                            </span>
                                             <span
                                                 className={`flag-icon ${checkLanguage(
                                                     language
@@ -120,7 +124,9 @@ function NavBar({
                                     </DropdownItem>
                                     <DropdownItem onClick={logoutHandler}>
                                         <div className="d-flex justify-content-between">
-                                            <span>{intlText.topnav.logout}</span>
+                                            <span>
+                                                {intlText.topnav.logout}
+                                            </span>
                                             <i
                                                 className="simple-icon-logout"
                                                 style={{ marginTop: 3 }}></i>

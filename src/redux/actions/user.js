@@ -11,7 +11,8 @@ import {
     SET_MENU_CLOSE,
     LOADING_END,
     SALES_REMOVE,
-    SET_LANG_ID
+    SET_LANG_ID,
+    DELETE_STOCKS
 } from '../actionTypes';
 
 export const login = (email, password) => (dispatch) => {
@@ -42,13 +43,13 @@ export const login = (email, password) => (dispatch) => {
                     dispatch(setLoading(false));
                 },
                 (error) => {
-                    dispatch(addAlert('Telah terjadi kesalahan'));
+                    dispatch(addAlert(`Telah terjadi kesalahan: ${error && error.message}`));
                     dispatch(setLoading(false));
                 }
             );
         },
         (error) => {
-            dispatch(addAlert(error ? error.message : error));
+            dispatch(addAlert('Telah terjadi kesalahan'));
             dispatch(setLoading(false));
         }
     );
@@ -66,4 +67,5 @@ export const logout = () => (dispatch) => {
     dispatch({ type: LOADING_END });
     dispatch({ type: SALES_REMOVE });
     dispatch({ type: SET_LANG_ID });
+    dispatch({ type: DELETE_STOCKS });
 };

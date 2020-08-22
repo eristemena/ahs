@@ -11,7 +11,7 @@ $background-color: whitesmoke;
 $navbar-color: white;
 $separator-color: #b3b3b3;
 $sidenav-dark: $primary-color - rgb(68, 68, 68);
-$sidenav-light: $primary-color+rgb(22, 22, 22);
+$sidenav-light: $primary-color + rgb(22, 22, 22);
 
 $text-light: grey;
 
@@ -49,19 +49,18 @@ body {
     .main-container {
 
         .custom-spinner {
-            color: transparent;
+            color: white - rgb(26, 26, 26);
             position: relative;
             display: inline-block;
             border: .2rem solid;
             border-radius: 50%;
             border-top-color: $primary-color;
-            animation: rotate 1.2s ease infinite;
+            animation: spinner-rotate 1.2s ease infinite;
 
             &.table-loading-spinner {
                 height: 48px;
                 width: 48px;
                 margin-top: 1.2rem;
-
             }
 
             &.button-loading-spinner {
@@ -69,19 +68,29 @@ body {
                 width: 1.75rem;
                 margin-top: 5px;
                 border-top-color: white;
-                animation: rotate 1.2s ease infinite;
+                animation: spinner-rotate 1.2s ease infinite;
             }
 
             &.page-loading-spinner {
                 position: fixed;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                margin: auto;
-                width: 70px;
-                height: 70px;
+                width: 60px;
+                height: 60px;
                 border-width: .25rem;
+                transition: left $menu-collapse-time;
+                &.menu-open {
+                    left: 9%;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                }
+                &.menu-close {
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                }
             }
 
             &.card-loading-spinner {
@@ -91,7 +100,9 @@ body {
                 margin: .75rem auto;
             }
 
-            @keyframes rotate {
+            
+
+            @keyframes spinner-rotate {
                 0% {
                     transform: rotate(0deg);
                 }
@@ -371,12 +382,13 @@ body {
         }
 
         .custom-table {
-
             $transaction-table-width: 645px;
             $product-table-width: 540px;
             $customer-table-width: 780px;
             $user-table-width: 473px;
             $merchant-table-width: 371px;
+            $stock-table-width: 564px;
+            $gallon-table-width: 337px;
             overflow-x: auto;
 
             .card {
@@ -398,6 +410,14 @@ body {
 
                 &.merchant {
                     min-width: $merchant-table-width;
+                }
+
+                &.stock {
+                    min-width: $stock-table-width;
+                }
+
+                &.gallon {
+                    min-width: $gallon-table-width;
                 }
             }
 
@@ -683,7 +703,7 @@ body {
     }
 
     .btn {
-        border-radius: 50px;
+        border-radius: $button-border-radius;
         outline: initial !important;
         box-shadow: none !important;
         box-shadow: initial !important;
@@ -691,13 +711,13 @@ body {
         padding: 0.5rem 1.25rem;
 
         &.btn-primary {
-            background-color: $button-color;
+            background-color: $primary-color;
 
             &:hover {
-                background-color: $button-hover;
+                background-color: $primary-color - rgb(26, 26, 26);
 
                 &:active {
-                    background-color: $button-click;
+                    background-color: $primary-color - rgb(46, 46, 46);
                 }
             }
 
@@ -709,7 +729,7 @@ body {
                 }
 
                 &:hover {
-                    background-color: $button-color;
+                    background-color: $primary-color;
                 }
 
                 &.table-button {
@@ -717,6 +737,38 @@ body {
                 }
             }
         }
+
+        &.btn-danger {
+            background-color: $danger-color;
+
+            &:hover {
+                background-color: $danger-color - rgb(26, 26, 26);
+
+                &:active {
+                    background-color: $danger-color - rgb(46, 46, 46);
+                }
+            }
+
+            &.disabled {
+                padding: 0 1.5rem;
+
+                &.button-waiting-for-confirmation {
+                    padding: .5rem 1.25rem !important;
+                }
+
+                &:hover {
+                    background-color: $danger-color;
+                }
+
+                &.table-button {
+                    padding: 0.8rem 1.25rem;
+                }
+            }
+        }
+
+        // &.input-group-append-button {
+        //     border-radius: 0px;
+        // }
 
         &.dropdown-button {
             &.dropdown-button-primary {
@@ -804,13 +856,12 @@ body {
                 color: black;
 
                 &:active {
-                    background-color: rgb(235, 235, 235);
                     outline: none;
                 }
             }
         }
 
-        .sort-dropdown {
+        .sort-dropdown, .show-entry-dropdown {
             border-radius: $navbar-border-radius;
 
             &.show {
@@ -819,18 +870,18 @@ body {
 
             .dropdown-item {
                 user-select: none;
-                color: $text-light;
+                color: $text-light !important;
                 font-weight: lighter;
                 font-size: .9rem;
                 padding: .4rem 1.3rem;
+                transition: none !important;
 
                 &:hover {
                     background-color: $primary-color;
-                    color: white;
+                    color: white !important;
                 }
 
                 &:active {
-                    background-color: $primary-color;
                     outline: none;
                 }
             }
@@ -847,9 +898,8 @@ body {
                 user-select: none;
 
                 .page-link {
-                    min-width: 40px;
+                    width: 40px;
                     height: 40px;
-                    line-height: 0.9;
                     font-size: 0.8rem;
                     border-radius: 50% !important;
 
@@ -872,7 +922,9 @@ body {
                     }
 
                     &.active .page-link {
-                        border-color: $primary-color;
+                        border-color: $secondary-color;
+                        background-color: $primary-color;
+                        color: white;
                     }
                 }
 
@@ -957,12 +1009,8 @@ body {
     }
 
     .modal .modal-dialog .modal-content {
-        .modal-body {
-            .text {
-                font-size: 1.2em;
-                text-align: justify;
-            }
-        }
+        border-radius: 0px;
+        background-clip: border-box;
     }
 
     .react-datepicker-wrapper {
@@ -1091,6 +1139,16 @@ body {
             &:hover {
                 color: $primary-color;
             }
+        }
+    }
+
+    .not-found {
+        text-align: center;
+        h1 {
+            font-weight: bold;
+        }
+        small {
+            font-size: 1em;
         }
     }
 

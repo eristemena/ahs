@@ -73,7 +73,7 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
                             </NavItem>
                             <NavItem className={activeLinks('/products')}>
                                 <a href="/products/get" onClick={setMenuClose}>
-                                    <i className="iconsminds-folder"></i>
+                                    <i className="iconsminds-drop"></i>
                                     <Label>{sidenav.products}</Label>
                                 </a>
                             </NavItem>
@@ -85,10 +85,22 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
                                     <Label>{sidenav.transactions}</Label>
                                 </a>
                             </NavItem>
+                            <NavItem className={activeLinks('/gallons')}>
+                                <a href="/gallons/stocks/get" onClick={setMenuClose}>
+                                    <i className="iconsminds-folder"></i>
+                                    <Label>Galon</Label>
+                                </a>
+                            </NavItem>
                             <NavItem className={activeLinks('/customers')}>
                                 <a href="/customers/get" onClick={setMenuClose}>
                                     <i className="iconsminds-male-female"></i>
                                     <Label>{sidenav.customers}</Label>
+                                </a>
+                            </NavItem>
+                            <NavItem className={activeLinks('/reports')}>
+                                <a href="/reports/get" onClick={setMenuClose}>
+                                    <i className="iconsminds-file"></i>
+                                    <Label>Reporting</Label>
                                 </a>
                             </NavItem>
                             {user && user.merchant_id === null ? (

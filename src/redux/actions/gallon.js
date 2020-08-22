@@ -1,26 +1,23 @@
+import { FETCH_GALLONS } from '../actionTypes';
 import { get } from '../../axios';
-import { addAlert } from './alert';
 import { setLoading } from './loading';
 import { logout } from './user';
-import { TRANSACTION_ADD } from '../actionTypes';
+import { addAlert } from './alert';
 
-export const getTransactions = (page, sort, date, limit) => (dispatch) => {
+export const fetchGallons = (page, name) => (dispatch) => {
     dispatch(setLoading(true));
     get(
-        `/transactions?limit=${limit}&page=${page}${sort ? `&sort=${sort}-desc` : ''}${
-            date ? `&date=${date}` : ''
-        }`,
-        ({ data, page, totalPage, totalData }) => {
+        `/gallons${name ? `?name=${name}` : ''}`,
+        ({data, totalData, totalPage}) => {
             dispatch({
-                type: TRANSACTION_ADD,
+                type: FETCH_GALLONS,
                 payload: {
-                    totalPage,
                     totalData,
-                    page,
-                    data,
-                },
+                    totalPage,
+                    data
+                }
             });
-            dispatch(setLoading(false));
+            dispatch(setLoading(false))
         },
         (error) => {
             if (error) {
@@ -39,5 +36,5 @@ export const getTransactions = (page, sort, date, limit) => (dispatch) => {
             }
             dispatch(setLoading(false));
         }
-    );
-};
+    )
+}

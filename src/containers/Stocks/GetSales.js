@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { getSales } from '../../redux/actions/sale';
 import { formatPrice } from '../../utilities';
 
-const GetSales = ({ sale, getSales, stock }) => {
+const GetSales = ({ sale, getSales, product_stock }) => {
     const [graphWeekCode, setGraphWeekCode] = useState(1);
     const [selectProduct, setSelectProduct] = useState(-1);
 
@@ -93,8 +93,8 @@ const GetSales = ({ sale, getSales, stock }) => {
                         <option value={-1} disabled>
                             --Select product--
                         </option>
-                        {stock.data
-                            ? stock.data.map(({ product_id, name }) => (
+                        {product_stock.data
+                            ? product_stock.data.map(({ product_id, name }) => (
                                   <option key={product_id} value={product_id}>
                                       {name}
                                   </option>
@@ -124,7 +124,7 @@ const GetSales = ({ sale, getSales, stock }) => {
 
 const mapStateToProps = (state) => ({
     sale: state.sale,
-    stock: state.stock,
+    product_stock: state.product_stock,
 });
 
 const mapDispatchToProps = (dispatch) => ({

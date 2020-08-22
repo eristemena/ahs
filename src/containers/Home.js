@@ -6,7 +6,7 @@ import { Container, Row, Col } from 'reactstrap';
 function Home({ merchant_id }) {
     return (
         <Container fluid>
-            {merchant_id ? (
+            {/* {merchant_id ? (
                 <Fragment>
                     <Row xs="1" sm="2" md="4" lg="5">
                         <GetStocks />
@@ -22,7 +22,7 @@ function Home({ merchant_id }) {
                 </Fragment>
             ) : (
                 <h1>Welcome Admin</h1>
-            )}
+            )} */}
         </Container>
     );
 }

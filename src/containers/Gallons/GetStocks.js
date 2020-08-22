@@ -2,14 +2,14 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { addAlert } from '../../redux/actions/alert';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getTransactions } from '../../redux/actions/transaction';
+import { fetchStocks } from '../../redux/actions/gallon_stock';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { del } from '../../axios';
-import { formatPrice, checkAdminMerchant } from '../../utilities';
+import { checkAdminMerchant, parseType } from '../../utilities';
 import {
     DeleteModal,
     InfoTooltip,
@@ -30,10 +30,10 @@ import {
 import { intlMessage } from '../../language';
 registerLocale('id', id);
 
-const GetTransaction = ({
+const GetGallonStocks = ({
     alert,
-    getTransaction,
-    transaction,
+    fetchStocks,
+    gallon_stock,
     history,
     user,
     loading,
@@ -48,11 +48,11 @@ const GetTransaction = ({
     const [limit, setLimit] = useState(8);
 
     useEffect(() => {
-        getTransaction(
+        fetchStocks(
             page,
+            limit,
             sortBy,
-            dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null,
-            limit
+            dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null
         );
     }, [page, sortBy, dateSearch, limit]);
 
@@ -62,7 +62,7 @@ const GetTransaction = ({
                 let a = [];
                 for (
                     let i = 1;
-                    i <= (transaction ? transaction.totalPage : 1);
+                    i <= (gallon_stock ? gallon_stock.totalPage : 1);
                     i++
                 ) {
                     a.push(i);
@@ -70,7 +70,7 @@ const GetTransaction = ({
                 return a;
             });
         }
-    }, [transaction]);
+    }, [gallon_stock]);
 
     const activeNav = (type) => {
         if (loading) {
@@ -81,9 +81,9 @@ const GetTransaction = ({
                 return true;
             }
         } else {
-            if (!transaction || transaction.totalPage < 1) {
+            if (!gallon_stock || gallon_stock.totalPage < 1) {
                 return true;
-            } else if (page === transaction.totalPage) {
+            } else if (page === gallon_stock.totalPage) {
                 return true;
             }
         }
@@ -107,89 +107,54 @@ const GetTransaction = ({
             return alert('Telah terjadi kesalahan');
         }
         del(
-            `/transactions/${delId}`,
+            `/stocks/${delId}`,
             (success) => {
                 alert('Data berhasil dihapus', 'success');
-                getTransaction(page);
+                fetchStocks(page);
                 setLoading(false);
                 setDelId(-1);
             },
             (error) => {
                 alert('Telah terjadi kesalahan');
-                getTransaction(page);
+                fetchStocks(page);
                 setLoading(false);
                 setDelId(-1);
             }
         );
     };
 
-    const {
-        transactions: {
-            get: { title, add_transaction, table },
-        },
-        action,
-    } = intlMessage(language);
+    // const [tableHead, setTableHead] = useState([]);
 
-    const [tableHead, setTableHead] = useState([]);
-
-    useEffect(() => {
-        setTableHead([
-            table.date,
-            table.name,
-            table.type,
-            table.quantity,
-            table.price,
-            table.customer,
-        ]);
-        if (checkAdminMerchant(user)) {
-            setTableHead((prevData) => [...prevData, action.action]);
-        }
-    }, []);
-
-    const parseType = (type) => {
-        switch (type) {
-            case 'sell':
-                return 'Sell';
-            case 'buy':
-                return 'Buy';
-            default:
-                return '';
-        }
-    };
-
-    const showTableData = ({
-        date,
-        product,
-        type,
-        customer,
-        quantity,
-        price,
-    }) => {
-        const formatDate = moment(date).format('LL');
-        const typeParse = parseType(type);
-        const priceFormat = formatPrice(price);
-        return {
-            date: formatDate,
-            name: product ? product.name : '~',
-            type: typeParse,
-            quantity,
-            price: price && `Rp. ${priceFormat}`,
-            customer: customer ? customer.name : '~',
-        };
-    };
+    // useEffect(() => {
+    //     setTableHead(['Name', 'Type', 'Quantity', 'Date', 'Customer']);
+    //     if (checkAdminMerchant(user)) {
+    //         setTableHead((prevData) => [...prevData, 'Actions']);
+    //     }
+    // }, []);
 
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1>{title}</h1>
-                <button
-                    className={`btn btn-primary font-weight-bold table-button ${
-                        !checkAdminMerchant(user) ? 'disabled' : ''
-                    }`}
-                    disabled={!checkAdminMerchant(user)}
-                    onClick={() => history.push('/transactions/add')}>
-                    {add_transaction}
-                </button>
+                <h1>Stocks</h1>
+                <div className="d-sm-flex flex-column flex-sm-row">
+                    <button
+                        className={`btn btn-primary font-weight-bold mr-2 mt-2 table-button ${
+                            !checkAdminMerchant(user) ? 'disabled' : ''
+                        }`}
+                        disabled={!checkAdminMerchant(user)}
+                        onClick={() => history.push('/gallons/stocks/add')}>
+                        EDIT GALLON STOCK
+                    </button>
+                    <button
+                        className={`btn btn-success font-weight-bold mt-2 table-button ${
+                            !checkAdminMerchant(user) ? 'disabled' : ''
+                        }`}
+                        disabled={!checkAdminMerchant(user)}
+                        onClick={() => history.push('/gallons/get')}>
+                        GALLONS
+                    </button>
+                </div>
+                
             </div>
             <div className="d-flex flex-column flex-sm-row justify-content-between mb-2">
                 <div className="d-flex flex-column flex-sm-row">
@@ -267,65 +232,44 @@ const GetTransaction = ({
                 </div>
             </div>
             <Container fluid>
-                {/* <CustomTable tableName={title.toLowerCase()} tableClassName="transaction"
-                    tableHead={tableHead}
-                    tableBody={{
-                        data: transaction.data && transaction.data.map(data => showTableData(data)),
-                        actions: checkAdminMerchant(user)
-                            && { edit: '/transactions/edit' }
-                    }}
-                    deleteFunction={setDelId}
-                /> */}
                 <div className="custom-table">
-                    <Card className="transaction">
+                    <Card className="stock">
                         <CardBody>
-                            <table className="transaction-table">
+                            <table className="stock-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>{table.date}</th>
-                                        <th>{table.name}</th>
-                                        <th>{table.type}</th>
-                                        <th>{table.quantity}</th>
-                                        <th>{table.price}</th>
-                                        <th>{table.customer}</th>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Quantity</th>
+                                        <th>Date</th>
+                                        <th>Customer</th>
                                         {checkAdminMerchant(user) ? (
-                                            <th>{action.action}</th>
+                                            <th>Actions</th>
                                         ) : null}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {!loading ? (
-                                        transaction &&
-                                        transaction.data &&
-                                        transaction.data.length > 0 ? (
-                                            transaction.data.map((tran) => (
+                                        gallon_stock.data &&
+                                        gallon_stock.data.length > 0 ? (
+                                            gallon_stock.data.map((galStk) => (
                                                 <tr
-                                                    key={tran.id}
+                                                    key={galStk.id}
                                                     role="row"
                                                     className="text-center">
+                                                    <td>{galStk.gallon.name}</td>
+                                                    <td>
+                                                        {parseType(galStk.type)}
+                                                    </td>
+                                                    <td>{galStk.quantity}</td>
                                                     <td>
                                                         {moment(
-                                                            tran.date
+                                                            galStk.date
                                                         ).format('LL')}
                                                     </td>
-                                                    <td>{tran.product.name}</td>
                                                     <td>
-                                                        {tran.type === 'sell'
-                                                            ? 'Jual'
-                                                            : 'Beli'}
-                                                    </td>
-                                                    <td>{tran.quantity}</td>
-                                                    <td>
-                                                        Rp.{' '}
-                                                        {formatPrice(
-                                                            tran.type === 'sell'
-                                                                ? tran.price
-                                                                : tran.buying_price
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        {tran.customer
-                                                            ? tran.customer.name
+                                                        {galStk.customer
+                                                            ? galStk.customer.name
                                                             : '~'}
                                                     </td>
                                                     {checkAdminMerchant(
@@ -333,35 +277,31 @@ const GetTransaction = ({
                                                     ) ? (
                                                         <td>
                                                             <Link
-                                                                to={`/transactions/edit?id=${tran.id}`}
+                                                                to={`/gallons/stocks/edit?id=${galStk.id}`}
                                                                 className="mr-2">
                                                                 <i
                                                                     className="simple-icon-note edit-icon"
-                                                                    title={
-                                                                        action.edit
-                                                                    }></i>
+                                                                    title="Edit"></i>
                                                             </Link>
                                                             <i
                                                                 className={`simple-icon-close delete-icon ${
-                                                                    tran.info
+                                                                    galStk.info
                                                                         ? 'mr-2'
                                                                         : ''
                                                                 }`}
                                                                 data-toggle="modal"
                                                                 data-target="#modal"
-                                                                title={
-                                                                    action.delete
-                                                                }
-                                                                onClick={(e) =>
+                                                                title="Delete"
+                                                                onClick={() =>
                                                                     setDelId(
-                                                                        tran.id
+                                                                        galStk.id
                                                                     )
                                                                 }></i>
-                                                            {tran.info ? (
+                                                            {galStk.info ? (
                                                                 <Fragment>
                                                                     <InfoTooltip
                                                                         info={
-                                                                            tran.info
+                                                                            galStk.info
                                                                         }
                                                                     />
                                                                 </Fragment>
@@ -373,7 +313,7 @@ const GetTransaction = ({
                                         ) : (
                                             <tr>
                                                 <td
-                                                    colSpan="7"
+                                                    colSpan="6"
                                                     className="text-center">
                                                     Belum ada transaksi,
                                                     silahkan tambahkan transaksi
@@ -383,7 +323,7 @@ const GetTransaction = ({
                                     ) : (
                                         <tr className="align-middle">
                                             <td
-                                                colSpan="7"
+                                                colSpan="6"
                                                 className="text-center">
                                                 <CustomSpinner
                                                     loading={loading}
@@ -413,16 +353,16 @@ const GetTransaction = ({
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
-    getTransaction: (page, sort, date, limit) =>
-        dispatch(getTransactions(page, sort, date, limit)),
+    fetchStocks: (page, limit, sort, date) =>
+        dispatch(fetchStocks(page, limit, sort, date)),
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
 const mapStateToProps = (state) => ({
-    transaction: state.transaction,
+    gallon_stock: state.gallon_stock,
     user: state.user,
     loading: state.loading,
     language: state.language,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetTransaction);
+export default connect(mapStateToProps, mapDispatchToProps)(GetGallonStocks);
