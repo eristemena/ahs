@@ -63,7 +63,8 @@ const CustomPagination = ({
     };
     return (
         <div className="text-center mt-2 custom-pagination">
-            <Pagination
+            {pages.length !== 0 && (
+                <Pagination
                 className="d-inline-block"
                 size="sm"
                 listClassName="justify-content-center">
@@ -109,6 +110,7 @@ const CustomPagination = ({
                     </PaginationLink>
                 </PaginationItem>
             </Pagination>
+            )}
         </div>
     );
 };

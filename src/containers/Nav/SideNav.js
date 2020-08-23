@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setMenuState } from '../../redux/actions/menu';
 import { intlMessage } from '../../language';
+import { checkAdminMerchant } from '../../utilities';
 
 const SideNav = ({ user, menu, setMenuState, history, language }) => {
     const [windowWidth, setWindowWidth] = useState(undefined);
@@ -46,7 +47,7 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
         }
     };
 
-    const {sidenav} = intlMessage(language)
+    const { sidenav } = intlMessage(language);
 
     return (
         <div className="side-nav">
@@ -86,7 +87,7 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/gallons')}>
-                                <a href="/gallons/stocks/get" onClick={setMenuClose}>
+                                <a href="/gallons/get" onClick={setMenuClose}>
                                     <i className="iconsminds-folder"></i>
                                     <Label>Galon</Label>
                                 </a>
@@ -97,13 +98,8 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
                                     <Label>{sidenav.customers}</Label>
                                 </a>
                             </NavItem>
-                            <NavItem className={activeLinks('/reports')}>
-                                <a href="/reports/get" onClick={setMenuClose}>
-                                    <i className="iconsminds-file"></i>
-                                    <Label>Reporting</Label>
-                                </a>
-                            </NavItem>
-                            {user && user.merchant_id === null ? (
+                            
+                            {!checkAdminMerchant(user) ? user.merchant_id === null && (
                                 <NavItem
                                     className={activeLinks('/merchants/get')}>
                                     <a
@@ -113,7 +109,14 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
                                         <Label>{sidenav.merchant}</Label>
                                     </a>
                                 </NavItem>
-                            ) : null}
+                            ) : (
+                                <NavItem className={activeLinks('/reports')}>
+                                    <a href="/reports/get" onClick={setMenuClose}>
+                                        <i className="iconsminds-file"></i>
+                                        <Label>Reporting</Label>
+                                    </a>
+                                </NavItem>
+                            )}
                         </Nav>
                     </PerfectScrollbar>
                 </div>

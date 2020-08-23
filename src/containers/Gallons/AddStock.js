@@ -10,7 +10,6 @@ const AddStock = ({ alert, history, loading }) => {
 
     const onSubmitHandler = (
         date,
-        gallon_id,
         type,
         quantity,
         customer_id,
@@ -21,7 +20,6 @@ const AddStock = ({ alert, history, loading }) => {
             '/stocks',
             {
                 date,
-                gallon_id,
                 type,
                 quantity,
                 info,

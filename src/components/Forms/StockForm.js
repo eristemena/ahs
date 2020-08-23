@@ -22,7 +22,6 @@ const StockForm = ({
     onSubmit = () => {},
     submitting,
     stateDate,
-    stateSelected = '',
     stateSelectedCustomer = '',
     stateQuantity = 1,
     stateType = 'sell',
@@ -31,16 +30,11 @@ const StockForm = ({
     alert,
     history,
 }) => {
-    const [owned, setOwned] = useState([]);
-    const [loadingOwned, setLoadingOwned] = useState(false);
     const [ownedCustomers, setOwnedCustomers] = useState([]);
     const [loadingOwnedCustomer, setLoadingOwnedCustomer] = useState(false);
 
     const schema = Yup.object().shape({
         date: Yup.date().required(),
-        gallon_id: Yup.number()
-            .integer()
-            .required(),
         type: Yup.string().default('sell'),
         quantity: Yup.number().positive().required(),
         customer_id: Yup.number().when('type', {
@@ -55,27 +49,7 @@ const StockForm = ({
     })
 
     useEffect(() => {
-        setLoadingOwned(true);
         setLoadingOwnedCustomer(true);
-        
-        get(
-            '/gallons',
-            ({ data }) => {
-                if (!data.length > 0) {
-                    history.push('/gallons/stocks/get');
-                    return alert('Anda belum memiliki gallon');
-                }
-                setOwned(
-                    data.map(({ id, name }) => ({ value: id, label: name }))
-                );
-                setLoadingOwned(false);
-            },
-            (error) => {
-                history.push('/gallons/stocks/get');
-                alert('Telah terjadi kesalahan');
-                setLoadingOwned(false);
-            }
-        );
         get(
             `/customers`,
             ({ data }) => {
@@ -122,46 +96,6 @@ const StockForm = ({
                         {errors.date && touched.date ? (
                             <div className="invalid-feedback d-block">
                                 {errors.date}
-                            </div>
-                        ) : null}
-                    </FormGroup>
-                    <FormGroup>
-                        <Label className="d-block" for="gallon">
-                            Gallon
-                        </Label>
-                        <Select
-                            id="gallon"
-                            classNamePrefix="custom-searchable-select "
-                            isLoading={loadingOwned}
-                            isDisabled={loadingOwned}
-                            noOptionsMessage={() => 'Produk tidak ditemukan'}
-                            name="gallon_id"
-                            options={owned}
-                            value={{
-                                value: values.gallon_id,
-                                label:
-                                    values.gallon_id > 0
-                                        ? owned.map((own) => {
-                                              if (
-                                                  own.value ===
-                                                  values.gallon_id
-                                              ) {
-                                                  return own.label;
-                                              }
-                                          })
-                                        : "Pilih produk",
-                            }}
-                            onChange={(e) =>
-                                setValues({
-                                    ...values,
-                                    gallon_id: e.value,
-                                })
-                            }
-                            isSearchable
-                        />
-                        {errors.gallon_id && touched.gallon_id ? (
-                            <div className="invalid-feedback d-block">
-                                {errors.gallon_id}
                             </div>
                         ) : null}
                     </FormGroup>
@@ -300,8 +234,7 @@ const StockForm = ({
                     </FormGroup>
                     <SubmitAndCancelButton
                         submitting={submitting}
-                        loading1={loadingOwned}
-                        loading2={loadingOwnedCustomer}
+                        loading1={loadingOwnedCustomer}
                         action={action}
                         history={history}
                     />
@@ -312,7 +245,6 @@ const StockForm = ({
 
     const submitHandler = ({
         date,
-        gallon_id,
         type,
         quantity,
         customer_id,
@@ -321,7 +253,6 @@ const StockForm = ({
         const dateSend = moment(date).format('YYYY-MM-DD');
         onSubmit(
             dateSend,
-            gallon_id,
             type,
             quantity,
             !customer_id || typeof customer_id === 'string'
@@ -335,7 +266,6 @@ const StockForm = ({
         <Formik
             initialValues={{
                 date: stateDate || '',
-                gallon_id: stateSelected || '',
                 type: stateType || 'sell',
                 quantity: stateQuantity || 1,
                 customer_id: stateSelectedCustomer || '',

@@ -12,6 +12,7 @@ import Customer from './Customer';
 import Alerts from '../components/Alerts';
 import Navigation from './Navigation';
 import GallonsStocks from './GallonStocks'
+import Report from './Report'
 import { Row, Col } from 'reactstrap';
 import { setMenuState } from '../redux/actions/menu';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -88,7 +89,10 @@ const Content = ({ user, menu, history, setMenuState }) => {
                                             path="/gallons"
                                             component={GallonsStocks}
                                         />
-
+                                        <Route
+                                            path="/reports"
+                                            component={Report}
+                                        />
                                         <Route component={NotFound} />
                                     </Switch>
                                 </Col>

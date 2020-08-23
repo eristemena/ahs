@@ -43,5 +43,3 @@ export const SET_LANG_EN = 'SET_LANG_EN';
 // Gallons
 export const FETCH_STOCKS = 'FETCH_STOCKS';
 export const DELETE_STOCKS = 'DELETE_STOCKS';
-export const FETCH_GALLONS = 'FETCH_GALLONS';
-export const DELETE_GALLONS = 'DELETE_GALLONS';

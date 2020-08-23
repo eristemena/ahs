@@ -26,6 +26,8 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
+    Row,
+    Col,
 } from 'reactstrap';
 import { intlMessage } from '../../language';
 registerLocale('id', id);
@@ -138,23 +140,14 @@ const GetGallonStocks = ({
                 <h1>Stocks</h1>
                 <div className="d-sm-flex flex-column flex-sm-row">
                     <button
-                        className={`btn btn-primary font-weight-bold mr-2 mt-2 table-button ${
+                        className={`btn btn-primary font-weight-bold table-button ${
                             !checkAdminMerchant(user) ? 'disabled' : ''
                         }`}
                         disabled={!checkAdminMerchant(user)}
-                        onClick={() => history.push('/gallons/stocks/add')}>
-                        EDIT GALLON STOCK
-                    </button>
-                    <button
-                        className={`btn btn-success font-weight-bold mt-2 table-button ${
-                            !checkAdminMerchant(user) ? 'disabled' : ''
-                        }`}
-                        disabled={!checkAdminMerchant(user)}
-                        onClick={() => history.push('/gallons/get')}>
-                        GALLONS
+                        onClick={() => history.push('/gallons/add')}>
+                        ADD STOCK TRANSACTION
                     </button>
                 </div>
-                
             </div>
             <div className="d-flex flex-column flex-sm-row justify-content-between mb-2">
                 <div className="d-flex flex-column flex-sm-row">
@@ -238,10 +231,9 @@ const GetGallonStocks = ({
                             <table className="stock-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>Name</th>
+                                        <th>Date</th>
                                         <th>Type</th>
                                         <th>Quantity</th>
-                                        <th>Date</th>
                                         <th>Customer</th>
                                         {checkAdminMerchant(user) ? (
                                             <th>Actions</th>
@@ -250,80 +242,103 @@ const GetGallonStocks = ({
                                 </thead>
                                 <tbody>
                                     {!loading ? (
-                                        gallon_stock.data &&
-                                        gallon_stock.data.length > 0 ? (
-                                            gallon_stock.data.map((galStk) => (
-                                                <tr
-                                                    key={galStk.id}
-                                                    role="row"
-                                                    className="text-center">
-                                                    <td>{galStk.gallon.name}</td>
-                                                    <td>
-                                                        {parseType(galStk.type)}
-                                                    </td>
-                                                    <td>{galStk.quantity}</td>
-                                                    <td>
-                                                        {moment(
-                                                            galStk.date
-                                                        ).format('LL')}
-                                                    </td>
-                                                    <td>
-                                                        {galStk.customer
-                                                            ? galStk.customer.name
-                                                            : '~'}
-                                                    </td>
-                                                    {checkAdminMerchant(
-                                                        user
-                                                    ) ? (
-                                                        <td>
-                                                            <Link
-                                                                to={`/gallons/stocks/edit?id=${galStk.id}`}
-                                                                className="mr-2">
-                                                                <i
-                                                                    className="simple-icon-note edit-icon"
-                                                                    title="Edit"></i>
-                                                            </Link>
-                                                            <i
-                                                                className={`simple-icon-close delete-icon ${
-                                                                    galStk.info
-                                                                        ? 'mr-2'
-                                                                        : ''
-                                                                }`}
-                                                                data-toggle="modal"
-                                                                data-target="#modal"
-                                                                title="Delete"
-                                                                onClick={() =>
-                                                                    setDelId(
-                                                                        galStk.id
-                                                                    )
-                                                                }></i>
-                                                            {galStk.info ? (
-                                                                <Fragment>
-                                                                    <InfoTooltip
-                                                                        info={
+                                        <Fragment>
+                                            {gallon_stock.data.rows &&
+                                            gallon_stock.data.rows.length >
+                                                0 ? (
+                                                gallon_stock.data.rows.map(
+                                                    (galStk) => (
+                                                        <tr
+                                                            key={galStk.id}
+                                                            role="row"
+                                                            className="text-center">
+                                                            <td>
+                                                                {moment(
+                                                                    galStk.date
+                                                                ).format('LL')}
+                                                            </td>
+                                                            <td>
+                                                                {parseType(
+                                                                    galStk.type
+                                                                )}
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    galStk.quantity
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                {galStk.customer
+                                                                    ? galStk
+                                                                          .customer
+                                                                          .name
+                                                                    : '~'}
+                                                            </td>
+                                                            {checkAdminMerchant(
+                                                                user
+                                                            ) ? (
+                                                                <td>
+                                                                    <Link
+                                                                        to={`/gallons/edit?id=${galStk.id}`}
+                                                                        className="mr-2">
+                                                                        <i
+                                                                            className="simple-icon-note edit-icon"
+                                                                            title="Edit"></i>
+                                                                    </Link>
+                                                                    <i
+                                                                        className={`simple-icon-close delete-icon ${
                                                                             galStk.info
-                                                                        }
-                                                                    />
-                                                                </Fragment>
+                                                                                ? 'mr-2'
+                                                                                : ''
+                                                                        }`}
+                                                                        data-toggle="modal"
+                                                                        data-target="#modal"
+                                                                        title="Delete"
+                                                                        onClick={() =>
+                                                                            setDelId(
+                                                                                galStk.id
+                                                                            )
+                                                                        }></i>
+                                                                    {galStk.info ? (
+                                                                        <Fragment>
+                                                                            <InfoTooltip
+                                                                                info={
+                                                                                    galStk.info
+                                                                                }
+                                                                            />
+                                                                        </Fragment>
+                                                                    ) : null}
+                                                                </td>
                                                             ) : null}
-                                                        </td>
-                                                    ) : null}
+                                                        </tr>
+                                                    )
+                                                )
+                                            ) : (
+                                                <tr>
+                                                    <td
+                                                        colSpan={
+                                                            checkAdminMerchant(
+                                                                user
+                                                            )
+                                                                ? 6
+                                                                : 5
+                                                        }
+                                                        className="text-center">
+                                                        Belum ada transaksi,
+                                                        silahkan tambahkan
+                                                        transaksi
+                                                    </td>
                                                 </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td
-                                                    colSpan="6"
-                                                    className="text-center">
-                                                    Belum ada transaksi,
-                                                    silahkan tambahkan transaksi
-                                                </td>
-                                            </tr>
-                                        )
+                                            )}
+                                        </Fragment>
                                     ) : (
                                         <tr className="align-middle">
                                             <td
-                                                colSpan="6"
+                                                colSpan={
+                                                    checkAdminMerchant(user)
+                                                        ? 6
+                                                        : 5
+                                                }
                                                 className="text-center">
                                                 <CustomSpinner
                                                     loading={loading}
@@ -345,7 +360,6 @@ const GetGallonStocks = ({
                     activeNav={activeNav}
                 />
             </Container>
-
             <DeleteModal deleteHandler={deleteData} />
         </Container>
     );

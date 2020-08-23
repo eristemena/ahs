@@ -7,7 +7,7 @@ import { addAlert } from './alert';
 export const fetchStocks = (page, limit, sort, date) => (dispatch) => {
     dispatch(setLoading(true));
     get(
-        `/stocks?limit=${limit ? limit : 8}&page=${page}${
+        `/stocks?limit=${limit || 8}&page=${page || 1}${
             sort ? `&sort=${sort}-desc` : ''
         }${date ? `&date=${date}` : ''}`,
         ({ data, totalData, totalPage }) => {

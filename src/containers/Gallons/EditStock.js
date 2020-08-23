@@ -11,7 +11,6 @@ const EditStock = ({ alert, user, loading, history, setLoading }) => {
     const [submitting, setSubmitting] = useState(false);
     const [id, setId] = useState(null);
     const [date, setDate] = useState(null);
-    const [gallon, setGallon] = useState(null);
     const [type, setType] = useState(null);
     const [quantity, setQuantity] = useState(null);
     const [customer, setCustomer] = useState(null);
@@ -46,15 +45,15 @@ const EditStock = ({ alert, user, loading, history, setLoading }) => {
         setId(queryId);
         get(
             `/stocks?id=${queryId}`,
-            ({ data }) => {
-                const stock = data[0];
+            ({ data: { rows } }) => {
+                const stock = rows[0];
                 setDate(new Date(stock.date));
                 setQuantity(stock.quantity);
                 setType(stock.type);
-                setGallon(stock.gallon_id);
                 if (stock.customer_id) {
-                    setCustomer(stock.customer_id)
+                    setCustomer(stock.customer_id);
                 }
+                setInfo(stock.info);
                 setLoading(false);
             },
             (error) => {
@@ -65,20 +64,12 @@ const EditStock = ({ alert, user, loading, history, setLoading }) => {
         );
     }, []);
 
-    const onSubmitHandler = (
-        date,
-        gallon_id,
-        type,
-        quantity,
-        customer_id,
-        info
-    ) => {
+    const onSubmitHandler = (date, type, quantity, customer_id, info) => {
         setSubmitting(true);
         put(
             `/stocks/${id}`,
             {
                 date,
-                gallon_id,
                 type,
                 quantity,
                 info,
@@ -86,7 +77,7 @@ const EditStock = ({ alert, user, loading, history, setLoading }) => {
             },
             (success) => {
                 setSubmitting(false);
-                alert('Transaksi berhasil ditambahkan', 'success');
+                alert('Transaksi berhasil diedit', 'success');
                 history.goBack();
             },
             (error) => {
@@ -105,8 +96,8 @@ const EditStock = ({ alert, user, loading, history, setLoading }) => {
                     stateDate={date}
                     stateQuantity={quantity}
                     stateType={type}
-                    stateSelected={gallon}
                     stateSelectedCustomer={customer}
+                    stateInfo={info}
                     action="Edit"
                 />
             ) : (
