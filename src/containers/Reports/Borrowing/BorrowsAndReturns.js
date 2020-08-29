@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom'
 import { Card, CardBody, CardTitle } from 'reactstrap';
-import { get } from '../../axios';
-import { addAlert } from '../../redux/actions';
+import { get } from '../../../axios';
+import { addAlert } from '../../../redux/actions';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { TableSearchbar, CustomSpinner } from '../../components';
 
 const BorrowsAndReturns = ({ history, alert }) => {
     const [data, setData] = useState([]);
@@ -17,11 +17,17 @@ const BorrowsAndReturns = ({ history, alert }) => {
         get(
             '/stocks/report',
             ({ data }) => {
-                setData(data);
+                let placeholder = [];
+                data.transactions.map((item) => {
+                    if (item.owed !== 0) {
+                        placeholder.push(item)
+                    }
+                });
+                setData(placeholder)
                 setLoading(false);
             },
             (error) => {
-                history.goBack();
+                history.push('/');
                 setLoading(false);
                 alert('Telah terjadi kesalahan');
             }
@@ -67,7 +73,7 @@ const BorrowsAndReturns = ({ history, alert }) => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="4">...</td>
+                                        <td colSpan="4" className="text-center">Yay! Tidak ada yang ngutang!</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -83,4 +89,4 @@ const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
 });
 
-export default connect(null, mapDispatchToProps)(BorrowsAndReturns);
+export default withRouter(connect(null, mapDispatchToProps)(BorrowsAndReturns));

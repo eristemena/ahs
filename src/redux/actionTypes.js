@@ -35,6 +35,8 @@ export const CUSTOMER_REMOVE = 'CUSTOMER_REMOVE';
 // Menu
 export const SET_MENU_OPEN = 'SET_MENU_OPEN';
 export const SET_MENU_CLOSE = 'SET_MENU_CLOSE';
+export const SET_SUB_MENU_OPEN = 'SET_SUB_MENU_OPEN';
+export const SET_SUB_MENU_CLOSE = 'SET_SUB_MENU_CLOSE';
 
 // Language
 export const SET_LANG_ID = 'SET_LANG_ID';

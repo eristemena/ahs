@@ -45,7 +45,7 @@ const GetGallonStocks = ({
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
     const [delId, setDelId] = useState(-1);
-    const [sortBy, setSortBy] = useState('date');
+    const [sortBy, setSortBy] = useState('updated_at');
     const [dateSearch, setDateSearch] = useState(new Date());
     const [limit, setLimit] = useState(8);
 

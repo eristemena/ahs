@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { Nav, NavItem, Label } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setMenuState } from '../../redux/actions/menu';
+import { setMenuState, setSubMenuState } from '../../redux/actions/';
 import { intlMessage } from '../../language';
 import { checkAdminMerchant } from '../../utilities';
 
-const SideNav = ({ user, menu, setMenuState, history, language }) => {
+const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language }) => {
     const [windowWidth, setWindowWidth] = useState(undefined);
+    const [sub, setSub] = useState(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -37,21 +38,52 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
         }
     };
 
+    const items = {
+        reports: [
+            {
+                name: 'Borrowing',
+                icon: 'simple-icon-share-alt',
+                to: '/reports/borrowing'
+            },
+            {
+                name: 'Sales',
+                icon: 'simple-icon-wallet',
+                to: '/reports/sales'
+            }
+        ]
+    }
+
     const setMenuClose = (e) => {
         e.preventDefault();
 
-        history.push(e.currentTarget.getAttribute('href'));
+        const href = e.currentTarget.getAttribute('href');
 
-        if (windowWidth < 992) {
-            setMenuState(false);
+        console.log(href)
+
+        if (href !== "#") {
+            history.push(href);
+            if (windowWidth < 992) {
+                setMenuState(false);
+            }
+            setSub(null)
+            setSubMenuState(false)
+        } else {
+            const id = e.currentTarget.getAttribute('id');
+            if (sub === id) {
+                setSubMenuState(!menu.sub)
+            } else {
+                setSubMenuState(true)
+            }
+            setSub(id)
         }
+
     };
 
     const { sidenav } = intlMessage(language);
 
     return (
         <div className="side-nav">
-            <div className={`main-menu ${!menu ? 'main-hidden' : ''}`}>
+            <div className={`main-menu ${!menu.menu ? 'main-hidden' : ''} ${menu.sub ? 'sub-open' : ''}`}>
                 <div className="scroll">
                     <PerfectScrollbar
                         options={{
@@ -111,11 +143,36 @@ const SideNav = ({ user, menu, setMenuState, history, language }) => {
                                 </NavItem>
                             ) : (
                                 <NavItem className={activeLinks('/reports')}>
-                                    <a href="/reports/get" onClick={setMenuClose}>
+                                    <a href="#" id="reports" onClick={setMenuClose}>
                                         <i className="iconsminds-file"></i>
                                         <Label>Reporting</Label>
                                     </a>
                                 </NavItem>
+                            )}
+                        </Nav>
+                    </PerfectScrollbar>
+                </div>
+            </div>
+            <div className={`sub-menu ${!menu.sub || !menu.menu ? 'hidden' : ''} ${!menu.menu ? 'main-hidden' : 'main-show'}`}>
+                <div className="scroll">
+                    <PerfectScrollbar
+                        options={{
+                            suppressScrollX: true,
+                            wheelPropagation: false,
+                            wheelSpeed: 0.3,
+                        }}>
+                        <Nav vertical className="list-unstyled">
+                            {sub === 'reports' && (
+                                <Fragment>
+                                    {items.reports.map((item, index) => (
+                                        <NavItem key={index} className={activeLinks(item.to)}>
+                                            <a href={item.to} onClick={setMenuClose}>
+                                                <i className={item.icon}></i>
+                                                <Label>{item.name}</Label>
+                                            </a>
+                                        </NavItem>
+                                    ))}
+                                </Fragment>
                             )}
                         </Nav>
                     </PerfectScrollbar>
@@ -133,6 +190,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
+    setSubMenuState: (sub) => dispatch(setSubMenuState(sub))
 });
 
 export default withRouter(

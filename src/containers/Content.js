@@ -14,10 +14,10 @@ import Navigation from './Navigation';
 import GallonsStocks from './GallonStocks'
 import Report from './Report'
 import { Row, Col } from 'reactstrap';
-import { setMenuState } from '../redux/actions/menu';
+import { setMenuState, setSubMenuState } from '../redux/actions/menu';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
-const Content = ({ user, menu, history, setMenuState }) => {
+const Content = ({ user, menu, history, setMenuState, setSubMenuState }) => {
     const [windowWidth, setWindowWidth] = useState(undefined);
 
     useEffect(() => {
@@ -42,6 +42,7 @@ const Content = ({ user, menu, history, setMenuState }) => {
         if (windowWidth < 992) {
             setMenuState(false);
         }
+        setSubMenuState(false)
     };
 
     return (
@@ -109,11 +110,12 @@ const Content = ({ user, menu, history, setMenuState }) => {
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    menu: state.menu,
+    menu: state.menu.menu,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
+    setSubMenuState: (sub) => dispatch(setSubMenuState(sub))
 });
 
 export default withRouter(

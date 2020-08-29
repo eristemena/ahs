@@ -144,7 +144,7 @@ function NavBar({
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    menu: state.menu,
+    menu: state.menu.menu,
     language: state.language,
 });
 
