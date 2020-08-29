@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 import { get } from '../../axios';
 import { addAlert } from '../../redux/actions';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { TableSearchbar } from '../../components';
+import { TableSearchbar, CustomSpinner } from '../../components';
 
 const BorrowsAndReturns = ({ history, alert }) => {
     const [data, setData] = useState([]);
-    const [temp, setTemp] = useState(0);
+    const [temp, setTemp] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [name, setName] = useState('');
 
     useEffect(() => {
         setLoading(true);
@@ -32,8 +31,21 @@ const BorrowsAndReturns = ({ history, alert }) => {
     return (
         <div className="custom-table">
             <Card className="borrowing">
-                <CardBody>
-                    <PerfectScrollbar>
+                <div className="custom-button">
+                    <button className={`refresh-button ${loading ? 'spin' : ''}`} disabled={loading} title="Refresh" onClick={() => setTemp(!temp)}>
+                        <i className="simple-icon-refresh" />
+                    </button>
+                </div>
+                <CardTitle className="p-3 m-0">
+                    <h4 className="m-0">Borrowing</h4>
+                </CardTitle>
+                <CardBody className="pt-0">
+                    <PerfectScrollbar
+                        options={{
+                            suppressScrollX: true,
+                            wheelPropagation: true,
+                            wheelSpeed: 0.2,
+                        }}>
                         <table className="borrowing-table">
                             <thead>
                                 <tr className="text-center">
@@ -54,7 +66,9 @@ const BorrowsAndReturns = ({ history, alert }) => {
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr></tr>
+                                    <tr>
+                                        <td colSpan="4">...</td>
+                                    </tr>
                                 )}
                             </tbody>
                         </table>

@@ -6,23 +6,23 @@ import { Container, Row, Col } from 'reactstrap';
 function Home({ merchant_id }) {
     return (
         <Container fluid>
-            {/* {merchant_id ? (
+            {merchant_id ? (
                 <Fragment>
                     <Row xs="1" sm="2" md="4" lg="5">
-                        <GetStocks />
+                        {/* <GetStocks /> */}
                     </Row>
                     <Row>
                         <Col md={8}>
                             <GetSales />
                         </Col>
                         <Col md={4}>
-                            <StockPieChart />
+                            {/* <StockPieChart /> */}
                         </Col>
                     </Row>
                 </Fragment>
             ) : (
                 <h1>Welcome Admin</h1>
-            )} */}
+            )}
         </Container>
     );
 }
