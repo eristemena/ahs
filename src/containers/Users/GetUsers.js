@@ -31,7 +31,7 @@ const GetUsers = ({ alert, loading, setLoading, language }) => {
 
     return (
         <div className="container-fluid">
-            <div className="mb-3">
+            <div className="mb-3 page-title">
                 <h1>{intlText.users.title}</h1>
             </div>
             <Container fluid>

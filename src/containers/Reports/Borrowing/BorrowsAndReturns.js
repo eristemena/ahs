@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { get } from '../../../axios';
 import { addAlert } from '../../../redux/actions';
@@ -20,10 +20,10 @@ const BorrowsAndReturns = ({ history, alert }) => {
                 let placeholder = [];
                 data.transactions.map((item) => {
                     if (item.owed !== 0) {
-                        placeholder.push(item)
+                        placeholder.push(item);
                     }
                 });
-                setData(placeholder)
+                setData(placeholder);
                 setLoading(false);
             },
             (error) => {
@@ -38,7 +38,11 @@ const BorrowsAndReturns = ({ history, alert }) => {
         <div className="custom-table">
             <Card className="borrowing">
                 <div className="custom-button">
-                    <button className={`refresh-button ${loading ? 'spin' : ''}`} disabled={loading} title="Refresh" onClick={() => setTemp(!temp)}>
+                    <button
+                        className={`refresh-button ${loading ? 'spin' : ''}`}
+                        disabled={loading}
+                        title="Refresh"
+                        onClick={() => setTemp(!temp)}>
                         <i className="simple-icon-refresh" />
                     </button>
                 </div>
@@ -73,7 +77,9 @@ const BorrowsAndReturns = ({ history, alert }) => {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="4" className="text-center">Yay! Tidak ada yang ngutang!</td>
+                                        <td colSpan="4" className="text-center">
+                                            Yay! Tidak ada yang ngutang!
+                                        </td>
                                     </tr>
                                 )}
                             </tbody>

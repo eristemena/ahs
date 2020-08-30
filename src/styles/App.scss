@@ -175,6 +175,10 @@ body {
                 left: 0;
                 box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 
+                @media (max-width: 576px) {
+                    width: $main-menu-width - 20px;
+                }
+
                 .scroll {
                     padding-right: unset;
                     margin-right: unset;
@@ -267,12 +271,19 @@ body {
                 border-left: 1px solid $separator-color;
                 border-top-right-radius: $navbar-border-radius;
                 border-bottom-right-radius: $navbar-border-radius;
-                transition: transform $menu-collapse-time;
+                transition: all $menu-collapse-time;
                 height: calc(100% - #{$navbar-height});
                 padding-top: 10px;
                 padding-bottom: 10px;
                 padding-right: 0;
                 box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+
+                @media (max-width: 576px) {
+                    width: calc(100% - #{$main-menu-width - 20px});
+                    left: $main-menu-width - 20px;
+                    border-top-right-radius: 0px;
+                    border-bottom-right-radius: 0px;
+                }
         
                 .scroll {
                     margin-right: unset;
@@ -387,11 +398,21 @@ body {
             .sub-menu.main-show.hidden {
                 box-shadow: 0 .5rem 1rem transparent;
                 transform: translateX(-$sub-menu-width);
+
+                @media (max-width: 576px) {
+                    width: $main-menu-width - 20px;
+                    transform: translateX(-$main-menu-width + 20px);
+                }
             }
 
             .sub-menu.main-hidden.hidden {
                 box-shadow: 0 .5rem 1rem transparent;
                 transform: translateX(-$sub-menu-width - $main-menu-width);
+
+                @media (max-width: 576px) {
+                    width: $main-menu-width - 20px;
+                    transform: translateX(calc(#{-$main-menu-width + 20px} * 2));
+                }
             }
         }
 
@@ -531,6 +552,7 @@ body {
             $stock-table-width: 564px;
             $gallon-table-width: 337px;
             $borrowing-table-width: 338px;
+            $sales-table-width: 501px;
             overflow-x: auto;
 
             table {
@@ -622,12 +644,16 @@ body {
                     min-width: $gallon-table-width;
                 }
 
+                &.sales {
+                    min-width: $sales-table-width;
+                }
+
                 &.borrowing {
                     min-width: $borrowing-table-width;
+                }
+
+                &.borrowing, &.sales {
                     .card-body {
-                        .scrollbar-container {
-                            max-height: 300px;
-                        }
                         table tbody tr {
                             box-shadow: none !important;
                             cursor: pointer;
@@ -647,6 +673,10 @@ body {
                             }
                         }
                     }
+                }
+
+                &.borrowing .scrollbar-container {
+                    max-height: 300px;
                 }
             }
 
@@ -919,6 +949,17 @@ body {
                         font-size: 1rem;
                     }
                 }
+            }
+        }
+        
+        .stocks-card {
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        .page-title {
+            @media (max-width: 576px) {
+                text-align: center;
             }
         }
     }

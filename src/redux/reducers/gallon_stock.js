@@ -1,4 +1,4 @@
-import {FETCH_STOCKS, DELETE_STOCKS} from '../actionTypes';
+import { FETCH_STOCKS, DELETE_STOCKS } from '../actionTypes';
 
 const initialState = {};
 

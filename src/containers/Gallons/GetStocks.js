@@ -137,7 +137,7 @@ const GetGallonStocks = ({
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1>Stocks</h1>
+                <h1 className="page-title">Stocks</h1>
                 <div className="d-sm-flex flex-column flex-sm-row">
                     <button
                         className={`btn btn-primary font-weight-bold table-button ${

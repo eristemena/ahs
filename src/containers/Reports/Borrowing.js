@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment } from 'react';
-import { GallonStock, BorrowsAndReturns } from '.';
+import { GallonStock, BorrowsAndReturns } from './Borrowing/index';
 import { connect } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
 import { fetchStocks } from '../../redux/actions';
@@ -13,7 +13,7 @@ const Borrowing = ({ fetchStocks, loading }) => {
         <Container fluid>
             {!loading ? (
                 <Fragment>
-                    <h1 className="mb-3">Report</h1>
+                    <h1 className="mb-3 page-title">Report</h1>
                     <Container fluid>
                         <Row>
                             <Col xs="12" sm="3" lg="2">

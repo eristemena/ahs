@@ -1,9 +1,4 @@
 import Borrowing from './Borrowing';
-import GallonStock from './Borrowing/GallonStock';
-import BorrowsAndReturns from './Borrowing/BorrowsAndReturns'
+import Sales from './Sales';
 
-export {
-    Borrowing,
-    GallonStock,
-    BorrowsAndReturns
-}
+export { Borrowing, Sales };

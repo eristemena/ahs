@@ -121,7 +121,7 @@ const GetCustomers = ({
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1>{title}</h1>
+                <h1 className="page-title">{title}</h1>
                 <button
                     className={`btn btn-primary font-weight-bold table-button ${
                         !checkAdminMerchant(user) ? 'disabled' : ''
