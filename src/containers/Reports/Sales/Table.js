@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { formatPrice } from '../../../utilities';
+import { formatPrice, parseType } from '../../../utilities';
 
-const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate = () => {}, language }) => {
+const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate = () => {}, translated, language }) => {
     return (
         <div className="custom-table">
             <Card className="sales">
@@ -20,7 +20,7 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                     </button>
                 </div>
                 <CardTitle className="p-3 m-0">
-                    <h4 className="m-0">{language.title}</h4>
+                    <h4 className="m-0">{translated.title}</h4>
                 </CardTitle>
                 <CardBody className="pt-0">
                     <PerfectScrollbar
@@ -32,11 +32,11 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                         <table className="sales-table">
                             <thead>
                                 <tr className="text-center">
-                                    <th>{language.thead.name}</th>
-                                    <th>{language.thead.type}</th>
-                                    <th>{language.thead.quantity}</th>
-                                    <th>{language.thead.price}</th>
-                                    <th>{language.thead.total}</th>
+                                    <th>{translated.thead.name}</th>
+                                    <th>{translated.thead.type}</th>
+                                    <th>{translated.thead.quantity}</th>
+                                    <th>{translated.thead.price}</th>
+                                    <th>{translated.thead.total}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,9 +45,7 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                                         <tr className="text-center" key={index}>
                                             <td>{item.product.name}</td>
                                             <td>
-                                                {item.type === 'sell'
-                                                    ? 'Jual'
-                                                    : 'Beli'}
+                                                {parseType(item.type, language)}
                                             </td>
                                             <td>{item.quantity}</td>
                                             <td>
@@ -81,11 +79,11 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                                         <td
                                             colSpan="5"
                                             className="text-center position-relative">
-                                            {language.no_data[0]}{' '}
+                                            {translated.no_data[0]}{' '}
                                             <Link
                                                 to="/transactions/add"
                                                 className="stretched-link">
-                                                {language.no_data[1]}
+                                                {translated.no_data[1]}
                                             </Link>
                                         </td>
                                     </tr>

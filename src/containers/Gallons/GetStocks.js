@@ -259,10 +259,7 @@ const GetGallonStocks = ({
                                                                     galStk.date
                                                                 ).format('LL')}
                                                             </td>
-                                                            <td>
-                                                                {parseType(
-                                                                    galStk.type
-                                                                )}
+                                                            <td>{parseType(galStk.type, language)}
                                                             </td>
                                                             <td>
                                                                 {

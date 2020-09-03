@@ -6,17 +6,20 @@ exports.checkAdminMerchant = (user) => {
     return user.merchant_id !== null && user.group_id === 1;
 };
 
-exports.parseType = (type) => {
+const { intlMessage } = require('./language');
+
+exports.parseType = (type, language) => {
+    const { parse_type } = intlMessage(language);
     switch (type) {
         case 'sell':
-            return 'Sell';
+            return parse_type.sell;
         case 'buy':
-            return 'Buy';
+            return parse_type.buy;
         case 'borrow':
-            return 'Borrow';
+            return parse_type.borrow;
         case 'return':
-            return 'Return';
+            return parse_type.return;
         default:
             return '';
     }
-}
+};

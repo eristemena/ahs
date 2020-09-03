@@ -258,5 +258,11 @@ module.exports = {
         `Oops!`,
         `Kami tidak dapat menemukan halaman yang Anda cari.`,
         'Mungkin aja page-nya belum dibikin?'
-    ]
+    ],
+    parse_type: {
+        buy: 'Beli',
+        sell: 'Jual',
+        borrow: 'Pinjam',
+        return: 'Balik'
+    }
 };

@@ -9,7 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { del } from '../../axios';
-import { formatPrice, checkAdminMerchant } from '../../utilities';
+import { formatPrice, checkAdminMerchant, parseType as tableParseType } from '../../utilities';
 import {
     DeleteModal,
     InfoTooltip,
@@ -309,11 +309,7 @@ const GetTransaction = ({
                                                         ).format('LL')}
                                                     </td>
                                                     <td>{tran.product.name}</td>
-                                                    <td>
-                                                        {tran.type === 'sell'
-                                                            ? 'Jual'
-                                                            : 'Beli'}
-                                                    </td>
+                                                    <td>{tableParseType(tran.type, language)}</td>
                                                     <td>{tran.quantity}</td>
                                                     <td>
                                                         Rp.{' '}

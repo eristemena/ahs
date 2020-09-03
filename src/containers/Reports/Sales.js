@@ -97,7 +97,8 @@ const Sales = ({ alert, history, language }) => {
                         loading={loading}
                         data={data}
                         temp={temp}
-                        language={sales.table}
+                        language={language}
+                        translated={sales.table}
                         refreshFunc={setTemp}
                     />
                 </Col>

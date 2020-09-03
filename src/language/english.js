@@ -258,5 +258,11 @@ module.exports = {
         `Oops!`,
         `We can't find the page you're looking for.`,
         'Maybe it never exists at all?'
-    ]
+    ],
+    parse_type: {
+        buy: 'Buy',
+        sell: 'Sell',
+        borrow: 'Borrow',
+        return: 'Return'
+    }
 };
