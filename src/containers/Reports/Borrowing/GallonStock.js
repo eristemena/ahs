@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Card, CardBody } from 'reactstrap';
 import { get } from '../../../axios';
 
-const GallonStock = ({ gallon_stock, history }) => {
+const GallonStock = ({ gallon_stock, history, language }) => {
     const [total, setTotal] = useState(0);
 
     useEffect(() => {
@@ -22,12 +22,12 @@ const GallonStock = ({ gallon_stock, history }) => {
     return (
         <Card className="mb-2">
             <CardBody className="text-center stocks-card">
-                <p>Gallon stock:</p>
+                <p>{language.stock}</p>
                 <h3 className="text-success">
                     {gallon_stock.data && gallon_stock.data.stock}
                 </h3>
                 <div class="dropdown-divider"></div>
-                <p className="mt-3">Total borrowed:</p>
+                <p className="mt-3">{language.borrowed}</p>
                 <h3 className="text-success mb-0">{total}</h3>
             </CardBody>
         </Card>

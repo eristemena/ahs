@@ -375,8 +375,7 @@ const GetTransaction = ({
                                                 <td
                                                     colSpan="7"
                                                     className="text-center">
-                                                    Belum ada transaksi,
-                                                    silahkan tambahkan transaksi
+                                                    {table.no_data}
                                                 </td>
                                             </tr>
                                         )

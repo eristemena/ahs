@@ -5,17 +5,22 @@ import { withRouter } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import { addAlert } from '../../redux/actions';
 import { Table, Cards } from './Sales/index';
+import ReactDatePicker, { registerLocale } from 'react-datepicker';
+import id from 'date-fns/locale/id';
+import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
+import { intlMessage } from '../../language';
+registerLocale('id', id);
 
-const Sales = ({ alert, history }) => {
+const Sales = ({ alert, history, language }) => {
     const [data, setData] = useState([]);
     const [temp, setTemp] = useState(false);
     const [loading, setLoading] = useState(false);
     const [income, setIncome] = useState(0);
     const [spending, setSpending] = useState(0);
     const [revenue, setRevenue] = useState(0);
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState(new Date());
 
     useEffect(() => {
         setLoading(true);
@@ -35,18 +40,55 @@ const Sales = ({ alert, history }) => {
             }
         );
     }, [temp, date]);
+
+    const { sales } = intlMessage(language);
+
     return (
         <Container fluid>
-            <h1 className="mb-3 page-title">Report (Today)</h1>
+            <div className="d-md-flex justify-content-between">
+                <h1 className="mb-3 page-title">{sales.title} ({sales.today})</h1>
+                {/* <ReactDatePicker
+                    locale="id"
+                    value={
+                        date
+                            ? moment(date).format('D MMMM yyyy')
+                            : ''
+                    }
+                    selected={date}
+                    className="form-control"
+                    wrapperClassName="transaction-table-datepicker"
+                    todayButton={`Hari ini (${moment(new Date()).format(
+                        'DD MMMM'
+                    )})`}
+                    placeholderText="Pilih hari"
+                    disabledKeyboardNavigation
+                    onChange={setDate}
+                    maxDate={new Date()}
+                    popperPlacement="bottom"
+                    popperModifiers={{
+                        flip: {
+                            enabled: false,
+                        },
+                    }}
+                /> */}
+            </div>
             <Row>
-                <Col xs="12" md="4" lg={{size: 3, offset: 1}} className="mb-4">
-                    <Cards title="Income" number={income} color="dark" />
+                <Col
+                    xs="12"
+                    md="4"
+                    lg={{ size: 3, offset: 1 }}
+                    className="mb-4">
+                    <Cards title={sales.cards.income} number={income} color="dark" />
                 </Col>
                 <Col xs="12" md="4" lg="3" className="mb-4">
-                    <Cards title="Spending" number={spending} color="dark" />
+                    <Cards title={sales.cards.spending} number={spending} color="dark" />
                 </Col>
-                <Col xs="12" md="4" lg={{size: 3, offset: -1}} className="mb-4">
-                    <Cards title="Revenue" number={revenue} />
+                <Col
+                    xs="12"
+                    md="4"
+                    lg={{ size: 3, offset: -1 }}
+                    className="mb-4">
+                    <Cards title={sales.cards.revenue} number={revenue} />
                 </Col>
             </Row>
             <Row>
@@ -55,6 +97,7 @@ const Sales = ({ alert, history }) => {
                         loading={loading}
                         data={data}
                         temp={temp}
+                        language={sales.table}
                         refreshFunc={setTemp}
                     />
                 </Col>
@@ -67,4 +110,8 @@ const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(Sales));
+const mapStateToProps = (state) => ({
+    language: state.language,
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sales));

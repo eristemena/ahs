@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addAlert } from '../../redux/actions/alert';
 import * as Yup from 'yup';
@@ -9,7 +9,7 @@ import { FormGroup, Label } from 'reactstrap';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
+import moment, { lang } from 'moment';
 import 'moment/locale/id';
 import { setLoading } from '../../redux/actions/loading';
 import { get } from '../../axios';
@@ -29,24 +29,24 @@ const StockForm = ({
     action,
     alert,
     history,
+    language,
 }) => {
     const [ownedCustomers, setOwnedCustomers] = useState([]);
     const [loadingOwnedCustomer, setLoadingOwnedCustomer] = useState(false);
 
+    const { gallons } = intlMessage(language);
+
     const schema = Yup.object().shape({
-        date: Yup.date().required(),
+        date: Yup.date().required(gallons.form.error.date),
         type: Yup.string().default('sell'),
         quantity: Yup.number().positive().required(),
         customer_id: Yup.number().when('type', {
             is: (val) =>
                 val && val.length > 0 && val !== 'buy' ? true : false,
-            then: Yup.number()
-                .integer()
-                .positive()
-                .required(),
+            then: Yup.number().integer().positive().required(gallons.form.error.customer),
         }),
         info: Yup.string().optional(),
-    })
+    });
 
     useEffect(() => {
         setLoadingOwnedCustomer(true);
@@ -67,7 +67,7 @@ const StockForm = ({
                 setLoadingOwnedCustomer(false);
             }
         );
-    }, [])
+    }, []);
 
     const form = (errors, touched, setValues, values) => (
         <Card className="custom-form-card">
@@ -75,7 +75,7 @@ const StockForm = ({
                 <Form>
                     <FormGroup>
                         <Label className="d-block" for="date">
-                            Date
+                            {gallons.form.date.name}
                         </Label>
                         <ReactDatePicker
                             selected={values.date}
@@ -85,7 +85,7 @@ const StockForm = ({
                             name="date"
                             dateFormat="dd MMMM yyyy"
                             className="form-control date-picker"
-                            placeholderText="Pilih tanggal"
+                            placeholderText={gallons.form.date.placeholder}
                             disabledKeyboardNavigation
                             maxDate={new Date()}
                             todayButton={`Hari ini (${moment(new Date()).format(
@@ -100,9 +100,7 @@ const StockForm = ({
                         ) : null}
                     </FormGroup>
                     <FormGroup>
-                        <Label className="d-block">
-                            Type
-                        </Label>
+                        <Label className="d-block">{gallons.form.type.name}</Label>
                         <div className="form-check form-check-inline align-middle custom-form-check">
                             <Field
                                 type="radio"
@@ -112,7 +110,7 @@ const StockForm = ({
                                 className="form-check-input"
                             />
                             <Label for="sell" className="form-check-label">
-                                Sell
+                                {gallons.form.type.sell}
                             </Label>
                         </div>
                         <div className="form-check form-check-inline align-middle custom-form-check">
@@ -131,7 +129,7 @@ const StockForm = ({
                                 }
                             />
                             <Label for="buy" className="form-check-label">
-                                Buy
+                                {gallons.form.type.sell}
                             </Label>
                         </div>
                         <div className="form-check form-check-inline align-middle custom-form-check">
@@ -143,7 +141,7 @@ const StockForm = ({
                                 className="form-check-input"
                             />
                             <Label for="borrow" className="form-check-label">
-                                Borrow
+                                {gallons.form.type.borrow}
                             </Label>
                         </div>
                         <div className="form-check form-check-inline align-middle custom-form-check">
@@ -155,14 +153,12 @@ const StockForm = ({
                                 className="form-check-input"
                             />
                             <Label for="return" className="form-check-label">
-                                Return
+                                {gallons.form.type.return}
                             </Label>
                         </div>
                     </FormGroup>
                     <FormGroup>
-                        <Label for="quantity">
-                            Quantity
-                        </Label>
+                        <Label for="quantity">{gallons.form.quantity}</Label>
                         <Field
                             className="form-control"
                             id="quantity"
@@ -179,7 +175,7 @@ const StockForm = ({
                     {values.type !== 'buy' ? (
                         <FormGroup>
                             <Label className="d-block" for="customer">
-                                Customer
+                                {gallons.form.customer.name}
                             </Label>
                             <Select
                                 id="customer"
@@ -187,7 +183,7 @@ const StockForm = ({
                                 isLoading={loadingOwnedCustomer}
                                 isDisabled={loadingOwnedCustomer}
                                 noOptionsMessage={() =>
-                                    'Pelanggan tidak ditemukan'
+                                    gallons.form.customer.noOptions
                                 }
                                 name="product_id"
                                 options={ownedCustomers}
@@ -203,7 +199,7 @@ const StockForm = ({
                                                       return own.label;
                                                   }
                                               })
-                                            : "Pilih customer",
+                                            : gallons.form.customer.placeholder,
                                 }}
                                 onChange={(e) =>
                                     setValues({
@@ -221,7 +217,7 @@ const StockForm = ({
                         </FormGroup>
                     ) : null}
                     <FormGroup>
-                        <Label for="info">Info</Label>
+                        <Label for="info">{gallons.form.info.name}</Label>
                         <Field
                             className="form-control"
                             id="info"
@@ -229,7 +225,7 @@ const StockForm = ({
                             as="textarea"
                             maxLength="150"
                             cols="5"
-                            placeholder="Tambahkan info"
+                            placeholder={gallons.form.info.placeholder}
                         />
                     </FormGroup>
                     <SubmitAndCancelButton
@@ -243,13 +239,7 @@ const StockForm = ({
         </Card>
     );
 
-    const submitHandler = ({
-        date,
-        type,
-        quantity,
-        customer_id,
-        info,
-    }) => {
+    const submitHandler = ({ date, type, quantity, customer_id, info }) => {
         const dateSend = moment(date).format('YYYY-MM-DD');
         onSubmit(
             dateSend,
@@ -278,8 +268,8 @@ const StockForm = ({
                 <Fragment>{form(errors, touched, setValues, values)}</Fragment>
             )}
         </Formik>
-    )
-}
+    );
+};
 
 StockForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
@@ -291,7 +281,7 @@ StockForm.propTypes = {
     stateType: PropTypes.string,
     stateInfo: PropTypes.string,
     action: PropTypes.string,
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

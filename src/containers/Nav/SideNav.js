@@ -38,21 +38,6 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
         }
     };
 
-    const items = {
-        reports: [
-            {
-                name: 'Borrowing',
-                icon: 'simple-icon-share-alt',
-                to: '/reports/borrowing'
-            },
-            {
-                name: 'Sales',
-                icon: 'simple-icon-wallet',
-                to: '/reports/sales'
-            }
-        ]
-    }
-
     const setMenuClose = (e) => {
         e.preventDefault();
 
@@ -80,6 +65,21 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
     };
 
     const { sidenav } = intlMessage(language);
+
+    const items = {
+        reports: [
+            {
+                name: sidenav.reporting.sub.borrowing,
+                icon: 'simple-icon-share-alt',
+                to: '/reports/borrowing'
+            },
+            {
+                name: sidenav.reporting.sub.sales,
+                icon: 'simple-icon-wallet',
+                to: '/reports/sales'
+            }
+        ]
+    }
 
     return (
         <div className="side-nav">
@@ -121,7 +121,7 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                             <NavItem className={activeLinks('/gallons')}>
                                 <a href="/gallons/get" onClick={setMenuClose}>
                                     <i className="iconsminds-folder"></i>
-                                    <Label>Galon</Label>
+                                    <Label>{sidenav.gallon}</Label>
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/customers')}>
@@ -145,7 +145,7 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                                 <NavItem className={activeLinks('/reports')}>
                                     <a href="#" id="reports" onClick={setMenuClose}>
                                         <i className="iconsminds-file"></i>
-                                        <Label>Reporting</Label>
+                                        <Label>{sidenav.reporting.name}</Label>
                                     </a>
                                 </NavItem>
                             )}

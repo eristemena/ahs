@@ -7,7 +7,7 @@ import { addAlert } from '../../../redux/actions';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
-const BorrowsAndReturns = ({ history, alert }) => {
+const BorrowsAndReturns = ({ history, alert, language }) => {
     const [data, setData] = useState([]);
     const [temp, setTemp] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ const BorrowsAndReturns = ({ history, alert }) => {
                     </button>
                 </div>
                 <CardTitle className="p-3 m-0">
-                    <h4 className="m-0">Borrowing</h4>
+                    <h4 className="m-0">{language.title}</h4>
                 </CardTitle>
                 <CardBody className="pt-0">
                     <PerfectScrollbar
@@ -59,10 +59,10 @@ const BorrowsAndReturns = ({ history, alert }) => {
                         <table className="borrowing-table">
                             <thead>
                                 <tr className="text-center">
-                                    <th>Name</th>
-                                    <th>Borrows</th>
-                                    <th>Returns</th>
-                                    <th>Total</th>
+                                    <th>{language.thead.name}</th>
+                                    <th>{language.thead.borrows}</th>
+                                    <th>{language.thead.returns}</th>
+                                    <th>{language.thead.total}</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -13,8 +13,6 @@ import { MenuIcon } from '../../components/svg';
 import 'flag-icon-css/css/flag-icon.css';
 import { setLanguage } from '../../redux/actions/language';
 import { intlMessage } from '../../language';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 
 function NavBar({
     user,
@@ -47,22 +45,6 @@ function NavBar({
         }
     }, [windowWidth > 992]);
 
-    const checkLanguage = (lang) => {
-        if (lang === 'en') {
-            return 'flag-icon-gb';
-        } else {
-            return 'flag-icon-id';
-        }
-    };
-
-    const changeLanguage = () => {
-        if (language === 'en') {
-            setLanguage('id');
-        } else {
-            setLanguage('en');
-        }
-    };
-
     const logoutHandler = (e) => {
         e.preventDefault();
 
@@ -94,34 +76,43 @@ function NavBar({
                             onClick={menuButtonClick}>
                             <MenuIcon />
                         </NavLink>
+                        <UncontrolledDropdown>
+                            <DropdownToggle
+                                className="btn language-button"
+                                color="empty">
+                                <span>{language.toUpperCase()}</span>
+                            </DropdownToggle>
+                            <DropdownMenu className="topnav-dropdown">
+                                <DropdownItem onClick={() => setLanguage('en')}>
+                                    <div className="d-flex justify-content-between">
+                                        <span>{intlText.topnav.language.english}</span>
+                                        <span className="flag-icon flag-icon-gb"></span>
+                                    </div>
+                                </DropdownItem>
+                                <DropdownItem onClick={() => setLanguage('id')}>
+                                    <div className="d-flex justify-content-between">
+                                        <span>{intlText.topnav.language.indonesia}</span>
+                                        <span className="flag-icon flag-icon-id"></span>
+                                    </div>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
                     </div>
                     <NavLink className="navbar-logo h-100" to="/">
                         <span className="logo-mobile d-block" />
                     </NavLink>
-
                     <div className="navbar-right d-flex">
                         <div className="user d-inline-block">
                             <UncontrolledDropdown className="dropdown-menu-right">
                                 <DropdownToggle
                                     className="nav-profile-picture d-flex align-middle"
                                     color="empty">
-                                    <p className="name d-none d-md-inline">
+                                    <p className="name">
                                         {user.name}
                                     </p>
                                     <i className="iconsminds-male-2 default-profile-picture"></i>
                                 </DropdownToggle>
                                 <DropdownMenu className="topnav-dropdown" right>
-                                    <DropdownItem onClick={changeLanguage}>
-                                        <div className="d-flex justify-content-between">
-                                            <span>
-                                                {intlText.topnav.language}
-                                            </span>
-                                            <span
-                                                className={`flag-icon ${checkLanguage(
-                                                    language
-                                                )}`}></span>
-                                        </div>
-                                    </DropdownItem>
                                     <DropdownItem onClick={logoutHandler}>
                                         <div className="d-flex justify-content-between">
                                             <span>

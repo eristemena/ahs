@@ -9,9 +9,20 @@ module.exports = {
         transactions: 'Transaksi',
         customers: 'Konsumen',
         merchant: 'Pedangan',
+        gallon: 'Galon',
+        reporting: {
+            name: 'Laporan',
+            sub: {
+                borrowing: 'Peminjaman',
+                sales: 'Penjualan'
+            }
+        }
     },
     topnav: {
-        language: 'Bahasa',
+        language: {
+            english: 'Inggris',
+            indonesia: 'Indonesia'
+        },
         logout: 'Keluar',
     },
     search_placeholder: 'Cari',
@@ -72,6 +83,7 @@ module.exports = {
                 quantity: 'Jumlah',
                 price: 'Harga',
                 customer: 'Konsumen',
+                no_data: 'Belum ada transaksi, silahkan tambahkan transaksi'
             }
         },
         form: {
@@ -93,7 +105,7 @@ module.exports = {
             },
             customer: {
                 label: 'Konsumen:',
-                placeholder: '--Pilih konsumen'
+                placeholder: '--Pilih konsumen--'
             },
             info: {
                 label: 'Info Tambahan:',
@@ -134,6 +146,82 @@ module.exports = {
                     lt4: 'Alamat harus lebih dari 3 huruf'
                 }
             }
+        }
+    },
+    gallons: {
+        get: {
+            title: 'Galon',
+            button: 'TAMBAH TRANSAKSI',
+            table: {
+                date: 'Tanggal',
+                type: 'Tipe',
+                quantity: 'Jumlah',
+                customer: 'Pelanggan',
+                no_data: 'Belum ada transaksi, silahkan tambahkan transaksi'
+            },
+        },
+        form: {
+            date: {
+                name: 'Tanggal',
+                placeholder: '--Pilih tanggal--'
+            },
+            type: {
+                name: 'Tipe',
+                sell: 'Jual',
+                buy: 'Beli',
+                borrow: 'Pinjam',
+                return: 'Pemulangan'
+            },
+            quantity: 'Jumlah',
+            customer: {
+                name: 'Pelanggan',
+                placeholder: '--Pilih pelanggan--',
+                noOptions: 'Pelanggan tidak ditemukan'
+            },
+            info: {
+                name: 'Info',
+                placeholder: 'Tambahkan info'
+            },
+            error: {
+                date: 'Tanggal perlu dipilih',
+                customer: 'Pelanggan perlu dipilih'
+            }
+        },
+    },
+    borrowing: {
+        title: 'Peminjaman',
+        stock: {
+            stock: 'Stok galon',
+            borrowed: 'Total dipinjam'
+        },
+        table: {
+            title: 'Peminjam',
+            thead: {
+                name: 'Nama',
+                borrows: 'Dipinjam',
+                returns: 'Dikembalikan',
+                total: 'Total'
+            }
+        }
+    },
+    sales: {
+        title: 'Penjualan',
+        today: 'Hari ini',
+        cards: {
+            income: 'Pemasukan',
+            spending: 'Pengeluaran',
+            revenue: 'Pendapatan'
+        },
+        table: {
+            title: 'Riwayat Transaksi',
+            thead: {
+                name: 'Nama Produk',
+                type: 'Tipe',
+                quantity: 'Jumlah',
+                price: 'Harga',
+                total: 'Total'
+            },
+            no_data: ['Tidak ada transaksi hari ini, silahkan', 'tambah transaksi.']
         }
     },
     button: {

@@ -125,6 +125,8 @@ const GetGallonStocks = ({
         );
     };
 
+    const { gallons: {get}, action } = intlMessage(language);
+
     // const [tableHead, setTableHead] = useState([]);
 
     // useEffect(() => {
@@ -137,7 +139,7 @@ const GetGallonStocks = ({
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
-                <h1 className="page-title">Stocks</h1>
+                <h1 className="page-title">{get.title}</h1>
                 <div className="d-sm-flex flex-column flex-sm-row">
                     <button
                         className={`btn btn-primary font-weight-bold table-button ${
@@ -145,7 +147,7 @@ const GetGallonStocks = ({
                         }`}
                         disabled={!checkAdminMerchant(user)}
                         onClick={() => history.push('/gallons/add')}>
-                        ADD STOCK TRANSACTION
+                        {get.button}
                     </button>
                 </div>
             </div>
@@ -231,19 +233,19 @@ const GetGallonStocks = ({
                             <table className="stock-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Quantity</th>
-                                        <th>Customer</th>
+                                        <th>{get.table.date}</th>
+                                        <th>{get.table.type}</th>
+                                        <th>{get.table.quantity}</th>
+                                        <th>{get.table.customer}</th>
                                         {checkAdminMerchant(user) ? (
-                                            <th>Actions</th>
+                                            <th>{action.action}</th>
                                         ) : null}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {!loading ? (
                                         <Fragment>
-                                            {gallon_stock.data.rows &&
+                                            {gallon_stock.data &&
                                             gallon_stock.data.rows.length >
                                                 0 ? (
                                                 gallon_stock.data.rows.map(
@@ -283,7 +285,7 @@ const GetGallonStocks = ({
                                                                         className="mr-2">
                                                                         <i
                                                                             className="simple-icon-note edit-icon"
-                                                                            title="Edit"></i>
+                                                                            title={action.edit}></i>
                                                                     </Link>
                                                                     <i
                                                                         className={`simple-icon-close delete-icon ${
@@ -293,7 +295,7 @@ const GetGallonStocks = ({
                                                                         }`}
                                                                         data-toggle="modal"
                                                                         data-target="#modal"
-                                                                        title="Delete"
+                                                                        title={action.delete}
                                                                         onClick={() =>
                                                                             setDelId(
                                                                                 galStk.id
@@ -324,9 +326,7 @@ const GetGallonStocks = ({
                                                                 : 5
                                                         }
                                                         className="text-center">
-                                                        Belum ada transaksi,
-                                                        silahkan tambahkan
-                                                        transaksi
+                                                        {get.table.no_data}
                                                     </td>
                                                 </tr>
                                             )}

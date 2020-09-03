@@ -66,10 +66,11 @@ body {
             }
 
             &.button-loading-spinner {
-                height: 1.75rem;
-                width: 1.75rem;
+                height: 2rem;
+                width: 2rem;
                 margin-top: 5px;
-                border-top-color: white;
+                color: white;
+                border-top-color: black;
                 animation: spinner-rotate 1.2s ease infinite;
             }
 
@@ -102,8 +103,6 @@ body {
                 margin: .75rem auto;
             }
 
-            
-
             @keyframes spinner-rotate {
                 0% {
                     transform: rotate(0deg);
@@ -119,6 +118,10 @@ body {
             background: $navbar-color;
             padding: 10px 0;
             height: $navbar-height;
+
+            .navbar-left {
+                height: 100%;
+            }
 
             .navbar-logo {
                 width: 170px;
@@ -450,10 +453,10 @@ body {
             color: $secondary-color;
             width: $main-menu-width;
             text-align: center;
+            text-decoration: none;
 
             svg {
                 height: 13px;
-
             }
 
             .main,
@@ -463,6 +466,11 @@ body {
 
             .main {
                 width: 10px;
+            }
+
+            @media (max-width: 576px) {
+                width: 100%;
+                margin: 0 1.3rem;
             }
         }
 
@@ -1079,6 +1087,25 @@ body {
             }
         }
 
+        &.language-button {
+            color: $text-light;
+            background-color: $background-color;
+            padding: 10px 20px;
+            span {
+                font-size: .8rem;
+            }
+            &::after {
+                display: inline-block;
+                margin-left: .4em;
+                vertical-align: .255em;
+                content: "";
+                border-top: .355em solid;
+                border-right: .355em solid transparent;
+                border-bottom: 0;
+                border-left: .355em solid transparent;
+            }
+        }
+
         &.nav-profile-picture:focus {
             box-shadow: none;
         }
@@ -1104,7 +1131,7 @@ body {
     }
 
     .dropdown {
-        >.dropdown-menu-right {
+        >.dropdown-menu {
             border-radius: $navbar-border-radius;
 
             &.show {

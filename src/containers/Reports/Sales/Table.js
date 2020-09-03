@@ -5,14 +5,8 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { formatPrice } from '../../../utilities';
-import ReactDatePicker, { registerLocale } from 'react-datepicker';
-import id from 'date-fns/locale/id';
-import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
-import 'moment/locale/id';
-registerLocale('id', id);
 
-const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate = () => {} }) => {
+const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate = () => {}, language }) => {
     return (
         <div className="custom-table">
             <Card className="sales">
@@ -26,33 +20,9 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                     </button>
                 </div>
                 <CardTitle className="p-3 m-0">
-                    <h4 className="m-0">Transaction History</h4>
+                    <h4 className="m-0">{language.title}</h4>
                 </CardTitle>
                 <CardBody className="pt-0">
-                    {/* <ReactDatePicker
-                        locale="id"
-                        value={
-                            date
-                                ? moment(date).format('DD MMMM yyyy')
-                                : ''
-                        }
-                        selected={date}
-                        className="form-control"
-                        wrapperClassName="transaction-table-datepicker"
-                        todayButton={`Hari ini (${moment(new Date()).format(
-                            'DD MMMM'
-                        )})`}
-                        placeholderText="Pilih hari"
-                        disabledKeyboardNavigation
-                        onChange={setDate}
-                        maxDate={new Date()}
-                        popperPlacement="bottom"
-                        popperModifiers={{
-                            flip: {
-                                enabled: false,
-                            },
-                        }}
-                    /> */}
                     <PerfectScrollbar
                         options={{
                             suppressScrollX: true,
@@ -62,11 +32,11 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                         <table className="sales-table">
                             <thead>
                                 <tr className="text-center">
-                                    <th>Product Name</th>
-                                    <th>Type</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Ammount</th>
+                                    <th>{language.thead.name}</th>
+                                    <th>{language.thead.type}</th>
+                                    <th>{language.thead.quantity}</th>
+                                    <th>{language.thead.price}</th>
+                                    <th>{language.thead.total}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,14 +79,13 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                                 ) : (
                                     <tr>
                                         <td
-                                            colSpan="4"
+                                            colSpan="5"
                                             className="text-center position-relative">
-                                            Tidak ada transaksi hari ini,
-                                            silahkan{' '}
+                                            {language.no_data[0]}{' '}
                                             <Link
                                                 to="/transactions/add"
                                                 className="stretched-link">
-                                                tambah transaksi.
+                                                {language.no_data[1]}
                                             </Link>
                                         </td>
                                     </tr>

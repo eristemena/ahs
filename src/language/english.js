@@ -9,9 +9,20 @@ module.exports = {
         transactions: 'Transactions',
         customers: 'Customers',
         merchant: 'Merchants',
+        gallon: 'Gallons',
+        reporting: {
+            name: 'Reporting',
+            sub: {
+                borrowing: 'Borrowing',
+                sales: 'Sales'
+            }
+        }
     },
     topnav: {
-        language: 'Language',
+        language: {
+            english: 'English',
+            indonesia: 'Indonesia'
+        },
         logout: 'Log Out',
     },
     search_placeholder: 'Search',
@@ -72,6 +83,7 @@ module.exports = {
                 quantity: 'Quantity',
                 price: 'Price',
                 customer: 'Customer',
+                no_data: 'There are no transactions, please add transactions'
             }
         },
         form: {
@@ -134,6 +146,82 @@ module.exports = {
                     lt4: 'Address must be more than 3 characters'
                 }
             }
+        }
+    },
+    gallons: {
+        get: {
+            title: 'Gallon',
+            button: 'ADD STOCK TRANSACTION',
+            table: {
+                date: 'Date',
+                type: 'Type',
+                quantity: 'Quantity',
+                customer: 'Customer',
+                no_data: 'There are no transactions, please add transactions'
+            },
+        },
+        form: {
+            date: {
+                name: 'Date',
+                placeholder: '--Pick a date--'
+            },
+            type: {
+                name: 'Type',
+                sell: 'Sell',
+                buy: 'Buy',
+                borrow: 'Borrow',
+                return: 'Return'
+            },
+            quantity: 'Quantity',
+            customer: {
+                name: 'Customer',
+                placeholder: '--Pick a customer--',
+                noOptions: 'Customer not found'
+            },
+            info: {
+                name: 'Info',
+                placeholder: 'Add additional info'
+            },
+            error: {
+                date: 'Date is required',
+                customer: 'Customer is required'
+            }
+        },
+    },
+    borrowing: {
+        title: 'Borrows',
+        stock: {
+            stock: 'Gallon stock',
+            borrowed: 'Total borrowed'
+        },
+        table: {
+            title: 'Borrowers',
+            thead: {
+                name: 'Name',
+                borrows: 'Borrows',
+                returns: 'Returns',
+                total: 'Total'
+            }
+        }
+    },
+    sales: {
+        title: 'Sales',
+        today: 'Today',
+        cards: {
+            income: 'Income',
+            spending: 'Spending',
+            revenue: 'Revenue'
+        },
+        table: {
+            title: 'Transaction History',
+            thead: {
+                name: 'Product Name',
+                type: 'Type',
+                quantity: 'Quantity',
+                price: 'Price',
+                total: 'Total'
+            },
+            no_data: ['No transactions today, please', 'add transaction.']
         }
     },
     button: {
