@@ -7,14 +7,15 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
-    Input,
+    Label
 } from 'reactstrap';
 import { BarChart } from '../../components/Charts';
 import { connect } from 'react-redux';
 import { getSales } from '../../redux/actions/sale';
 import { formatPrice } from '../../utilities';
+import Select from 'react-select';
 
-const GetSales = ({ sale, getSales, product_stock }) => {
+const GetSales = ({ sale, getSales, product_stock, product }) => {
     const [graphWeekCode, setGraphWeekCode] = useState(1);
     const [selectProduct, setSelectProduct] = useState(-1);
 
@@ -62,10 +63,10 @@ const GetSales = ({ sale, getSales, product_stock }) => {
     };
 
     return (
-        <Card className="shadow mt-3 h-100">
+        <Card className="mt-3 h-100">
             <CardBody>
                 <CardTitle className="d-flex justify-content-between">
-                    <h3>Sales</h3>
+                    <h3>Product Sales Graph (Weekly)</h3>
                     <UncontrolledDropdown>
                         <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle dropdown-button dropdown-button-primary outline">
                             <i className="mr-2">
@@ -84,24 +85,15 @@ const GetSales = ({ sale, getSales, product_stock }) => {
                         </DropdownMenu>
                     </UncontrolledDropdown>
                 </CardTitle>
-                <div className="d-flex justify-content-center mb-3 w-100">
-                    <Input
-                        type="select"
-                        value={selectProduct}
-                        className="custom-select-not-bootstrap product-sales-select"
-                        onChange={(e) => setSelectProduct(e.target.value)}>
-                        <option value={-1} disabled>
-                            --Select product--
-                        </option>
-                        {product_stock.data
-                            ? product_stock.data.map(({ product_id, name }) => (
-                                  <option key={product_id} value={product_id}>
-                                      {name}
-                                  </option>
-                              ))
-                            : null}
-                    </Input>
-                </div>
+                <Label className="mt-0 mb-1">Pilih produk:</Label>
+                <Select
+                    classNamePrefix="custom-searchable-select home "
+                    className="mb-3"
+                    noOptionsMessage={() => 'Produk tidak ditemukan'}
+                    options={product ? product.data.map((item) => ({value: item.id, label: item.name})) : []}
+                    onChange={(e) => setSelectProduct(e.value)}
+                    isSearchable
+                />
                 <BarChart
                     viewCode={graphWeekCode}
                     setViewCode={setGraphWeekCode}
@@ -125,6 +117,7 @@ const GetSales = ({ sale, getSales, product_stock }) => {
 const mapStateToProps = (state) => ({
     sale: state.sale,
     product_stock: state.product_stock,
+    product: state.product
 });
 
 const mapDispatchToProps = (dispatch) => ({

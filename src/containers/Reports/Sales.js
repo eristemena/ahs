@@ -76,17 +76,15 @@ const Sales = ({ alert, history, language }) => {
                 <Col
                     xs="12"
                     md="4"
-                    lg={{ size: 3, offset: 1 }}
                     className="mb-4">
                     <Cards title={sales.cards.income} number={income} color="dark" />
                 </Col>
-                <Col xs="12" md="4" lg="3" className="mb-4">
+                <Col xs="12" md="4" className="mb-4">
                     <Cards title={sales.cards.spending} number={spending} color="dark" />
                 </Col>
                 <Col
                     xs="12"
                     md="4"
-                    lg={{ size: 3, offset: -1 }}
                     className="mb-4">
                     <Cards title={sales.cards.revenue} number={revenue} />
                 </Col>

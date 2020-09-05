@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Card, CardBody } from 'reactstrap';
 import { get } from '../../../axios';
+import { intlMessage } from '../../../language';
 
 const GallonStock = ({ gallon_stock, history, language }) => {
     const [total, setTotal] = useState(0);
@@ -19,15 +20,19 @@ const GallonStock = ({ gallon_stock, history, language }) => {
         );
     }, []);
 
+    const {
+        borrowing: { stock },
+    } = intlMessage(language);
+
     return (
-        <Card className="mb-2">
+        <Card>
             <CardBody className="text-center stocks-card">
-                <p>{language.stock}</p>
+                <p>{stock.stock}</p>
                 <h3 className="text-success">
                     {gallon_stock.data && gallon_stock.data.stock}
                 </h3>
                 <div class="dropdown-divider"></div>
-                <p className="mt-3">{language.borrowed}</p>
+                <p className="mt-3">{stock.borrowed}</p>
                 <h3 className="text-success mb-0">{total}</h3>
             </CardBody>
         </Card>
@@ -36,6 +41,7 @@ const GallonStock = ({ gallon_stock, history, language }) => {
 
 const mapStateToProps = (state) => ({
     gallon_stock: state.gallon_stock,
+    language: state.language,
 });
 
 export default withRouter(connect(mapStateToProps)(GallonStock));

@@ -23,7 +23,7 @@ const Borrowing = ({ fetchStocks, loading, language }) => {
                     <Container fluid>
                         <Row>
                             <Col xs="12" sm="3" lg="2">
-                                <GallonStock language={stock} />
+                                <GallonStock />
                             </Col>
                             <Col xs="12" sm="9" lg="10">
                                 <BorrowsAndReturns language={table} />

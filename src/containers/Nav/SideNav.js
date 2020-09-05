@@ -43,8 +43,6 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
 
         const href = e.currentTarget.getAttribute('href');
 
-        console.log(href)
-
         if (href !== "#") {
             history.push(href);
             if (windowWidth < 992) {

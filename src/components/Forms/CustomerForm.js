@@ -87,7 +87,7 @@ const CustomerForm = ({
                                     name="address"
                                 />
                                 {errors.address && touched.address && (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="invalid-feedback left-75 d-block">
                                         {errors.address}
                                     </div>
                                 )}

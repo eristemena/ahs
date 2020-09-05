@@ -4,10 +4,10 @@ import { PRODUCT_GET } from '../actionTypes';
 import { logout } from './user';
 import { setLoading } from './loading';
 
-export const getProducts = (page, name) => (dispatch) => {
+export const getProducts = (page, name, limit) => (dispatch) => {
     dispatch(setLoading(true));
     get(
-        `/products?limit=7&page=${page}${name ? `&name=${name}` : ''}`,
+        `/products?limit=${limit || 8}&page=${page}${name ? `&name=${name}` : ''}`,
         ({ data, totalPage, totalData, page }) => {
             dispatch({
                 type: PRODUCT_GET,

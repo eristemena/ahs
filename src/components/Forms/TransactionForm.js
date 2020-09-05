@@ -47,7 +47,7 @@ const TransactionForm = ({
             .required(transactionForm.error.product),
         type: Yup.string().default('sell'),
         quantity: Yup.number().positive().required(),
-        customer_id: Yup.number().when('type', {
+        customer_id: Yup.number().typeError(transactionForm.error.customer).when('type', {
             is: (val) =>
                 val && val.length > 0 && val === 'sell' ? true : false,
             then: Yup.number()
@@ -260,7 +260,7 @@ const TransactionForm = ({
                                 isSearchable
                             />
                             {errors.customer_id && touched.customer_id ? (
-                                <div className="invalid-feedback d-block">
+                                <div className="invalid-feedback left-75 d-block">
                                     {errors.customer_id}
                                 </div>
                             ) : null}

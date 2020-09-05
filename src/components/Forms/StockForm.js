@@ -210,7 +210,7 @@ const StockForm = ({
                                 isSearchable
                             />
                             {errors.customer_id && touched.customer_id ? (
-                                <div className="invalid-feedback d-block">
+                                <div className="invalid-feedback left-75 d-block">
                                     {errors.customer_id}
                                 </div>
                             ) : null}

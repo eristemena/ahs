@@ -192,7 +192,7 @@ module.exports = {
         title: 'Peminjaman',
         stock: {
             stock: 'Stok galon',
-            borrowed: 'Total dipinjam'
+            borrowed: 'Total galon dipinjam'
         },
         table: {
             title: 'Peminjam',

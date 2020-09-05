@@ -69,7 +69,7 @@ const ProductForm = ({
                 </InputGroup>
 
                 {errors.price && touched.price && (
-                    <div className="invalid-feedback d-block">
+                    <div className="invalid-feedback left-75 d-block">
                         {errors.price}
                     </div>
                 )}
@@ -83,7 +83,7 @@ const ProductForm = ({
                     <Field className="form-control" name="buying_price"/>
                 </InputGroup>
                 {errors.buying_price && touched.buying_price && (
-                    <div className="invalid-feedback d-block">
+                    <div className="invalid-feedback left-75 d-block">
                         {errors.buying_price}
                     </div>
                 )}
