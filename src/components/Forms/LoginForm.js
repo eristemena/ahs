@@ -48,7 +48,7 @@ function LoginForm({ onSubmit = () => {}, loggingIn }) {
                             name="password"
                         />
                         {errors.password && touched.password && (
-                            <div className="invalid-feedback d-block">
+                            <div className="invalid-feedback left-75 d-block">
                                 {errors.password}
                             </div>
                         )}

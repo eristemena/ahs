@@ -49,7 +49,7 @@ export const login = (email, password) => (dispatch) => {
             );
         },
         (error) => {
-            dispatch(addAlert('Telah terjadi kesalahan'));
+            dispatch(addAlert(`Telah terjadi kesalahan: ${error && error.message}`));
             dispatch(setLoading(false));
         }
     );

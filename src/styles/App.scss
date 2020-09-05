@@ -17,7 +17,8 @@ $text-light: grey;
 
 $full-height: 100vh;
 $full-width: 100vw;
-$logo: url('https://vectorlogo4u.com/wp-content/uploads/2019/09/Aqua-Logo-Vector-2019-520x245.png');
+// $logo: url('https://vectorlogo4u.com/wp-content/uploads/2019/09/Aqua-Logo-Vector-2019-520x245.png');
+$logo: url('../icon.png');
 
 $main-menu-item-height: 110px;
 $main-menu-width: 120px;
@@ -990,19 +991,6 @@ body {
                 border-radius: 0;
                 border: 1px solid $secondary-color;
                 border-top: none;
-                animation: select-menu-down-animate $menu-collapse-time ease forwards;
-
-                @keyframes select-menu-down-animate {
-                    0% {
-                        opacity: 0%;
-                        top: 50%;
-                    }
-
-                    100% {
-                        opacity: 100%;
-                        top: 100%;
-                    }
-                }
 
                 .__option {
                     background: white;
