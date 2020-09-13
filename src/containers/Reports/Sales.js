@@ -192,7 +192,7 @@ const Sales = ({ alert, history, language }) => {
                                     setEndDate(new Date());
                                     setModal(false);
                                 }}>
-                                This week
+                                This week*
                             </button>
                             <button
                                 className="btn btn-primary"
@@ -203,9 +203,9 @@ const Sales = ({ alert, history, language }) => {
                                 }}>
                                 This month
                             </button>
-                            {/* <div className="mt-2">
+                            <div className="mt-2">
                                 <small className="text-muted">*The week starts at Sunday</small>
-                            </div> */}
+                            </div>
                         </CardBody>
                     </Card>
                 </ModalBody>
