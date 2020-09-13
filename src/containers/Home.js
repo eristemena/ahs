@@ -1,15 +1,15 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { GetStocks, GetSales, StockPieChart } from './Stocks';
-import { GallonStock } from './Reports/Borrowing/index';
+import { GetStocks } from './Stocks';
 import { Cards } from './Reports/Sales/index';
 import { Container, Row, Col, CardTitle, Card, CardBody } from 'reactstrap';
 import { get } from '../axios';
-import { setLoading } from '../redux/actions';
+import { setLoading, addAlert, getProductStocks } from '../redux/actions';
 import { CustomSpinner } from '../components';
 import moment from 'moment';
 import { intlMessage } from '../language';
 import { getProducts } from '../redux/actions';
+import { Howl } from 'howler';
 
 function Home({
     merchant_id,
@@ -18,6 +18,9 @@ function Home({
     history,
     language,
     getProducts,
+    alert,
+    getProductStocks,
+    product_stock
 }) {
     const [income, setIncome] = useState(0);
     const [spending, setSpending] = useState(0);
@@ -26,9 +29,10 @@ function Home({
     useEffect(() => {
         if (merchant_id) {
             getProducts();
+            getProductStocks();
             setLoading(true);
             get(
-                `/transactions/revenue?date=${moment().format('YYYY-MM-DD')}`,
+                `/transactions/revenue?start_date=${moment().format('YYYY-MM-DD')}&end_date=${moment().format('YYYY-MM-DD')}`,
                 ({ data }) => {
                     setIncome(data.income);
                     setSpending(data.spending);
@@ -36,7 +40,6 @@ function Home({
                     setLoading(false);
                 },
                 (error) => {
-                    history.push('/');
                     setLoading(false);
                     alert('Telah terjadi kesalahan');
                 }
@@ -44,22 +47,41 @@ function Home({
         }
     }, []);
 
+    const [products, setProducts] = useState(null)
+    const [productLoading, setProductLoading] = useState(false)
+    const [productTemp, setProductTemp] = useState(false);
+
+    useEffect(() => {
+        setProductLoading(true);
+            get(
+                '/products/stocks',
+                ({data}) => {
+                    setProducts(data);
+                    setProductLoading(false)
+                },
+                (error) => {
+                    alert('Telah terjadi kesalahan');
+                    setProductLoading(false)
+                }
+            )
+    }, [productTemp])
+
     const { sales } = intlMessage(language);
 
     return (
         <Fragment>
             {!loading ? (
                 <Container fluid>
-                    {/* <Col xs="12" md="3" className="mb-2">
-                                    <GallonStock />
-                                </Col> */}
+                    <h1 className="page-title">Home</h1>
                     {merchant_id ? (
                         <Fragment>
                             <Card className="">
                                 <div className="custom-button">
                                     <button
                                         className="goto-button"
-                                        onClick={() => history.push('/reports/sales')}
+                                        onClick={() =>
+                                            history.push('/reports/sales')
+                                        }
                                         title="Go to page">
                                         <i className="simple-icon-action-redo"></i>
                                     </button>
@@ -90,7 +112,31 @@ function Home({
                                             />
                                         </Col>
                                     </Row>
-                                    <GetSales />
+                                </CardBody>
+                            </Card>
+                            <Card className="mt-2">
+                                <div className="custom-button">
+                                    <button
+                                        className="goto-button"
+                                        onClick={() =>
+                                            history.push('/transactions/get')
+                                        }
+                                        title="Go to page">
+                                        <i className="simple-icon-action-redo"></i>
+                                    </button>
+                                    <button
+                                        className={`refresh-button ${productLoading ? 'spin' : ''}`}
+                                        disabled={productLoading}
+                                        title="Refresh"
+                                        onClick={() => setProductTemp(!productTemp)}>
+                                        <i className="simple-icon-refresh" />
+                                    </button>
+                                </div>
+                                <CardTitle className="p-3 m-0">
+                                    <h3>Product Stock</h3>
+                                </CardTitle>
+                                <CardBody className="pt-0">
+                                    <GetStocks products={products} loading={productLoading} />
                                 </CardBody>
                             </Card>
                         </Fragment>
@@ -109,11 +155,14 @@ const mapStateToProps = (state) => ({
     merchant_id: state.user.merchant_id,
     loading: state.loading,
     language: state.language,
+    product_stock: state.product_stock
 });
 
 const mapDispatchToProps = (dispatch) => ({
     setLoading: (loading) => dispatch(setLoading(loading)),
     getProducts: () => dispatch(getProducts(1, null, 0)),
+    alert: (message) => dispatch(addAlert(message)),
+    getProductStocks: () => dispatch(getProductStocks())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

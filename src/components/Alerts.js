@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
@@ -9,7 +9,11 @@ function Alerts({ alerts }) {
             {alerts.length > 0 ? (
                 <Fragment>
                     {alerts.map((alert) => (
-                        <Alert color={alert.type} key={alert.id} fade={false} className="notification-alert"> 
+                        <Alert
+                            color={alert.type}
+                            key={alert.id}
+                            fade={false}
+                            className="notification-alert">
                             {alert.message}
                         </Alert>
                     ))}

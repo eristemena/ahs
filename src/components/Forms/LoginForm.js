@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Label, FormGroup } from 'reactstrap';
 import { Formik, Form, Field } from 'formik';
@@ -8,7 +8,6 @@ import CustomSpinner from '../CustomSpinner';
 import * as Yup from 'yup';
 
 function LoginForm({ onSubmit = () => {}, loggingIn }) {
-
     const schema = Yup.object().shape({
         email: Yup.string().email("Email tidak valid").required("Email perlu diisi"),
         password: Yup.string().required("Password perlu diisi")
@@ -55,7 +54,7 @@ function LoginForm({ onSubmit = () => {}, loggingIn }) {
                     </FormGroup>
                     <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
                         <Link
-                            to="#"
+                            to="/password-reset"
                             className="custom-login-form-forgot-password">
                             Lupa password?
                         </Link>

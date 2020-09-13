@@ -37,7 +37,7 @@ const CustomSpinner = ({ loading, type, menu }) => {
                 />
             );
         default:
-            break;
+            return null;
     }
 };
 

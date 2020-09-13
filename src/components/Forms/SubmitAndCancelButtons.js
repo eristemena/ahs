@@ -26,7 +26,7 @@ const SubmitAndCancelButtons = ({
                 disabled={submitting || loading1 || loading2}>
                 <CustomSpinner loading={submitting} type="button" />
                 <span className={`${submitting ? 'd-none' : ''}`}>
-                    {action ? button.edit : button.submit}
+                    {action || button.submit}
                 </span>
             </button>
             <button

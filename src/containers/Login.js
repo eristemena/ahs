@@ -1,10 +1,9 @@
 import React from 'react';
-import { LoginForm } from '../components/Forms';
+import { LoginForm, RstPwFindEmailForm } from '../components/Forms';
 import { login } from '../redux/actions/user';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Row, Card, CardBody, CardTitle, Col, Alert } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
-import Alerts from '../components/Alerts';
+import { Row, Card, CardBody, CardTitle, Col } from 'reactstrap';
 
 function Login({ login }) {
     const submitHandler = (email, password) => {
@@ -22,7 +21,10 @@ function Login({ login }) {
                                 src="https://vectorlogo4u.com/wp-content/uploads/2019/09/Aqua-Logo-Vector-2019-520x245.png"
                             />
                         </CardTitle>
-                        <LoginForm onSubmit={submitHandler} />
+                        <Switch>
+                            <Route path="/" exact component={() => <LoginForm onSubmit={submitHandler} />} />
+                            <Route path="/password-reset" exact component={RstPwFindEmailForm} />
+                        </Switch>
                     </CardBody>
                 </Card>
             </Col>
