@@ -129,7 +129,7 @@ const StockForm = ({
                                 }
                             />
                             <Label for="buy" className="form-check-label">
-                                {gallons.form.type.sell}
+                                {gallons.form.type.buy}
                             </Label>
                         </div>
                         <div className="form-check form-check-inline align-middle custom-form-check">

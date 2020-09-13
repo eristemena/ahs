@@ -210,7 +210,7 @@ module.exports = {
         cards: {
             income: 'Pemasukan',
             spending: 'Pengeluaran',
-            revenue: 'Pendapatan'
+            revenue: 'Keuntungan'
         },
         table: {
             title: 'Riwayat Transaksi',
