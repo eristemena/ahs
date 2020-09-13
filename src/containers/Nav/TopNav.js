@@ -107,7 +107,7 @@ function NavBar({
                                 <DropdownToggle
                                     className="nav-profile-picture d-flex align-middle"
                                     color="empty">
-                                    <p className="name">
+                                    <p className="name d-none d-sm-inline">
                                         {user.name}
                                     </p>
                                     <i className="iconsminds-male-2 default-profile-picture"></i>

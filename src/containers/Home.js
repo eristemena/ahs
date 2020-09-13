@@ -17,10 +17,7 @@ function Home({
     loading,
     history,
     language,
-    getProducts,
     alert,
-    getProductStocks,
-    product_stock
 }) {
     const [income, setIncome] = useState(0);
     const [spending, setSpending] = useState(0);
@@ -28,8 +25,6 @@ function Home({
 
     useEffect(() => {
         if (merchant_id) {
-            getProducts();
-            getProductStocks();
             setLoading(true);
             get(
                 `/transactions/revenue?start_date=${moment().format('YYYY-MM-DD')}&end_date=${moment().format('YYYY-MM-DD')}`,
@@ -52,19 +47,21 @@ function Home({
     const [productTemp, setProductTemp] = useState(false);
 
     useEffect(() => {
-        setProductLoading(true);
-            get(
-                '/products/stocks',
-                ({data}) => {
-                    setProducts(data);
-                    setProductLoading(false)
-                },
-                (error) => {
-                    alert('Telah terjadi kesalahan');
-                    setProductLoading(false)
-                }
-            )
-    }, [productTemp])
+        if (merchant_id) {
+            setProductLoading(true);
+                get(
+                    '/products/stocks',
+                    ({data}) => {
+                        setProducts(data);
+                        setProductLoading(false)
+                    },
+                    (error) => {
+                        alert('Telah terjadi kesalahan');
+                        setProductLoading(false)
+                    }
+                )
+        }
+    }, [merchant_id ? productTemp : null])
 
     const { sales } = intlMessage(language);
 
