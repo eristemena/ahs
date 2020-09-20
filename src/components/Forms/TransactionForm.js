@@ -12,7 +12,7 @@ import moment from 'moment';
 import 'moment/locale/id';
 import { setLoading } from '../../redux/actions/loading';
 import { get } from '../../axios';
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody, Row, Col } from 'reactstrap';
 import { intlMessage } from '../../language';
 import SubmitAndCancelButton from './SubmitAndCancelButtons';
 registerLocale('id', id);
@@ -42,11 +42,9 @@ const TransactionForm = ({
 
     const schema = Yup.object().shape({
         date: Yup.date().required(transactionForm.error.date),
-        product_id: Yup.number()
-            .integer()
-            .required(transactionForm.error.product),
+        product_id: Yup.array().typeError(transactionForm.error.product).required(transactionForm.error.product),
         type: Yup.string().default('sell'),
-        quantity: Yup.number().positive().required(),
+        quantity: Yup.array().of(Yup.number().positive()).required(),
         customer_id: Yup.number().typeError(transactionForm.error.customer).when('type', {
             is: (val) =>
                 val && val.length > 0 && val === 'sell' ? true : false,
@@ -137,29 +135,18 @@ const TransactionForm = ({
                             classNamePrefix="custom-searchable-select "
                             isLoading={loadingOwned}
                             isDisabled={loadingOwned}
+                            isMulti
                             noOptionsMessage={() => 'Produk tidak ditemukan'}
                             name="product_id"
                             options={owned}
-                            value={{
-                                value: values.product_id,
-                                label:
-                                    values.product_id > 0
-                                        ? owned.map((own) => {
-                                              if (
-                                                  own.value ===
-                                                  values.product_id
-                                              ) {
-                                                  return own.label;
-                                              }
-                                          })
-                                        : transactionForm.product.placeholder,
-                            }}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                console.log(e)
                                 setValues({
                                     ...values,
-                                    product_id: e.value,
+                                    product_id: e,
                                 })
-                            }
+                            }}
+                            placeholder={transactionForm.product.placeholder}
                             isSearchable
                         />
                         {errors.product_id && touched.product_id ? (
@@ -204,23 +191,39 @@ const TransactionForm = ({
                             </Label>
                         </div>
                     </FormGroup>
-                    <FormGroup>
-                        <Label for="quantity">
-                            {transactionForm.quantity.label}
-                        </Label>
-                        <Field
-                            className="form-control"
-                            id="quantity"
-                            type="number"
-                            min="0"
-                            name="quantity"
-                        />
-                        {errors.quantity && touched.quantity ? (
-                            <div className="invalid-feedback d-block">
-                                {errors.quantity}
-                            </div>
-                        ) : null}
-                    </FormGroup>
+                    {values.product_id && values.product_id.length > 0 && (
+                        <Fragment>
+                            <Label for="quantity">    
+                                {transactionForm.quantity.label}
+                            </Label>
+                            
+                            <Row>
+                                {values.product_id.map(({label}, index) => (
+                                    <Col xs={12} sm={6} md={3}>
+                                        <FormGroup>
+                                            <Label>
+                                                {label}: {index}
+                                            </Label>
+                                            <Field
+                                                className="form-control"
+                                                id="quantity"
+                                                type="number"
+                                                min="0"
+                                                name="quantity"
+                                                value={2}
+                                                onChange={(e) => console.log('test')}
+                                            />
+                                            {errors.quantity && touched.quantity ? (
+                                                <div className="invalid-feedback d-block">
+                                                    {errors.quantity}
+                                                </div>
+                                            ) : null}
+                                        </FormGroup>
+                                    </Col>
+                                ))}
+                            </Row>
+                        </Fragment>
+                    )}
                     {values.type === 'sell' ? (
                         <FormGroup>
                             <Label className="d-block" for="customer">
@@ -315,9 +318,9 @@ const TransactionForm = ({
         <Formik
             initialValues={{
                 date: stateDate || '',
-                product_id: stateSelected || '',
+                product_id: stateSelected || [],
                 type: stateType || 'sell',
-                quantity: stateQuantity || 1,
+                quantity: stateQuantity || [],
                 customer_id: stateSelectedCustomer || '',
                 info: stateInfo || '',
             }}
