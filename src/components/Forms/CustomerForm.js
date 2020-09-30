@@ -85,6 +85,7 @@ const CustomerForm = ({
                                     className="form-control"
                                     as="textarea"
                                     name="address"
+                                    rows="4"
                                 />
                                 {errors.address && touched.address && (
                                     <div className="invalid-feedback left-75 d-block">

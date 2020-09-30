@@ -20,7 +20,11 @@ const AddCustomer = ({ history, alert }) => {
             (success) => {
                 setSubmitting(false);
                 alert('Pelanggan berhasil ditambahkan', 'success');
-                history.push('/customers/get')
+                if (history.location.search.replace('?shortcut=', '') === 'true') {
+                    history.goBack()
+                } else {
+                    history.push('/customers/get')
+                }
             },
             (error) => {
                 alert(`Telah terjadi kesalahan: ${error.message}`);

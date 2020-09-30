@@ -144,7 +144,6 @@ const GetProducts = ({
                             <table className="product-table">
                                 <thead>
                                     <tr className="text-center">
-                                        <th>{table.id}</th>
                                         <th>{table.name}</th>
                                         <th>{table.price}</th>
                                         <th>{table.buying_price}</th>
@@ -165,7 +164,6 @@ const GetProducts = ({
                                                 <tr
                                                     key={product.id}
                                                     className="text-center">
-                                                    <td>{product.id}</td>
                                                     <td>{product.name}</td>
                                                     <td>{`Rp. ${formatPrice(
                                                         product.price
@@ -217,11 +215,11 @@ const GetProducts = ({
                                                 <td
                                                     colSpan={
                                                         checkAdminMerchant(user)
-                                                            ? 5
+                                                            ? 4
                                                             : user.merchant_id ===
                                                               null
-                                                            ? 5
-                                                            : 4
+                                                            ? 4
+                                                            : 3
                                                     }
                                                     className="text-center">
                                                     {queryName.length > 0

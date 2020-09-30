@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { Line } from 'react-chartjs-2';
@@ -11,7 +11,6 @@ const BarChart = ({
     legends = [],
     customYAxis = () => {},
 }) => {
-    const [windowWidth, setWindowWidth] = useState(undefined);
     return (
         <Card className="custom-chart">
             <CardBody>

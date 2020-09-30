@@ -1,5 +1,6 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
 import { addAlert } from '../../redux/actions/alert';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
@@ -206,9 +207,17 @@ const TransactionForm = ({
                                     classNamePrefix="custom-searchable-select "
                                     isLoading={loadingOwnedCustomer}
                                     isDisabled={loadingOwnedCustomer}
-                                    noOptionsMessage={() =>
-                                        'Pelanggan tidak ditemukan'
-                                    }
+                                    noOptionsMessage={() => (
+                                        <span className="position-relative">
+                                            Pelanggan tidak ditemukan,{' '}
+                                            <Link
+                                                to="/customers/add?shortcut=true"
+                                                className="stretched-link text-decoration-none">
+                                                silahkan tambah pelanggan
+                                                baru
+                                            </Link>
+                                        </span>
+                                    )}
                                     name="product_id"
                                     options={ownedCustomers}
                                     onChange={(e) =>
@@ -243,7 +252,17 @@ const TransactionForm = ({
                                                 classNamePrefix="custom-searchable-select "
                                                 isLoading={loadingOwned}
                                                 isDisabled={loadingOwned}
-                                                noOptionsMessage={() => 'Produk tidak ditemukan'}
+                                                noOptionsMessage={() => (
+                                                    <span className="position-relative">
+                                                        Produk tidak ditemukan,{' '}
+                                                        <Link
+                                                            to="/products/add?shortcut=true"
+                                                            className="stretched-link text-decoration-none">
+                                                            silahkan tambah produk
+                                                            baru
+                                                        </Link>
+                                                    </span>
+                                                )}
                                                 options={owned}
                                                 value={item.product_id > 0 && {
                                                     value: item.product_id,
@@ -322,7 +341,7 @@ const TransactionForm = ({
                                 name="info"
                                 as="textarea"
                                 maxLength="150"
-                                cols="5"
+                                rows="4"
                                 placeholder={transactionForm.info.placeholder}
                             />
                         </FormGroup>

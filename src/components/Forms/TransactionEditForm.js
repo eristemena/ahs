@@ -224,7 +224,7 @@ const TransactionEditForm = ({
                                             <span className="position-relative">
                                                 Pelanggan tidak ditemukan,{' '}
                                                 <Link
-                                                    to="/customers/add"
+                                                    to="/customers/add?shortcut=true"
                                                     className="stretched-link text-decoration-none">
                                                     silahkan tambah pelanggan
                                                     baru
@@ -280,7 +280,7 @@ const TransactionEditForm = ({
                                                 <span className="position-relative">
                                                     Produk tidak ditemukan,{' '}
                                                     <Link
-                                                        to="/products/add"
+                                                        to="/products/add?shortcut=true"
                                                         className="stretched-link text-decoration-none">
                                                         silahkan tambah produk
                                                         baru

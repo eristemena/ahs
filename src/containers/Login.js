@@ -18,6 +18,7 @@ function Login({ login }) {
                         <CardTitle className="text-center">
                             <img
                                 className="img-fluid"
+                                alt="Image not found"
                                 src="https://vectorlogo4u.com/wp-content/uploads/2019/09/Aqua-Logo-Vector-2019-520x245.png"
                             />
                         </CardTitle>

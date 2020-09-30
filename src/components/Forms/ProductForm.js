@@ -14,7 +14,6 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import SubmitAndCancelButtons from './SubmitAndCancelButtons';
 import { intlMessage } from '../../language';
-import { formatPrice } from '../../utilities';
 
 const ProductForm = ({
     onSubmit = () => {},

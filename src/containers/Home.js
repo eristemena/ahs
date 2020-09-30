@@ -9,7 +9,6 @@ import { CustomSpinner } from '../components';
 import moment from 'moment';
 import { intlMessage } from '../language';
 import { getProducts } from '../redux/actions';
-import { Howl } from 'howler';
 
 function Home({
     merchant_id,

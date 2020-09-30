@@ -6,7 +6,6 @@ import { TRANSACTION_ADD } from '../actionTypes';
 
 export const getTransactions = (page, sort, date, limit) => (dispatch) => {
     dispatch(setLoading(true));
-    console.log(page, sort, date, limit)
     get(
         `/transactions?limit=${limit}&page=${page}${sort ? `&sort=${sort}-desc` : ''}${
             date ? `&date=${date}` : ''

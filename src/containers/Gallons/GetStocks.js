@@ -14,7 +14,6 @@ import {
     DeleteModal,
     InfoTooltip,
     CustomPagination,
-    Table as CustomTable,
 } from '../../components';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';

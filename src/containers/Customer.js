@@ -8,7 +8,7 @@ const Customer = () => {
     return (
         <Switch>
             <Route path="/customers/get" exact component={GetCustomers} />
-            <Route path="/customers/add" exact component={AddCustomer} />
+            <Route path="/customers/add" component={AddCustomer} />
             <Route path="/customers/edit" component={EditCustomer} />
             <Route component={NotFound} />
         </Switch>

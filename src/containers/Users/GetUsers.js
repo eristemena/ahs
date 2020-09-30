@@ -9,14 +9,12 @@ import { intlMessage } from '../../language';
 
 const GetUsers = ({ alert, loading, setLoading, language }) => {
     const [users, setList] = useState([]);
-    const [d, setD] = useState('d-none');
 
     useEffect(() => {
         setLoading(true);
         get(
             '/users',
             (success) => {
-                setD(() => '');
                 setList(() => success.data);
                 setLoading(false);
             },
