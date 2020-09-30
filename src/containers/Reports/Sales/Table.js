@@ -81,7 +81,7 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                                 ) : (
                                     <tr>
                                         <td
-                                            colSpan="5"
+                                            colSpan="6"
                                             className="text-center position-relative">
                                             {translated.no_data[0]}{' '}
                                             <Link

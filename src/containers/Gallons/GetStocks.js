@@ -49,6 +49,8 @@ const GetGallonStocks = ({
     const [dateSearch, setDateSearch] = useState(null);
     const [limit, setLimit] = useState(8);
 
+    const [modalToggle, setModalToggle] = useState(false);
+
     useEffect(() => {
         fetchStocks(
             page,
@@ -290,14 +292,13 @@ const GetGallonStocks = ({
                                                                                 ? 'mr-2'
                                                                                 : ''
                                                                         }`}
-                                                                        data-toggle="modal"
-                                                                        data-target="#modal"
                                                                         title={action.delete}
-                                                                        onClick={() =>
+                                                                        onClick={() => {
                                                                             setDelId(
                                                                                 galStk.id
-                                                                            )
-                                                                        }></i>
+                                                                            );
+                                                                            setModalToggle(true)
+                                                                        }}></i>
                                                                     {galStk.info ? (
                                                                         <Fragment>
                                                                             <InfoTooltip
@@ -357,7 +358,7 @@ const GetGallonStocks = ({
                     activeNav={activeNav}
                 />
             </Container>
-            <DeleteModal deleteHandler={deleteData} />
+            <DeleteModal toggle={modalToggle} setToggle={setModalToggle} deleteHandler={deleteData} />
         </Container>
     );
 };

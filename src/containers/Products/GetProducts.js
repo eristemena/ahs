@@ -30,6 +30,8 @@ const GetProducts = ({
     const [delId, setDelId] = useState(-1);
     const [queryName, setQueryName] = useState('');
 
+    const [modalToggle, setModalToggle] = useState(false);
+
     useEffect(() => {
         getProducts(page, queryName);
     }, [page]);
@@ -196,15 +198,15 @@ const GetProducts = ({
                                                             </Link>
                                                             <i
                                                                 className="simple-icon-close delete-icon"
-                                                                data-toggle="modal"
-                                                                data-target="#modal"
                                                                 title={
                                                                     action.delete
                                                                 }
-                                                                onClick={(e) =>
+                                                                onClick={(e) => {
                                                                     setDelId(
                                                                         product.id
                                                                     )
+                                                                    setModalToggle(true)
+                                                                }
                                                                 }></i>
                                                         </td>
                                                     ) : null}
@@ -266,6 +268,8 @@ const GetProducts = ({
             </Container>
             <DeleteModal
                 deleteHandler={deleteHandler}
+                toggle={modalToggle}
+                setToggle={setModalToggle}
                 additionalText="All transactions related to this product will also be deleted."
             />
         </Container>

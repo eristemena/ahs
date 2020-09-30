@@ -4,7 +4,8 @@ import ProductForm from './ProductForm';
 import RegisterForm from './RegisterForm';
 import TransactionForm from './TransactionForm';
 import StockForm from './StockForm';
-import RstPwFindEmailForm from './RstPwFindEmailForm'
+import RstPwFindEmailForm from './RstPwFindEmailForm';
+import TransactionEditForm from './TransactionEditForm';
 
 export {
     CustomerForm,
@@ -13,5 +14,6 @@ export {
     RegisterForm,
     TransactionForm,
     StockForm,
-    RstPwFindEmailForm
+    RstPwFindEmailForm,
+    TransactionEditForm
 };

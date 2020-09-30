@@ -4,15 +4,13 @@ import { addAlert } from '../../redux/actions/alert';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import Select from 'react-select';
-import { FormGroup, Label } from 'reactstrap';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
-import { setLoading } from '../../redux/actions/loading';
 import { get } from '../../axios';
-import { Card, CardBody, Row, Col } from 'reactstrap';
+import { Card, CardBody, Row, Col, InputGroup, FormGroup, InputGroupAddon, Label } from 'reactstrap';
 import { intlMessage } from '../../language';
 import SubmitAndCancelButton from './SubmitAndCancelButtons';
 registerLocale('id', id);
@@ -20,12 +18,6 @@ registerLocale('id', id);
 const TransactionForm = ({
     onSubmit = () => {},
     submitting,
-    stateDate,
-    stateSelected = '',
-    stateSelectedCustomer = '',
-    stateQuantity = 1,
-    stateType = 'sell',
-    stateInfo = '',
     action,
     alert,
     history,
@@ -35,23 +27,27 @@ const TransactionForm = ({
     const [loadingOwned, setLoadingOwned] = useState(false);
     const [ownedCustomers, setOwnedCustomers] = useState([]);
     const [loadingOwnedCustomer, setLoadingOwnedCustomer] = useState(false);
+    
+    const [products, setProducts] = useState([{product_id: null, quantity: 1}]);
+    
+    // dummy state to force re render
+    const [re, setRe] = useState(false)
 
     const {
         transactions: { form: transactionForm },
     } = intlMessage(language);
 
     const schema = Yup.object().shape({
-        date: Yup.date().required(transactionForm.error.date),
-        product_id: Yup.array().typeError(transactionForm.error.product).required(transactionForm.error.product),
-        type: Yup.string().default('sell'),
-        quantity: Yup.array().of(Yup.number().positive()).required(),
+        date: Yup.date().typeError(transactionForm.error.date).required(),
+        type: Yup.string(),
         customer_id: Yup.number().typeError(transactionForm.error.customer).when('type', {
             is: (val) =>
-                val && val.length > 0 && val === 'sell' ? true : false,
+                val && val.length > 0 && val === 'sell',
             then: Yup.number()
+                .typeError(transactionForm.error.customer)
                 .integer()
-                .positive()
-                .required(transactionForm.error.customer),
+                .positive(transactionForm.error.customer)
+                .required(),
         }),
         info: Yup.string().optional(),
     });
@@ -96,220 +92,29 @@ const TransactionForm = ({
         );
     }, []);
 
-    const form = (errors, touched, setValues, values) => (
-        <Card className="custom-form-card">
-            <CardBody>
-                <Form>
-                    <FormGroup>
-                        <Label className="d-block" for="date">
-                            {transactionForm.date.label}
-                        </Label>
-                        <ReactDatePicker
-                            selected={values.date}
-                            locale="id"
-                            popperPlacement="bottom"
-                            id="date"
-                            name="date"
-                            dateFormat="dd MMMM yyyy"
-                            className="form-control date-picker"
-                            placeholderText={transactionForm.date.placeholder}
-                            disabledKeyboardNavigation
-                            maxDate={new Date()}
-                            todayButton={`Hari ini (${moment(new Date()).format(
-                                'DD MMMM'
-                            )})`}
-                            onChange={(e) => setValues({ ...values, date: e })}
-                        />
-                        {errors.date && touched.date ? (
-                            <div className="invalid-feedback d-block">
-                                {errors.date}
-                            </div>
-                        ) : null}
-                    </FormGroup>
-                    <FormGroup>
-                        <Label className="d-block" for="product">
-                            {transactionForm.product.label}
-                        </Label>
-                        <Select
-                            id="product"
-                            classNamePrefix="custom-searchable-select "
-                            isLoading={loadingOwned}
-                            isDisabled={loadingOwned}
-                            isMulti
-                            noOptionsMessage={() => 'Produk tidak ditemukan'}
-                            name="product_id"
-                            options={owned}
-                            onChange={(e) => {
-                                console.log(e)
-                                setValues({
-                                    ...values,
-                                    product_id: e,
-                                })
-                            }}
-                            placeholder={transactionForm.product.placeholder}
-                            isSearchable
-                        />
-                        {errors.product_id && touched.product_id ? (
-                            <div className="invalid-feedback d-block">
-                                {errors.product_id}
-                            </div>
-                        ) : null}
-                    </FormGroup>
-                    <FormGroup>
-                        <Label className="d-block">
-                            {transactionForm.type.label}
-                        </Label>
-                        <div className="form-check form-check-inline align-middle custom-form-check">
-                            <Field
-                                type="radio"
-                                name="type"
-                                value="sell"
-                                id="sell"
-                                className="form-check-input"
-                            />
-                            <Label for="sell" className="form-check-label">
-                                {transactionForm.type.sell}
-                            </Label>
-                        </div>
-                        <div className="form-check form-check-inline align-middle custom-form-check">
-                            <Field
-                                type="radio"
-                                name="type"
-                                value="buy"
-                                id="buy"
-                                className="form-check-input"
-                                onChange={() =>
-                                    setValues({
-                                        ...values,
-                                        customer_id: 0,
-                                        type: 'buy',
-                                    })
-                                }
-                            />
-                            <Label for="buy" className="form-check-label">
-                                {transactionForm.type.buy}
-                            </Label>
-                        </div>
-                    </FormGroup>
-                    {values.product_id && values.product_id.length > 0 && (
-                        <Fragment>
-                            <Label for="quantity">    
-                                {transactionForm.quantity.label}
-                            </Label>
-                            
-                            <Row>
-                                {values.product_id.map(({label}, index) => (
-                                    <Col xs={12} sm={6} md={3}>
-                                        <FormGroup>
-                                            <Label>
-                                                {label}: {index}
-                                            </Label>
-                                            <Field
-                                                className="form-control"
-                                                id="quantity"
-                                                type="number"
-                                                min="0"
-                                                name="quantity"
-                                                value={2}
-                                                onChange={(e) => console.log('test')}
-                                            />
-                                            {errors.quantity && touched.quantity ? (
-                                                <div className="invalid-feedback d-block">
-                                                    {errors.quantity}
-                                                </div>
-                                            ) : null}
-                                        </FormGroup>
-                                    </Col>
-                                ))}
-                            </Row>
-                        </Fragment>
-                    )}
-                    {values.type === 'sell' ? (
-                        <FormGroup>
-                            <Label className="d-block" for="customer">
-                                {transactionForm.customer.label}
-                            </Label>
-                            <Select
-                                id="customer"
-                                classNamePrefix="custom-searchable-select "
-                                isLoading={loadingOwnedCustomer}
-                                isDisabled={loadingOwnedCustomer}
-                                noOptionsMessage={() =>
-                                    'Pelanggan tidak ditemukan'
-                                }
-                                name="product_id"
-                                options={ownedCustomers}
-                                value={{
-                                    value: values.customer_id,
-                                    label:
-                                        values.customer_id > 0
-                                            ? ownedCustomers.map((own) => {
-                                                  if (
-                                                      own.value ===
-                                                      values.customer_id
-                                                  ) {
-                                                      return own.label;
-                                                  }
-                                              })
-                                            : transactionForm.customer
-                                                  .placeholder,
-                                }}
-                                onChange={(e) =>
-                                    setValues({
-                                        ...values,
-                                        customer_id: e.value,
-                                    })
-                                }
-                                isSearchable
-                            />
-                            {errors.customer_id && touched.customer_id ? (
-                                <div className="invalid-feedback left-75 d-block">
-                                    {errors.customer_id}
-                                </div>
-                            ) : null}
-                        </FormGroup>
-                    ) : null}
-                    <FormGroup>
-                        <Label for="info">{transactionForm.info.label}</Label>
-                        <Field
-                            className="form-control"
-                            id="info"
-                            name="info"
-                            as="textarea"
-                            maxLength="150"
-                            cols="5"
-                            placeholder={transactionForm.info.placeholder}
-                        />
-                    </FormGroup>
-                    <SubmitAndCancelButton
-                        submitting={submitting}
-                        loading1={loadingOwned}
-                        loading2={loadingOwnedCustomer}
-                        action={action}
-                        history={history}
-                    />
-                </Form>
-            </CardBody>
-        </Card>
-    );
-
     const submitHandler = ({
         date,
-        product_id,
         type,
-        quantity,
         customer_id,
         info,
     }) => {
         const dateSend = moment(date).format('YYYY-MM-DD');
+        let checkIfProductsEmpty = true;
+        products.forEach((item) => {
+            if (item.product_id === null) {
+                checkIfProductsEmpty = false;
+            }
+        })
+
+        if (!checkIfProductsEmpty) {
+            return alert('Pilih produk')
+        }
+
         onSubmit(
             dateSend,
-            product_id,
             type,
-            quantity,
-            !customer_id || typeof customer_id === 'string'
-                ? null
-                : customer_id,
+            customer_id || null,
+            products,
             info.length === 0 ? null : info
         );
     };
@@ -317,18 +122,220 @@ const TransactionForm = ({
     return (
         <Formik
             initialValues={{
-                date: stateDate || '',
-                product_id: stateSelected || [],
-                type: stateType || 'sell',
-                quantity: stateQuantity || [],
-                customer_id: stateSelectedCustomer || '',
-                info: stateInfo || '',
+                date: null,
+                type: 'sell',
+                customer_id: null,
+                info: '',
             }}
             enableReinitialize
             onSubmit={submitHandler}
             validationSchema={schema}>
             {({ errors, touched, setValues, values }) => (
-                <Fragment>{form(errors, touched, setValues, values)}</Fragment>
+                <Card className="custom-form-card">
+                <CardBody>
+                    <Form>
+                        <FormGroup id="date">
+                            <Label className="d-block" for="date">
+                                {transactionForm.date.label}
+                            </Label>
+                            <ReactDatePicker
+                                selected={values.date}
+                                locale="id"
+                                popperPlacement="bottom"
+                                id="date"
+                                name="date"
+                                dateFormat="dd MMMM yyyy"
+                                className="form-control date-picker"
+                                placeholderText={transactionForm.date.placeholder}
+                                disabledKeyboardNavigation
+                                maxDate={new Date()}
+                                todayButton={`Hari ini (${moment(new Date()).format(
+                                    'DD MMMM'
+                                )})`}
+                                onChange={(e) => setValues({ ...values, date: e })}
+                            />
+                            {errors.date && touched.date ? (
+                                <div className="invalid-feedback d-block">
+                                    {errors.date}
+                                </div>
+                            ) : null}
+                        </FormGroup>
+                        <FormGroup id="type">
+                            <Label className="d-block">
+                                {transactionForm.type.label}
+                            </Label>
+                            <div className="form-check form-check-inline align-middle custom-form-check">
+                                <Field
+                                    type="radio"
+                                    name="type"
+                                    value="sell"
+                                    id="sell"
+                                    className="form-check-input"
+                                />
+                                <Label for="sell" className="form-check-label">
+                                    {transactionForm.type.sell}
+                                </Label>
+                            </div>
+                            <div className="form-check form-check-inline align-middle custom-form-check">
+                                <Field
+                                    type="radio"
+                                    name="type"
+                                    value="buy"
+                                    id="buy"
+                                    className="form-check-input"
+                                    onChange={() =>
+                                        setValues({
+                                            ...values,
+                                            customer_id: 0,
+                                            type: 'buy',
+                                        })
+                                    }
+                                />
+                                <Label for="buy" className="form-check-label">
+                                    {transactionForm.type.buy}
+                                </Label>
+                            </div>
+                        </FormGroup>
+                        {values.type === 'sell' ? (
+                            <FormGroup>
+                                <Label className="d-block" for="customer">
+                                    {transactionForm.customer.label}
+                                </Label>
+                                <Select
+                                    id="customer"
+                                    classNamePrefix="custom-searchable-select "
+                                    isLoading={loadingOwnedCustomer}
+                                    isDisabled={loadingOwnedCustomer}
+                                    noOptionsMessage={() =>
+                                        'Pelanggan tidak ditemukan'
+                                    }
+                                    name="product_id"
+                                    options={ownedCustomers}
+                                    onChange={(e) =>
+                                        setValues({
+                                            ...values,
+                                            customer_id: e.value,
+                                        })
+                                    }
+                                    placeholder={transactionForm.customer.placeholder}
+                                    isSearchable
+                                />
+                                {errors.customer_id && touched.customer_id ? (
+                                    <div className="invalid-feedback left-75 d-block">
+                                        {errors.customer_id}
+                                    </div>
+                                ) : null}
+                            </FormGroup>
+                        ) : null}
+                        <div className="mb-3">
+                            {products.length > 0 || (
+                                <p className="m-0">{transactionForm.product.label}</p>
+                            )}
+                            {products.map((item, index) => (
+                                <Row>
+                                    <Col xs={6}>
+                                        <FormGroup>
+                                            <Label className="d-block" for="product">
+                                                {transactionForm.product.label}
+                                            </Label>
+                                            <Select
+                                                id="product"
+                                                classNamePrefix="custom-searchable-select "
+                                                isLoading={loadingOwned}
+                                                isDisabled={loadingOwned}
+                                                noOptionsMessage={() => 'Produk tidak ditemukan'}
+                                                options={owned}
+                                                value={item.product_id > 0 && {
+                                                    value: item.product_id,
+                                                    label: owned.map((own) => {
+                                                        if (own.value === item.product_id) {
+                                                            return own.label
+                                                        }
+                                                    })
+                                                }}
+                                                onChange={(e) => {
+                                                    setProducts(prev => {
+                                                        prev[index].product_id = e.value;
+                                                        return prev;
+                                                    });
+                                                    setRe(!re)
+                                                }}
+                                                placeholder={transactionForm.product.placeholder}
+                                                isSearchable
+                                            />
+                                        </FormGroup>
+                                    </Col>
+                                    <Col xs={6}>
+                                        <FormGroup>
+                                            <Label>
+                                                {transactionForm.quantity.label}
+                                            </Label>
+                                            <InputGroup>
+                                                <Field
+                                                    className="form-control"
+                                                    type="number"
+                                                    min="1"
+                                                    defaultValue="1"
+                                                    name="quantity"
+                                                    value={item.quantity}
+                                                    onChange={(e) => {
+                                                        e.persist()
+                                                        setProducts(prev => {
+                                                            prev[index].quantity = e.target.value * 1;
+                                                            return prev;
+                                                        });
+                                                        setRe(!re)
+                                                    }}
+                                                />
+                                                {index > 0 && (
+                                                    <InputGroupAddon addonType="prepend">
+                                                        <button 
+                                                        className="btn btn-danger" 
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setProducts(prev => {
+                                                                let placeholder = prev.filter((e, i) => i !== index)
+                                                                return placeholder;
+                                                            });
+                                                            setRe(!re);
+                                                        }}>
+                                                            <i className="simple-icon-trash" />
+                                                        </button>
+                                                    </InputGroupAddon>
+                                                )}
+                                            </InputGroup>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                            ))}
+                            <button 
+                            className="btn btn-primary mt-2" 
+                            type="button"
+                            onClick={() => setProducts([...products, {product_id: null, quantity: 1}])}
+                            >Add Product</button>
+                        </div>
+                        <FormGroup id="info">
+                            <Label for="info">{transactionForm.info.label}</Label>
+                            <Field
+                                className="form-control"
+                                id="info"
+                                name="info"
+                                as="textarea"
+                                maxLength="150"
+                                cols="5"
+                                placeholder={transactionForm.info.placeholder}
+                            />
+                        </FormGroup>
+                        <SubmitAndCancelButton
+                            submitting={submitting}
+                            loading1={loadingOwned}
+                            loading2={loadingOwnedCustomer}
+                            action={action}
+                            history={history}
+                        />
+                    </Form>
+                </CardBody>
+            </Card>
             )}
         </Formik>
     );
@@ -336,12 +343,9 @@ const TransactionForm = ({
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
-    setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
 const mapStateToProps = (state) => ({
-    customer: state.customer,
-    loading: state.loading,
     language: state.language,
 });
 
