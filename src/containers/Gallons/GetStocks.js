@@ -14,7 +14,6 @@ import {
     DeleteModal,
     InfoTooltip,
     CustomPagination,
-    Table as CustomTable,
 } from '../../components';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
@@ -48,6 +47,8 @@ const GetGallonStocks = ({
     const [sortBy, setSortBy] = useState('updated_at');
     const [dateSearch, setDateSearch] = useState(null);
     const [limit, setLimit] = useState(8);
+
+    const [modalToggle, setModalToggle] = useState(false);
 
     useEffect(() => {
         fetchStocks(
@@ -290,14 +291,13 @@ const GetGallonStocks = ({
                                                                                 ? 'mr-2'
                                                                                 : ''
                                                                         }`}
-                                                                        data-toggle="modal"
-                                                                        data-target="#modal"
                                                                         title={action.delete}
-                                                                        onClick={() =>
+                                                                        onClick={() => {
                                                                             setDelId(
                                                                                 galStk.id
-                                                                            )
-                                                                        }></i>
+                                                                            );
+                                                                            setModalToggle(true)
+                                                                        }}></i>
                                                                     {galStk.info ? (
                                                                         <Fragment>
                                                                             <InfoTooltip
@@ -357,7 +357,7 @@ const GetGallonStocks = ({
                     activeNav={activeNav}
                 />
             </Container>
-            <DeleteModal deleteHandler={deleteData} />
+            <DeleteModal toggle={modalToggle} setToggle={setModalToggle} deleteHandler={deleteData} />
         </Container>
     );
 };

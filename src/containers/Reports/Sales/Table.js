@@ -5,6 +5,8 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { formatPrice, parseType } from '../../../utilities';
+import moment from 'moment';
+import 'moment/locale/id';
 
 const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate = () => {}, translated, language }) => {
     return (
@@ -32,6 +34,7 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                         <table className="sales-table">
                             <thead>
                                 <tr className="text-center">
+                                    <th>Date</th>
                                     <th>{translated.thead.name}</th>
                                     <th>{translated.thead.type}</th>
                                     <th>{translated.thead.quantity}</th>
@@ -43,6 +46,7 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                                 {data.length > 0 ? (
                                     data.map((item, index) => (
                                         <tr className="text-center" key={index}>
+                                            <td>{moment(item.date).format('D MMM YYYY')}</td>
                                             <td>{item.product.name}</td>
                                             <td>
                                                 {parseType(item.type, language)}
@@ -77,7 +81,7 @@ const Table = ({ loading, temp, refreshFunc = () => {}, data = [], date, setDate
                                 ) : (
                                     <tr>
                                         <td
-                                            colSpan="5"
+                                            colSpan="6"
                                             className="text-center position-relative">
                                             {translated.no_data[0]}{' '}
                                             <Link

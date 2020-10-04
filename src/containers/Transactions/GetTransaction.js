@@ -14,7 +14,6 @@ import {
     DeleteModal,
     InfoTooltip,
     CustomPagination,
-    Table as CustomTable,
 } from '../../components';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
@@ -46,6 +45,8 @@ const GetTransaction = ({
     const [sortBy, setSortBy] = useState('updated_at');
     const [dateSearch, setDateSearch] = useState(null);
     const [limit, setLimit] = useState(8);
+
+    const [modalToggle, setModalToggle] = useState(false);
 
     useEffect(() => {
         getTransaction(
@@ -110,13 +111,23 @@ const GetTransaction = ({
             `/transactions/${delId}`,
             (success) => {
                 alert('Data berhasil dihapus', 'success');
-                getTransaction(page);
+                getTransaction(
+                    page,
+                    sortBy,
+                    dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null,
+                    limit
+                );
                 setLoading(false);
                 setDelId(-1);
             },
             (error) => {
                 alert('Telah terjadi kesalahan');
-                getTransaction(page);
+                getTransaction(
+                    page,
+                    sortBy,
+                    dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null,
+                    limit
+                );
                 setLoading(false);
                 setDelId(-1);
             }
@@ -343,16 +354,15 @@ const GetTransaction = ({
                                                                         ? 'mr-2'
                                                                         : ''
                                                                 }`}
-                                                                data-toggle="modal"
-                                                                data-target="#modal"
                                                                 title={
                                                                     action.delete
                                                                 }
-                                                                onClick={(e) =>
+                                                                onClick={(e) => {
                                                                     setDelId(
                                                                         tran.id
-                                                                    )
-                                                                }></i>
+                                                                    );
+                                                                    setModalToggle(true)
+                                                                }}></i>
                                                             {tran.info ? (
                                                                 <Fragment>
                                                                     <InfoTooltip
@@ -400,8 +410,7 @@ const GetTransaction = ({
                     activeNav={activeNav}
                 />
             </Container>
-
-            <DeleteModal deleteHandler={deleteData} />
+            <DeleteModal toggle={modalToggle} setToggle={setModalToggle} deleteHandler={deleteData} />
         </Container>
     );
 };

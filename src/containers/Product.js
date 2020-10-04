@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { addAlert } from '../redux/actions/alert';
@@ -6,12 +6,9 @@ import { GetProducts, AddProduct, EditProduct } from './Products';
 import NotFound from './NotFound';
 
 const Product = ({ history, user, alert }) => {
-    const [me, setMe] = useState({});
 
     useEffect(() => {
-        if (user) {
-            setMe(user);
-        } else {
+        if (!user) {
             history.push('/');
             alert('Anda belum login. Silahkan login terlebih dahulu');
         }
@@ -19,7 +16,7 @@ const Product = ({ history, user, alert }) => {
 
     return (
         <Switch>
-            <Route path="/products/get" component={GetProducts} />
+            <Route path="/products/get" exact component={GetProducts} />
             <Route path="/products/add" component={AddProduct} />
             <Route path="/products/edit" component={EditProduct} />
             <Route component={NotFound} />

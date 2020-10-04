@@ -9,7 +9,6 @@ const AddProduct = ({ history, alert }) => {
 
     const submitHandler = (name, price, buying_price) => {
         setSubmitting(true);
-        // console.log(name, price, buying_price)
         postWithAuth(
             '/products',
             {
@@ -20,7 +19,11 @@ const AddProduct = ({ history, alert }) => {
             (success) => {
                 alert('Produk berhasil ditambahkan', 'success');
                 setSubmitting(false);
-                history.push('/products/get');
+                if (history.location.search.replace('?shortcut=', '') === 'true') {
+                    history.goBack()
+                } else {
+                    history.push('/products/get');
+                }
             },
             (error) => {
                 console.log(error);

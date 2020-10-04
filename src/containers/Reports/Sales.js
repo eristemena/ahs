@@ -15,6 +15,7 @@ import {
 } from 'reactstrap';
 import { addAlert } from '../../redux/actions';
 import { Table, Cards } from './Sales/index';
+import { CustomPagination } from '../../components';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -33,17 +34,35 @@ const Sales = ({ alert, history, language }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
 
+    const [page, setPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+    const [paging, setPaging] = useState([]);
+
     useEffect(() => {
         setLoading(true);
         get(
             `/transactions/revenue?start_date=${moment(startDate).format(
                 'YYYY-MM-DD'
-            )}&end_date=${moment(endDate).format('YYYY-MM-DD')}`,
+            )}&end_date=${moment(endDate).format(
+                'YYYY-MM-DD'
+            )}&limit=10&page=${page}`,
             ({ data }) => {
-                setData(data.transactions);
+                setData(data.transaction.data);
                 setIncome(data.income);
                 setSpending(data.spending);
                 setRevenue(data.revenue);
+                setTotalPage(data.transaction.totalPage);
+                setPaging(() => {
+                    let a = [];
+                    for (
+                        let i = 1;
+                        i <= (data ? data.transaction.totalPage : 1);
+                        i++
+                    ) {
+                        a.push(i);
+                    }
+                    return a;
+                });
                 setLoading(false);
             },
             (error) => {
@@ -56,7 +75,7 @@ const Sales = ({ alert, history, language }) => {
                 );
             }
         );
-    }, [temp, startDate, endDate]);
+    }, [temp, startDate, endDate, page]);
 
     const [modal, setModal] = useState(false);
 
@@ -99,10 +118,46 @@ const Sales = ({ alert, history, language }) => {
         />
     );
 
+    const activeNav = (type) => {
+        if (loading) {
+            return true;
+        }
+        if (type === 'prev') {
+            if (page === 1) {
+                return true;
+            }
+        } else {
+            if (totalPage < 1) {
+                return true;
+            } else if (page === totalPage) {
+                return true;
+            }
+        }
+    };
+
+    const activePage = (p) => {
+        if (loading) {
+            return true;
+        }
+        if (p === page) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     return (
         <Container fluid>
             <div className="d-md-flex justify-content-between mb-3">
-                <h1 className="page-title">{sales.title} ({checkIfToday(startDate, endDate) ? sales.today : `${moment(startDate).format('D MMM')} - ${moment(endDate).format('D MMM')}`})</h1>
+                <h1 className="page-title">
+                    {sales.title} (
+                    {checkIfToday(startDate, endDate)
+                        ? sales.today
+                        : `${moment(startDate).format('D MMM')} - ${moment(
+                              endDate
+                          ).format('D MMM')}`}
+                    )
+                </h1>
                 <button
                     className="btn btn-primary font-weight-bold"
                     onClick={() => setModal(!modal)}>
@@ -137,6 +192,13 @@ const Sales = ({ alert, history, language }) => {
                         language={language}
                         translated={sales.table}
                         refreshFunc={setTemp}
+                    />
+                    <CustomPagination
+                        currentPage={page}
+                        pages={paging}
+                        activePage={activePage}
+                        setPage={setPage}
+                        activeNav={activeNav}
                     />
                 </Col>
             </Row>
@@ -177,7 +239,7 @@ const Sales = ({ alert, history, language }) => {
                     <Card>
                         <CardBody className="p-3">
                             <button
-                                className="btn btn-primary mr-2"
+                                className="btn btn-primary mr-2 mb-2"
                                 onClick={() => {
                                     setStartDate(new Date());
                                     setEndDate(new Date());
@@ -186,7 +248,7 @@ const Sales = ({ alert, history, language }) => {
                                 Today
                             </button>
                             <button
-                                className="btn btn-primary mr-2"
+                                className="btn btn-primary mr-2 mb-2"
                                 onClick={() => {
                                     setStartDate(moment().startOf('week'));
                                     setEndDate(new Date());
@@ -195,7 +257,7 @@ const Sales = ({ alert, history, language }) => {
                                 This week*
                             </button>
                             <button
-                                className="btn btn-primary"
+                                className="btn btn-primary mb-2"
                                 onClick={() => {
                                     setStartDate(moment().startOf('month'));
                                     setEndDate(new Date());
@@ -203,8 +265,10 @@ const Sales = ({ alert, history, language }) => {
                                 }}>
                                 This month
                             </button>
-                            <div className="mt-2">
-                                <small className="text-muted">*The week starts at Sunday</small>
+                            <div>
+                                <small className="text-muted">
+                                    *The week starts at Sunday
+                                </small>
                             </div>
                         </CardBody>
                     </Card>

@@ -31,7 +31,7 @@ const GallonStock = ({ gallon_stock, history, language }) => {
                 <h3 className="text-success">
                     {gallon_stock.data && gallon_stock.data.stock}
                 </h3>
-                <div class="dropdown-divider"></div>
+                <div className="dropdown-divider"></div>
                 <p className="mt-3">{stock.borrowed}</p>
                 <h3 className="text-success mb-0">{total}</h3>
             </CardBody>

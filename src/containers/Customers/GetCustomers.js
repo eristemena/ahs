@@ -12,7 +12,11 @@ import { del } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { checkAdminMerchant } from '../../utilities';
 import CustomSpinner from '../../components/CustomSpinner';
-import { Container, Card, CardBody,  } from 'reactstrap';
+import {
+    Container,
+    Card,
+    CardBody,
+} from 'reactstrap';
 import { intlMessage } from '../../language';
 
 const GetCustomers = ({
@@ -29,6 +33,8 @@ const GetCustomers = ({
     const [totalPage, setTotalPage] = useState([]);
     const [delId, setDelId] = useState(-1);
     const [queryName, setQueryName] = useState('');
+
+    const [modalToggle, setModalToggle] = useState(false);
 
     useEffect(() => {
         getCustomers(page, queryName);
@@ -136,7 +142,6 @@ const GetCustomers = ({
                     searchName={searchName}
                     inputOnChange={inputOnChange}
                 />
-                
             </div>
             <Container fluid>
                 <div className="custom-table">
@@ -189,11 +194,12 @@ const GetCustomers = ({
                                                                 title={
                                                                     action.delete
                                                                 }
-                                                                onClick={(e) =>
+                                                                onClick={() => {
                                                                     setDelId(
                                                                         custom.id
-                                                                    )
-                                                                }></i>
+                                                                    );
+                                                                    setModalToggle(true);
+                                                                }}></i>
                                                         </td>
                                                     ) : null}
                                                 </tr>
@@ -252,10 +258,7 @@ const GetCustomers = ({
                     setPage={setPage}
                 />
             </Container>
-            <DeleteModal
-                deleteHandler={deleteHandler}
-                additionalText="All transactions related to this customer will also be deleted."
-            />
+            <DeleteModal toggle={modalToggle} deleteHandler={deleteHandler} setToggle={setModalToggle} />
         </Container>
     );
 };

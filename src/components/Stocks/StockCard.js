@@ -1,6 +1,5 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Card, CardBody } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
 
 const StockCard = ({stock, product_name}) => (
@@ -15,10 +14,6 @@ const StockCard = ({stock, product_name}) => (
                 {stock}
             </h5>
             <p className="card-text mb-0">{product_name}</p>
-            {/* <Link
-                to="/transactions/get"
-                className="stretched-link"
-            /> */}
         </CardBody>
     </Card>
 ) 

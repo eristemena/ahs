@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import { get, put } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
-import { TransactionForm } from '../../components/Forms';
+import { TransactionEditForm } from '../../components/Forms';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/id';
@@ -90,15 +90,14 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
     return (
         <Fragment>
             <CustomSpinner loading={loading} type="page" />
-            <TransactionForm
+            <TransactionEditForm
                 submitting={submitting}
-                action="Edit"
                 stateDate={date}
-                stateSelected={productId}
+                stateProduct={productId}
                 stateQuantity={quantity}
                 stateInfo={info}
                 stateType={type}
-                stateSelectedCustomer={customer}
+                stateCustomer={customer}
                 onSubmit={onSubmitHandler}
                 history={history}
             />

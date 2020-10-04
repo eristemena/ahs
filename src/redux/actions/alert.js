@@ -20,3 +20,10 @@ export const addAlert = (message, type = "danger") => (dispatch) => {
         });
     }, 3000);
 };
+
+export const deleteAlert = (id) => (dispatch) => {
+    dispatch({
+        type: ALERT_REMOVE,
+        id,
+    });
+}

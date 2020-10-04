@@ -1,9 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
+import {deleteAlert} from '../redux/actions';
 
-function Alerts({ alerts }) {
+function Alerts({ alerts, deleteAlert }) {
     return (
         <Fragment>
             {alerts.length > 0 ? (
@@ -15,6 +16,10 @@ function Alerts({ alerts }) {
                             fade={false}
                             className="notification-alert">
                             {alert.message}
+                            <i
+                                class="fas fa-times notification-close-icon"
+                                title="Close"
+                                onClick={() => deleteAlert(alert.id)}></i>
                         </Alert>
                     ))}
                 </Fragment>
@@ -27,10 +32,12 @@ Alerts.propTypes = {
     alerts: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = (state) => {
-    return {
-        alerts: state.alert,
-    };
-};
+const mapStateToProps = (state) => ({
+    alerts: state.alert,
+})
 
-export default connect(mapStateToProps)(Alerts);
+const mapDispatchToProps = (dispatch) => ({
+    deleteAlert: (id) => dispatch(deleteAlert(id))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Alerts);

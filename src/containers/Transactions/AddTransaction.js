@@ -10,33 +10,36 @@ const AddTransaction = ({ alert, history, loading }) => {
 
     const onSubmitHandler = (
         date,
-        product_id,
         type,
-        quantity,
         customer_id,
+        products,
         info
     ) => {
         setSubmitting(true);
-        postWithAuth(
-            '/transactions',
-            {
-                date,
-                product_id,
-                type,
-                quantity,
-                info,
-                customer_id,
-            },
-            (success) => {
-                setSubmitting(false);
-                alert('Transaksi berhasil ditambahkan', 'success');
-                history.push('/transactions/get');
-            },
-            (error) => {
-                setSubmitting(false);
-                alert(`Telah terjadi kesalahan: ${error.message}`);
-            }
-        );
+        products.forEach((product, index) => {
+            postWithAuth(
+                '/transactions',
+                {
+                    date,
+                    product_id: product.product_id,
+                    type,
+                    quantity: product.quantity,
+                    info,
+                    customer_id,
+                },
+                (success) => {
+                    if (index + 1 === products.length) {
+                        setSubmitting(false);
+                        alert('Transaksi berhasil ditambahkan', 'success');
+                        history.push('/transactions/get');
+                    }
+                },
+                (error) => {
+                    setSubmitting(false);
+                    alert(`Telah terjadi kesalahan pada produk dengan kode ${product.product_id}: ${error.message}`);
+                }
+            );
+        })
     };
     
     return (

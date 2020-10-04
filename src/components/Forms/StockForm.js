@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom'
 import { addAlert } from '../../redux/actions/alert';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
@@ -9,7 +10,7 @@ import { FormGroup, Label } from 'reactstrap';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
 import id from 'date-fns/locale/id';
 import 'react-datepicker/dist/react-datepicker.css';
-import moment, { lang } from 'moment';
+import moment from 'moment';
 import 'moment/locale/id';
 import { setLoading } from '../../redux/actions/loading';
 import { get } from '../../axios';
@@ -182,9 +183,17 @@ const StockForm = ({
                                 classNamePrefix="custom-searchable-select "
                                 isLoading={loadingOwnedCustomer}
                                 isDisabled={loadingOwnedCustomer}
-                                noOptionsMessage={() =>
-                                    gallons.form.customer.noOptions
-                                }
+                                noOptionsMessage={() => (
+                                    <span className="position-relative">
+                                        Pelanggan tidak ditemukan,{' '}
+                                        <Link
+                                            to="/customers/add?shortcut=true"
+                                            className="stretched-link text-decoration-none">
+                                            silahkan tambah pelanggan
+                                            baru
+                                        </Link>
+                                    </span>
+                                )}
                                 name="product_id"
                                 options={ownedCustomers}
                                 value={{
@@ -224,7 +233,7 @@ const StockForm = ({
                             name="info"
                             as="textarea"
                             maxLength="150"
-                            cols="5"
+                            rows="4"
                             placeholder={gallons.form.info.placeholder}
                         />
                     </FormGroup>
