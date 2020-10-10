@@ -24,7 +24,6 @@ function Home({
     const [revenue, setRevenue] = useState(0);
 
     const [products, setProducts] = useState(null)
-    const [productLoading, setProductLoading] = useState(false)
 
     useEffect(() => {
         if (merchant_id) {
@@ -94,6 +93,10 @@ function Home({
         }
     }, []);
 
+    useEffect(() => {
+
+    })
+
     const goToButton = (onClick) => (
         <div className="custom-button">
             <button
@@ -159,7 +162,7 @@ function Home({
                                     <h3>Product Stock</h3>
                                 </CardTitle>
                                 <CardBody className="pt-0">
-                                    <GetStocks products={products} loading={productLoading} />
+                                    <GetStocks products={products} />
                                 </CardBody>
                             </Card>
                         </Fragment>

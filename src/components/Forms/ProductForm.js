@@ -50,7 +50,6 @@ const ProductForm = ({
                 setGroupLoading(false);
             },
             (error) => {
-                console.log(error);
                 alert(`Telah terjadi kesalahan${error ? `: ${error.message}` : ''}.`);
                 setGroupFailed(true)
                 setGroupLoading(false);
@@ -147,7 +146,7 @@ const ProductForm = ({
                                     classNamePrefix="custom-searchable-select "
                                     isLoading={groupLoading}
                                     isDisabled={groupLoading}
-                                    noOptionsMessage={() => groupFailed ? (
+                                    noOptionsMessage={() => !groupFailed ? (
                                         <span className="position-relative">
                                             Grup tidak ditemukan,{' '}
                                             <Link
