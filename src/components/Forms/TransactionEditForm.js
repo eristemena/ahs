@@ -12,13 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { get } from '../../axios';
-import {
-    Card,
-    CardBody,
-    Row,
-    Col,
-    InputGroup,
-} from 'reactstrap';
+import { Card, CardBody, Row, Col, InputGroup } from 'reactstrap';
 import { intlMessage } from '../../language';
 import SubmitAndCancelButton from './SubmitAndCancelButtons';
 registerLocale('id', id);
@@ -48,7 +42,9 @@ const TransactionEditForm = ({
     const schema = Yup.object().shape({
         date: Yup.date().required(transactionForm.error.date),
         type: Yup.string(),
-        customer_id: Yup.number().nullable(true).when('type', {
+        customer_id: Yup.number()
+            .nullable(true)
+            .when('type', {
                 is: (val) => val && val.length > 0 && val === 'sell',
                 then: Yup.number()
                     .integer()
@@ -118,7 +114,7 @@ const TransactionEditForm = ({
             product_id,
             type,
             quantity,
-            customer_id,
+            customer_id || null,
             info.length === 0 ? null : info
         );
     };
@@ -165,7 +161,7 @@ const TransactionEditForm = ({
                                     }
                                 />
                                 {errors.date && touched.date ? (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.date}
                                     </div>
                                 ) : null}
@@ -257,7 +253,7 @@ const TransactionEditForm = ({
                                     />
                                     {errors.customer_id &&
                                     touched.customer_id ? (
-                                        <div className="invalid-feedback left-75 d-block">
+                                        <div className="feedback invalid left-75 d-block">
                                             {errors.customer_id}
                                         </div>
                                     ) : null}
@@ -313,7 +309,7 @@ const TransactionEditForm = ({
                                         />
                                         {errors.product_id &&
                                         touched.product_id ? (
-                                            <div className="invalid-feedback d-block">
+                                            <div className="feedback invalid d-block">
                                                 {errors.product_id}
                                             </div>
                                         ) : null}
@@ -333,7 +329,7 @@ const TransactionEditForm = ({
                                             />
                                         </InputGroup>
                                         {errors.quantity && touched.quantity ? (
-                                            <div className="invalid-feedback d-block">
+                                            <div className="feedback invalid d-block">
                                                 {errors.quantity}
                                             </div>
                                         ) : null}

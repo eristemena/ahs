@@ -95,7 +95,7 @@ const StockForm = ({
                             onChange={(e) => setValues({ ...values, date: e })}
                         />
                         {errors.date && touched.date ? (
-                            <div className="invalid-feedback d-block">
+                            <div className="feedback invalid d-block">
                                 {errors.date}
                             </div>
                         ) : null}
@@ -168,7 +168,7 @@ const StockForm = ({
                             name="quantity"
                         />
                         {errors.quantity && touched.quantity ? (
-                            <div className="invalid-feedback d-block">
+                            <div className="feedback invalid d-block">
                                 {errors.quantity}
                             </div>
                         ) : null}
@@ -219,7 +219,7 @@ const StockForm = ({
                                 isSearchable
                             />
                             {errors.customer_id && touched.customer_id ? (
-                                <div className="invalid-feedback left-75 d-block">
+                                <div className="feedback invalid left-75 d-block">
                                     {errors.customer_id}
                                 </div>
                             ) : null}

@@ -17,6 +17,8 @@ export const LOADING_END = 'LOADING_END';
 // Product
 export const PRODUCT_GET = 'PRODUCT_GET';
 export const PRODUCT_REMOVE = 'PRODUCT_REMOVE';
+export const GROUP_GET = 'GROUP_GET';
+export const GROUP_REMOVE = 'GROUP_REMOVE';
 
 // Transaction
 export const TRANSACTION_ADD = 'TRANSACTION_ADD';

@@ -28,7 +28,7 @@ const RstPwFindEmailForm = ({ onSubmit = () => {}, loading, history }) => {
                         <Label>Email</Label>
                         <Field className="form-control" name="email" />
                         {errors.email && touched.email && (
-                            <div className="invalid-feedback d-block">
+                            <div className="feedback invalid d-block">
                                 {errors.email}
                             </div>
                         )}

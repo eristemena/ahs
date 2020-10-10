@@ -50,7 +50,7 @@ const CustomerForm = ({
                                     name="name"
                                 />
                                 {errors.name && touched.name && (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.name}
                                     </div>
                                 )}
@@ -62,7 +62,7 @@ const CustomerForm = ({
                                     name="email"
                                 />
                                 {errors.email && touched.email && (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.email}
                                     </div>
                                 )}
@@ -74,7 +74,7 @@ const CustomerForm = ({
                                     name="phone"
                                 />
                                 {errors.phone && touched.phone && (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.phone}
                                     </div>
                                 )}
@@ -88,7 +88,7 @@ const CustomerForm = ({
                                     rows="4"
                                 />
                                 {errors.address && touched.address && (
-                                    <div className="invalid-feedback left-75 d-block">
+                                    <div className="feedback invalid left-75 d-block">
                                         {errors.address}
                                     </div>
                                 )}

@@ -6,6 +6,7 @@ $primary-color: #008ecc;
 $secondary-color: #73c2fb;
 $danger-color: rgb(200, 49, 49);
 $info-color: #17a2b8;
+$success-color: #28a745;
 $background-color: whitesmoke;
 
 $navbar-color: white;
@@ -303,7 +304,19 @@ body {
                         padding-bottom: 15px;
                     }
                 }
-        
+
+                .sub-menu-title {
+                    font-size: 1.5em;
+                    font-weight: 500;
+                    color: $text-light;
+                    margin-left: 2rem;
+                }
+
+                .dropdown-divider {
+                    border-color: $separator-color !important;
+                    border-top-width: 1.4px !important;
+                }
+
                 ul {
         
                     li {
@@ -695,6 +708,10 @@ body {
                     min-width: $borrowing-table-width;
                 }
 
+                &.group {
+                    min-width: 376px;
+                }
+
                 &.borrowing .scrollbar-container {
                     max-height: 300px;
                 }
@@ -813,13 +830,11 @@ body {
         .form-group {
             position: relative;
 
-            .invalid-feedback {
+            .feedback {
                 border-radius: $border-radius;
                 padding: 0.5rem 1rem;
                 font-size: 0.76rem;
-                color: $danger-color;
                 background: white;
-                border: 1px solid $danger-color;
                 text-align: center;
                 width: unset !important;
                 position: absolute;
@@ -828,6 +843,21 @@ body {
                 transform: translateX(0) translateY(-50%);
                 top: 16px;
                 left: 50px;
+
+                &.invalid {
+                    color: $danger-color;
+                    border: 1px solid $danger-color;
+                }
+
+                &.primary {
+                    color: $primary-color;
+                    border: 1px solid $primary-color;
+                }
+
+                &.success {
+                    color: $success-color;
+                    border: 1px solid $success-color;
+                }
 
                 &.left-0 {
                     left: 0;
@@ -976,7 +1006,7 @@ body {
                     transition: transform $menu-collapse-time;
                 }
 
-                &.__control--menu-is-open svg {
+                &.__control--menu-is-open .__dropdown-indicator svg {
                     transform: rotateZ(180deg);
                 }
             }

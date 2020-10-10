@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { addAlert } from '../../redux/actions/alert';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getProducts } from '../../redux/actions/product';
 import { formatPrice, checkAdminMerchant } from '../../utilities';
@@ -9,10 +8,10 @@ import {
     DeleteModal,
     TableSearchbar,
     CustomPagination,
+    Table
 } from '../../components';
 import { del } from '../../axios';
-import CustomSpinner from '../../components/CustomSpinner';
-import { Container, Card, CardBody } from 'reactstrap';
+import { Container } from 'reactstrap';
 import { intlMessage } from '../../language';
 
 const GetProducts = ({
@@ -80,18 +79,18 @@ const GetProducts = ({
         setLoading(true);
         if (delId < 0) {
             setLoading(false);
-            return alert('Telah terjadi kesalahan');
+            return alert('Telah terjadi kesalahan.');
         }
         del(
             `/products/${delId}`,
             (success) => {
-                alert('Berhasil menghapus data', 'success');
+                alert('Berhasil menghapus data.', 'success');
                 getProducts(page);
                 setLoading(false);
                 setDelId(-1);
             },
             (error) => {
-                alert('Telah terjadi kesalahan');
+                alert('Telah terjadi kesalahan.');
                 getProducts(page);
                 setLoading(false);
                 setDelId(-1);
@@ -102,7 +101,9 @@ const GetProducts = ({
     const searchName = (e) => {
         e.preventDefault();
 
-        getProducts(1, queryName);
+        if (!/^\s*$/.test(queryName)) {
+            getProducts(1, queryName);
+        }
     };
 
     const inputOnChange = (e) => {
@@ -115,7 +116,7 @@ const GetProducts = ({
 
     const {
         products: {
-            get: { title, add_product, table },
+            get: { title, button, table },
         },
         action,
     } = intlMessage(language);
@@ -130,7 +131,7 @@ const GetProducts = ({
                     }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/products/add')}>
-                    {add_product}
+                    {button}
                 </button>
             </div>
             <TableSearchbar
@@ -138,124 +139,32 @@ const GetProducts = ({
                 inputOnChange={inputOnChange}
             />
             <Container fluid>
-                <div className="custom-table">
-                    <Card className="product">
-                        <CardBody>
-                            <table className="product-table">
-                                <thead>
-                                    <tr className="text-center">
-                                        <th>{table.name}</th>
-                                        <th>{table.price}</th>
-                                        <th>{table.buying_price}</th>
-                                        {user.merchant_id === null ? (
-                                            <th>{table.merchant}</th>
-                                        ) : null}
-                                        {checkAdminMerchant(user) ? (
-                                            <th>{action.action}</th>
-                                        ) : null}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {!loading ? (
-                                        product &&
-                                        product.data &&
-                                        product.data.length > 0 ? (
-                                            product.data.map((product) => (
-                                                <tr
-                                                    key={product.id}
-                                                    className="text-center">
-                                                    <td>{product.name}</td>
-                                                    <td>{`Rp. ${formatPrice(
-                                                        product.price
-                                                    )}`}</td>
-                                                    <td>{`Rp. ${formatPrice(
-                                                        product.buying_price
-                                                    )}`}</td>
-                                                    {user.merchant_id ===
-                                                    null ? (
-                                                        <td>
-                                                            {' '}
-                                                            {
-                                                                product.owner
-                                                                    .name
-                                                            }{' '}
-                                                        </td>
-                                                    ) : null}
-                                                    {checkAdminMerchant(
-                                                        user
-                                                    ) ? (
-                                                        <td>
-                                                            <Link
-                                                                to={`/products/edit?id=${product.id}`}
-                                                                className="mr-2">
-                                                                <i
-                                                                    className="simple-icon-note edit-icon"
-                                                                    title={
-                                                                        action.edit
-                                                                    }></i>
-                                                            </Link>
-                                                            <i
-                                                                className="simple-icon-close delete-icon"
-                                                                title={
-                                                                    action.delete
-                                                                }
-                                                                onClick={(e) => {
-                                                                    setDelId(
-                                                                        product.id
-                                                                    )
-                                                                    setModalToggle(true)
-                                                                }
-                                                                }></i>
-                                                        </td>
-                                                    ) : null}
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td
-                                                    colSpan={
-                                                        checkAdminMerchant(user)
-                                                            ? 4
-                                                            : user.merchant_id ===
-                                                              null
-                                                            ? 4
-                                                            : 3
-                                                    }
-                                                    className="text-center">
-                                                    {queryName.length > 0
-                                                        ? 'Produk tidak ditemukan'
-                                                        : checkAdminMerchant(
-                                                              user
-                                                          )
-                                                        ? 'Belum ada produk, silahkan tambahkan produk'
-                                                        : 'Belum ada produk'}
-                                                </td>
-                                            </tr>
-                                        )
-                                    ) : (
-                                        <tr>
-                                            <td
-                                                colSpan={
-                                                    checkAdminMerchant(user)
-                                                        ? 5
-                                                        : user.merchant_id ===
-                                                          null
-                                                        ? 5
-                                                        : 4
-                                                }
-                                                className="text-center">
-                                                <CustomSpinner
-                                                    loading={loading}
-                                                    type="table"
-                                                />
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </CardBody>
-                    </Card>
-                </div>
+                <Table 
+                    tableClassName="product"
+                    tableHead={[
+                        table.name,
+                        table.price,
+                        table.buying_price,
+                        table.group,
+                        checkAdminMerchant(user) ? action.action : table.merchant
+                    ]}
+                    tableBody={product && product.data && product.data.map((item) => ({
+                        id: item.id,
+                        name: item.name,
+                        price: `Rp. ${formatPrice(item.price)}`,
+                        buying_price: `Rp. ${formatPrice(item.buying_price)}`,
+                        group: item.group_id ? item.group.name : '~',
+                        merchant_action: !checkAdminMerchant(user) ? item.owner.name : null
+                    }))}
+                    deleteId
+                    loading={loading}
+                    deleteFunction={setDelId}
+                    setModal={setModalToggle}
+                    actions={checkAdminMerchant(user) && {
+                        edit: '/products/edit'
+                    }}
+                    noDataMessage={table.no_data}
+                />
                 <CustomPagination
                     pages={totalPage}
                     currentPage={page}

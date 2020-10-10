@@ -1,18 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Switch, Route, withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import NotFound from './NotFound';
-import Home from './Home';
-import User from './User';
-import Product from './Product';
-import Login from './Login';
-import Merchant from './Merchant';
-import Transaction from './Transaction';
-import Customer from './Customer';
-import Alerts from '../components/Alerts';
-import Navigation from './Navigation';
-import GallonsStocks from './GallonStocks'
-import Report from './Report'
+import {
+    NotFound,
+    Home,
+    User,
+    Product,
+    Login,
+    Merchant,
+    Transaction,
+    Customer,
+    Alerts,
+    Navigation,
+    GallonsStocks,
+    Report,
+} from './index';
 import { Row, Col } from 'reactstrap';
 import { setMenuState, setSubMenuState } from '../redux/actions/menu';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -36,13 +38,13 @@ const Content = ({ user, menu, history, setMenuState, setSubMenuState }) => {
         if (!user) {
             history.push('/');
         }
-    }, []);
+    }, [user]);
 
     const closeMenu = () => {
         if (windowWidth < 992) {
             setMenuState(false);
         }
-        setSubMenuState(false)
+        setSubMenuState(false);
     };
 
     return (
@@ -115,7 +117,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     setMenuState: (menu) => dispatch(setMenuState(menu)),
-    setSubMenuState: (sub) => dispatch(setSubMenuState(sub))
+    setSubMenuState: (sub) => dispatch(setSubMenuState(sub)),
 });
 
 export default withRouter(

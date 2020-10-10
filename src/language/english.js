@@ -5,7 +5,13 @@ module.exports = {
     sidenav: {
         dashboard: 'Home',
         users: 'Users',
-        products: 'Products',
+        products: {
+            name: 'Products',
+            sub: {
+                products: 'Products',
+                groups: 'Groups'
+            }
+        },
         transactions: 'Transactions',
         customers: 'Customers',
         merchant: 'Merchants',
@@ -43,13 +49,15 @@ module.exports = {
     products: {
         get: {
             title: 'Product',
-            add_product: 'ADD PRODUCT',
+            button: 'ADD PRODUCT',
             table: {
                 id: 'ID',
                 name: 'Product Name',
                 price: 'Price',
                 buying_price: 'Buying Price',
                 merchant: 'Merchant',
+                group: 'Group',
+                no_data: 'There are no products, please add a product.'
             },
         },
         form: {
@@ -75,7 +83,7 @@ module.exports = {
     transactions: {
         get: {
             title: 'Transaction',
-            add_transaction: 'ADD TRANSACTION',
+            button: 'ADD TRANSACTION',
             table: {
                 date: 'Date',
                 name: 'Name Product',
@@ -83,7 +91,7 @@ module.exports = {
                 quantity: 'Quantity',
                 price: 'Price',
                 customer: 'Customer',
-                no_data: 'There are no transactions, please add transactions'
+                no_data: 'There are no transactions, please add transactions.'
             }
         },
         form: {
@@ -121,7 +129,7 @@ module.exports = {
     customers: {
         get: {
             title: 'Customer',
-            add_transaction: 'ADD CUSTOMER',
+            button: 'ADD CUSTOMER',
             table: {
                 name: 'Name',
                 email: 'Email',
@@ -157,7 +165,7 @@ module.exports = {
                 type: 'Type',
                 quantity: 'Quantity',
                 customer: 'Customer',
-                no_data: 'There are no transactions, please add transactions'
+                no_data: 'There are no transactions, please add transactions.'
             },
         },
         form: {
@@ -264,5 +272,31 @@ module.exports = {
         sell: 'Sell',
         borrow: 'Borrow',
         return: 'Return'
+    },
+    groups: {
+        get: {
+            title: 'Group',
+            button: 'ADD GROUP',
+            table: {
+                name: 'Group Name',
+                quantity: 'Quantity',
+                merchant: 'Merchant',
+                no_data: 'There are no groups, please add a group.'
+            },
+        },
+        form: {
+            name: 'Name',
+            quantity: 'Quantity',
+            error: {
+                name: {
+                    empty: 'Name must be filled',
+                    lt2: 'Product name must be more than 2 letters'
+                },
+                quantity: {
+                    empty: 'Quantity must be filled',
+                    NaN: 'Quantity must be a number',
+                }
+            }
+        },
     }
 };

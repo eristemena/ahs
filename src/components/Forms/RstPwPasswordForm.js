@@ -37,7 +37,7 @@ const RstPwPasswordForm = ({onSubmit = () => {}, loading}) => {
                         <Label>New Password</Label>
                         <Field className="form-control" name="password" type="password" />
                         {errors.password && touched.password && (
-                            <div className="invalid-feedback d-block">
+                            <div className="feedback invalid d-block">
                                 {errors.password}
                             </div>
                         )}
@@ -46,7 +46,7 @@ const RstPwPasswordForm = ({onSubmit = () => {}, loading}) => {
                         <Label>Re-type Password</Label>
                         <Field className="form-control" name="password2" type="password" />
                         {errors.password2 && touched.password2 && (
-                            <div className="invalid-feedback d-block">
+                            <div className="feedback invalid d-block">
                                 {errors.password2}
                             </div>
                         )}

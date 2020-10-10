@@ -6,6 +6,7 @@ import TransactionForm from './TransactionForm';
 import StockForm from './StockForm';
 import RstPwFindEmailForm from './RstPwFindEmailForm';
 import TransactionEditForm from './TransactionEditForm';
+import GroupForm from './GroupForm'
 
 export {
     CustomerForm,
@@ -15,5 +16,6 @@ export {
     TransactionForm,
     StockForm,
     RstPwFindEmailForm,
-    TransactionEditForm
+    TransactionEditForm,
+    GroupForm
 };

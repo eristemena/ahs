@@ -7,10 +7,11 @@ const TableSearchbar = ({
     searchName = () => {},
     inputOnChange = () => {},
     language,
+    className = ''
 }) => {
     const { search_placeholder } = intlMessage(language);
     return (
-        <div className="custom-table-searchbar mb-3">
+        <div className={`custom-table-searchbar mb-3 ${className}`}>
             <form onSubmit={searchName}>
                 <input
                     type="text"

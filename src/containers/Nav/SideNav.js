@@ -76,6 +76,18 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                 icon: 'simple-icon-wallet',
                 to: '/reports/sales'
             }
+        ],
+        products: [
+            {
+                name: sidenav.products.sub.products,
+                icon: 'simple-icon-list',
+                to: '/products/get'
+            },
+            {
+                name: sidenav.products.sub.groups,
+                icon: 'simple-icon-notebook',
+                to: '/products/groups/get'
+            }
         ]
     }
 
@@ -90,7 +102,7 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                             wheelSpeed: 0.3,
                         }}>
                         <Nav vertical className="list-unstyled">
-                            <NavItem className={`${activeLinks('/')}`}>
+                            <NavItem className={activeLinks('/')}>
                                 <a href="/" onClick={setMenuClose}>
                                     <i className="iconsminds-home"></i>
                                     <Label>{sidenav.dashboard}</Label>
@@ -103,9 +115,9 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/products')}>
-                                <a href="/products/get" onClick={setMenuClose}>
+                                <a href="#" id={sidenav.products.name} onClick={setMenuClose}>
                                     <i className="iconsminds-drop"></i>
-                                    <Label>{sidenav.products}</Label>
+                                    <Label>{sidenav.products.name}</Label>
                                 </a>
                             </NavItem>
                             <NavItem className={activeLinks('/transactions')}>
@@ -141,7 +153,7 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                                 </NavItem>
                             ) : (
                                 <NavItem className={activeLinks('/reports')}>
-                                    <a href="#" id="reports" onClick={setMenuClose}>
+                                    <a href="#" id={sidenav.reporting.name} onClick={setMenuClose}>
                                         <i className="iconsminds-file"></i>
                                         <Label>{sidenav.reporting.name}</Label>
                                     </a>
@@ -159,20 +171,34 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                             wheelPropagation: false,
                             wheelSpeed: 0.3,
                         }}>
-                        <Nav vertical className="list-unstyled">
-                            {sub === 'reports' && (
-                                <Fragment>
-                                    {items.reports.map((item, index) => (
-                                        <NavItem key={index} className={activeLinks(item.to)}>
-                                            <a href={item.to} onClick={setMenuClose}>
-                                                <i className={item.icon}></i>
-                                                <Label>{item.name}</Label>
-                                            </a>
-                                        </NavItem>
-                                    ))}
+                            <p className="sub-menu-title">{sub}</p>
+                            <div class="dropdown-divider"></div>
+                            <Nav vertical className="list-unstyled">
+                                {sub === sidenav.reporting.name && (
+                                    <Fragment>
+                                        {items.reports.map((item, index) => (
+                                            <NavItem key={index} className={activeLinks(item.to)}>
+                                                <a href={item.to} onClick={setMenuClose}>
+                                                    <i className={item.icon}></i>
+                                                    <Label>{item.name}</Label>
+                                                </a>
+                                            </NavItem>
+                                        ))}
+                                    </Fragment>
+                                )}
+                                {sub === sidenav.products.name && (
+                                    <Fragment>
+                                        {items.products.map((item, index) => (
+                                            <NavItem key={index} className={activeLinks(item.to)}>
+                                                <a href={item.to} onClick={setMenuClose}>
+                                                    <i className={item.icon}></i>
+                                                    <Label>{item.name}</Label>
+                                                </a>
+                                            </NavItem>
+                                        ))}
                                 </Fragment>
-                            )}
-                        </Nav>
+                                )}
+                            </Nav>
                     </PerfectScrollbar>
                 </div>
             </div>

@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { addAlert } from '../../redux/actions/alert';
+import { addAlert, setLoading, getGroups } from '../../../redux/actions';
 import { connect } from 'react-redux';
-import { fetchStocks } from '../../redux/actions/gallon_stock';
-import ReactDatePicker, { registerLocale } from 'react-datepicker';
-import id from 'date-fns/locale/id';
-import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
-import 'moment/locale/id';
-import { del } from '../../axios';
-import { checkAdminMerchant, parseType } from '../../utilities';
+import { checkAdminMerchant } from '../../../utilities';
 import {
     DeleteModal,
+    TableSearchbar,
     CustomPagination,
     Table,
-} from '../../components';
-import { setLoading } from '../../redux/actions/loading';
+} from '../../../components';
+import { del } from '../../../axios';
 import {
     Container,
     UncontrolledDropdown,
@@ -22,52 +16,42 @@ import {
     DropdownMenu,
     DropdownItem,
 } from 'reactstrap';
-import { intlMessage } from '../../language';
-registerLocale('id', id);
+import { intlMessage } from '../../../language';
 
-const GetGallonStocks = ({
-    alert,
-    fetchStocks,
-    gallon_stock,
+const GetGroups = ({
     history,
+    alert,
     user,
+    group,
     loading,
+    getGroups,
     setLoading,
     language,
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
     const [delId, setDelId] = useState(-1);
+    const [queryName, setQueryName] = useState('');
     const [sortBy, setSortBy] = useState('updated_at');
-    const [dateSearch, setDateSearch] = useState(null);
     const [limit, setLimit] = useState(8);
 
     const [modalToggle, setModalToggle] = useState(false);
 
     useEffect(() => {
-        fetchStocks(
-            page,
-            limit,
-            sortBy,
-            dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null
-        );
-    }, [page, sortBy, dateSearch, limit]);
+        getGroups(page, sortBy, queryName, limit);
+    }, [page, sortBy, limit]);
 
     useEffect(() => {
         if (loading) {
             setTotalPage(() => {
                 let a = [];
-                for (
-                    let i = 1;
-                    i <= (gallon_stock ? gallon_stock.totalPage : 1);
-                    i++
-                ) {
+                for (let i = 1; i <= (group ? group.totalPage : 1); i++) {
                     a.push(i);
                 }
                 return a;
             });
         }
-    }, [gallon_stock]);
+    }, [group]);
 
     const activeNav = (type) => {
         if (loading) {
@@ -78,9 +62,9 @@ const GetGallonStocks = ({
                 return true;
             }
         } else {
-            if (!gallon_stock || gallon_stock.totalPage < 1) {
+            if (!group || group.totalPage < 1) {
                 return true;
-            } else if (page === gallon_stock.totalPage) {
+            } else if (page === group.totalPage) {
                 return true;
             }
         }
@@ -97,32 +81,48 @@ const GetGallonStocks = ({
         }
     };
 
-    const deleteData = () => {
+    const deleteHandler = () => {
         setLoading(true);
         if (delId < 0) {
             setLoading(false);
             return alert('Telah terjadi kesalahan');
         }
         del(
-            `/stocks/${delId}`,
+            `/products/${delId}`,
             (success) => {
-                alert('Data berhasil dihapus', 'success');
-                fetchStocks(page);
+                alert('Berhasil menghapus data', 'success');
+                getGroups(page, sortBy, queryName, limit);
                 setLoading(false);
                 setDelId(-1);
             },
             (error) => {
                 alert('Telah terjadi kesalahan');
-                fetchStocks(page);
+                getGroups(page, sortBy, queryName, limit);
                 setLoading(false);
                 setDelId(-1);
             }
         );
     };
 
+    const searchName = (e) => {
+        e.preventDefault();
+
+        if (!/^\s*$/.test(queryName)) {
+            getGroups(1, sortBy, queryName, limit);
+        }
+    };
+
+    const inputOnChange = (e) => {
+        if (e.target.value.length === 0) {
+            getGroups(page, sortBy, '', limit);
+        } else {
+            setQueryName(e.target.value);
+        }
+    };
+
     const {
-        gallons: {
-            get: { title, table, button },
+        groups: {
+            get: { title, button, table },
         },
         action,
     } = intlMessage(language);
@@ -131,21 +131,19 @@ const GetGallonStocks = ({
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
                 <h1 className="page-title">{title}</h1>
-                <div className="d-sm-flex flex-column flex-sm-row">
-                    <button
-                        className={`btn btn-primary font-weight-bold table-button ${
-                            !checkAdminMerchant(user) ? 'disabled' : ''
-                        }`}
-                        disabled={!checkAdminMerchant(user)}
-                        onClick={() => history.push('/gallons/add')}>
-                        {button}
-                    </button>
-                </div>
+                <button
+                    className={`btn btn-primary font-weight-bold table-button ${
+                        !checkAdminMerchant(user) ? 'disabled' : ''
+                    }`}
+                    disabled={!checkAdminMerchant(user)}
+                    onClick={() => history.push('/products/groups/add')}>
+                    {button}
+                </button>
             </div>
-            <div className="d-flex flex-column flex-sm-row justify-content-between mb-2">
+            <div className="d-flex flex-column flex-sm-row justify-content-between mb-3">
                 <div className="d-flex flex-column flex-sm-row">
-                    <UncontrolledDropdown>
-                        <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle sorting-button">
+                    <UncontrolledDropdown className="my-auto">
+                        <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle sorting-button mr-2">
                             <i className="mr-2">
                                 Order by:{' '}
                                 {sortBy === 'date' ? 'Date' : 'Modified At'}
@@ -162,33 +160,10 @@ const GetGallonStocks = ({
                             </DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>
-                    <ReactDatePicker
-                        locale="id"
-                        value={
-                            dateSearch
-                                ? moment(dateSearch).format('DD MMMM yyyy')
-                                : ''
-                        }
-                        selected={dateSearch}
-                        className="form-control"
-                        wrapperClassName="transaction-table-datepicker"
-                        todayButton={`Hari ini (${moment(new Date()).format(
-                            'DD MMMM'
-                        )})`}
-                        placeholderText="Pilih hari"
-                        disabledKeyboardNavigation
-                        onChange={(e) => {
-                            setDateSearch(e);
-                            setPage(1);
-                        }}
-                        maxDate={new Date()}
-                        popperPlacement="bottom"
-                        popperModifiers={{
-                            flip: {
-                                enabled: false,
-                            },
-                        }}
-                        isClearable
+                    <TableSearchbar
+                        searchName={searchName}
+                        inputOnChange={inputOnChange}
+                        className="my-auto"
                     />
                 </div>
                 <div className="d-flex flex-column flex-sm-row">
@@ -197,8 +172,8 @@ const GetGallonStocks = ({
                         style={{ color: '#808080' }}>
                         Show entries:
                     </p>
-                    <UncontrolledDropdown>
-                        <DropdownToggle className="d-flex justify-content-center justify-content-md-between align-middle sorting-button">
+                    <UncontrolledDropdown className="my-auto">
+                        <DropdownToggle className="d-flex justify-content-center justify-content-md-between sorting-button">
                             <i className="mr-2"> {limit} </i>
                             <i className="simple-icon-arrow-down arrow"></i>
                         </DropdownToggle>
@@ -218,46 +193,42 @@ const GetGallonStocks = ({
                 </div>
             </div>
             <Container fluid>
-                <Table 
-                    tableClassName="stock" 
-                    noDataMessage={table.no_data}
+                <Table
+                    tableClassName="group"
                     tableHead={[
-                        table.date,
-                        table.type,
+                        table.name,
                         table.quantity,
-                        table.customer,
-                        checkAdminMerchant(user) ? action.action : null
+                        checkAdminMerchant(user) ? action.action : table.merchant
                     ]}
-                    tableBody={gallon_stock && gallon_stock.data && gallon_stock.data.rows && gallon_stock.data.rows.map((item) => ({
+                    tableBody={group && group.data && group.data.map((item) => ({
                         id: item.id,
-                        date: moment(item.date).format('LL'),
-                        type: parseType(item.type, language),
+                        name: item.name,
                         quantity: item.quantity,
-                        customer: item.customer ? item.customer.name : '~',
-                        info: item.info
+                        merchant_action: !checkAdminMerchant(user) ? item.owner.name : null
                     }))}
                     deleteId
                     loading={loading}
                     deleteFunction={setDelId}
                     setModal={setModalToggle}
-                    actions={checkAdminMerchant(user) && {
-                        edit: '/gallons/edit',
-                        info: true
-                    }}
+                    actions={
+                        checkAdminMerchant(user) && {
+                            edit: '/products/groups/edit',
+                        }
+                    }
                     noDataMessage={table.no_data}
                 />
                 <CustomPagination
-                    currentPage={page}
                     pages={totalPage}
+                    currentPage={page}
+                    activeNav={activeNav}
                     activePage={activePage}
                     setPage={setPage}
-                    activeNav={activeNav}
                 />
             </Container>
             <DeleteModal
+                deleteHandler={deleteHandler}
                 toggle={modalToggle}
                 setToggle={setModalToggle}
-                deleteHandler={deleteData}
             />
         </Container>
     );
@@ -265,16 +236,15 @@ const GetGallonStocks = ({
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
-    fetchStocks: (page, limit, sort, date) =>
-        dispatch(fetchStocks(page, limit, sort, date)),
+    getGroups: (page, sort, name, limit) => dispatch(getGroups(page, sort, name, limit)),
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
 const mapStateToProps = (state) => ({
-    gallon_stock: state.gallon_stock,
-    user: state.user,
+    group: state.group,
     loading: state.loading,
+    user: state.user,
     language: state.language,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetGallonStocks);
+export default connect(mapStateToProps, mapDispatchToProps)(GetGroups);

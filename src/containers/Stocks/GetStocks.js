@@ -9,9 +9,9 @@ const GetSales = ({ products }) => {
     return (
         <Fragment>
             <Row>
-                {products && products.map(({id, name, stock}) => (
+                {products && products.map(({id, name, quantity}) => (
                     <Col key={id} md={3} sm={6} xs={12} className="mb-2">
-                        <StockCard product_name={name} stock={stock} />
+                        <StockCard product_name={name} stock={quantity} />
                     </Col>
                 ))}
             </Row>

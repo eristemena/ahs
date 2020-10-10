@@ -11,6 +11,7 @@ import { merchant } from './merchant';
 import { language } from './language';
 import { sale } from './sale';
 import { gallonStock as gallon_stock } from './gallon_stock';
+import { group } from './group'
 
 export default combineReducers({
     alert,
@@ -25,4 +26,5 @@ export default combineReducers({
     language,
     sale,
     gallon_stock,
+    group
 });

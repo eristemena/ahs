@@ -50,7 +50,7 @@ function RegisterForm({ onSubmit = () => {}, submitting, history }) {
                                 <Label>Nama Lengkap</Label>
                                 <Field className="form-control" name="name" />
                                 {errors.name && touched.name ? (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.name}
                                     </div>
                                 ) : null}
@@ -59,7 +59,7 @@ function RegisterForm({ onSubmit = () => {}, submitting, history }) {
                                 <Label>Alamat Email</Label>
                                 <Field className="form-control" name="email" />
                                 {errors.email && touched.email ? (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.email}
                                     </div>
                                 ) : null}
@@ -68,7 +68,7 @@ function RegisterForm({ onSubmit = () => {}, submitting, history }) {
                                 <Label>Nama AHS</Label>
                                 <Field className="form-control" name="ahs" />
                                 {errors.ahs && touched.ahs ? (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.ahs}
                                     </div>
                                 ) : null}
@@ -81,7 +81,7 @@ function RegisterForm({ onSubmit = () => {}, submitting, history }) {
                                     type="password"
                                 />
                                 {errors.password && touched.password ? (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.password}
                                     </div>
                                 ) : null}
@@ -94,7 +94,7 @@ function RegisterForm({ onSubmit = () => {}, submitting, history }) {
                                     type="password"
                                 />
                                 {errors.password2 && touched.password2 ? (
-                                    <div className="invalid-feedback d-block">
+                                    <div className="feedback invalid d-block">
                                         {errors.password2}
                                     </div>
                                 ) : null}

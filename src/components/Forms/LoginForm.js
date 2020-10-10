@@ -34,7 +34,7 @@ function LoginForm({ onSubmit = () => {}, loggingIn }) {
                             name="email"
                         />
                         {errors.email && touched.email && (
-                            <div className="invalid-feedback d-block">
+                            <div className="feedback invalid d-block">
                                 {errors.email}
                             </div>
                         )}
@@ -47,7 +47,7 @@ function LoginForm({ onSubmit = () => {}, loggingIn }) {
                             name="password"
                         />
                         {errors.password && touched.password && (
-                            <div className="invalid-feedback left-75 d-block">
+                            <div className="feedback invalid left-75 d-block">
                                 {errors.password}
                             </div>
                         )}
