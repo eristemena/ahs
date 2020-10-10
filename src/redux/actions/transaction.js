@@ -8,7 +8,7 @@ export const getTransactions = (page, sort, date, limit) => (dispatch) => {
     dispatch(setLoading(true));
     get(
         `/transactions?limit=${limit}&page=${page}${sort ? `&sort=${sort}-desc` : ''}${
-            date ? `&date=${date}` : ''
+            date !== null ? `&start_date=${date}&end_date=${date}` : ''
         }`,
         ({ data, page, totalPage, totalData }) => {
             dispatch({
@@ -32,10 +32,10 @@ export const getTransactions = (page, sort, date, limit) => (dispatch) => {
                     );
                     dispatch(logout());
                 } else if (error.message !== 'Need authorization header') {
-                    dispatch(addAlert(`Terjadi kesalahan: ${error.message}`));
+                    dispatch(addAlert(`Telah terjadi kesalahan: ${error.message}`));
                 }
             } else {
-                dispatch(addAlert('Terjadi kesalahan'));
+                dispatch(addAlert('Telah terjadi kesalahan'));
             }
             dispatch(setLoading(false));
         }

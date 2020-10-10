@@ -1,4 +1,9 @@
-import { SET_MENU_OPEN, SET_MENU_CLOSE, SET_SUB_MENU_CLOSE, SET_SUB_MENU_OPEN } from '../actionTypes';
+import {
+    SET_MENU_OPEN,
+    SET_MENU_CLOSE,
+    SET_SUB_MENU_CLOSE,
+    SET_SUB_MENU_OPEN,
+} from '../actionTypes';
 
 export const setMenuState = (menu) => (dispatch) => {
     if (menu) {
@@ -14,4 +19,4 @@ export const setSubMenuState = (sub) => (dispatch) => {
     } else {
         dispatch({ type: SET_SUB_MENU_CLOSE });
     }
-}
+};

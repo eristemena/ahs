@@ -1,6 +1,5 @@
 import { post, get } from '../../axios';
-import { addAlert } from './alert';
-import { setLoading } from './loading';
+import { addAlert, setLoading } from './';
 import {
     USER_SET,
     USER_REMOVE,
@@ -12,7 +11,8 @@ import {
     LOADING_END,
     SALES_REMOVE,
     SET_LANG_ID,
-    DELETE_STOCKS
+    DELETE_STOCKS,
+    GROUP_REMOVE
 } from '../actionTypes';
 
 export const login = (email, password) => (dispatch) => {
@@ -68,4 +68,5 @@ export const logout = () => (dispatch) => {
     dispatch({ type: SALES_REMOVE });
     dispatch({ type: SET_LANG_ID });
     dispatch({ type: DELETE_STOCKS });
+    dispatch({ type: GROUP_REMOVE });
 };

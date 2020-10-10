@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Alert } from 'reactstrap';
-import {deleteAlert} from '../redux/actions';
+import { deleteAlert } from '../redux/actions';
 
 function Alerts({ alerts, deleteAlert }) {
     return (
@@ -34,10 +34,10 @@ Alerts.propTypes = {
 
 const mapStateToProps = (state) => ({
     alerts: state.alert,
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
-    deleteAlert: (id) => dispatch(deleteAlert(id))
-})
+    deleteAlert: (id) => dispatch(deleteAlert(id)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Alerts);

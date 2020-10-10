@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { get } from '../../axios';
-import { addAlert } from '../../redux/actions/alert';
+import { addAlert, setLoading, logout } from '../../redux/actions/';
 import { connect } from 'react-redux';
-import { setLoading } from '../../redux/actions/loading';
-import CustomSpinner from '../../components/CustomSpinner';
-import { Container, Card, CardBody } from 'reactstrap';
+import { Table as CustomTable } from '../../components';
+import { Container } from 'reactstrap';
 import { intlMessage } from '../../language';
 
-const GetUsers = ({ alert, loading, setLoading, language }) => {
+const GetUsers = ({ alert, loading, setLoading, language, logout }) => {
     const [users, setList] = useState([]);
 
     useEffect(() => {
@@ -19,13 +18,32 @@ const GetUsers = ({ alert, loading, setLoading, language }) => {
                 setLoading(false);
             },
             (error) => {
-                alert(`Telah terjadi kesalahan`);
+                if (error) {
+                    if (error.message === 'jwt expired, please login.') {
+                        alert(
+                            'Anda belum login setelah seminggu. Harap login lagi.'
+                        );
+                        logout();
+                    } else if (error.message !== 'Need authorization header') {
+                        alert(
+                            `Telah terjadi kesalahan${
+                                error ? `: ${error.message}` : ''
+                            }.`
+                        );
+                    }
+                } else {
+                    alert(
+                        `Telah terjadi kesalahan${
+                            error ? `: ${error.message}` : ''
+                        }.`
+                    );
+                }
                 setLoading(false);
             }
         );
     }, []);
 
-    const intlText = intlMessage(language)
+    const intlText = intlMessage(language);
 
     return (
         <div className="container-fluid">
@@ -33,51 +51,24 @@ const GetUsers = ({ alert, loading, setLoading, language }) => {
                 <h1>{intlText.users.title}</h1>
             </div>
             <Container fluid>
-                <div className="custom-table">
-                    <Card className="user">
-                        <CardBody>
-                            <table className="users-table">
-                                <thead>
-                                    <tr className="text-center">
-                                        <th>{intlText.users.table.id}</th>
-                                        <th>{intlText.users.table.name}</th>
-                                        <th>{intlText.users.table.email}</th>
-                                        <th>{intlText.users.table.merchant}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {!loading ? (
-                                        users.map((user) => (
-                                            <tr
-                                                key={user.id}
-                                                className="text-center">
-                                                <td>{user.id}</td>
-                                                <td>{user.name}</td>
-                                                <td>{user.email}</td>
-                                                <td>
-                                                    {user.merchant
-                                                        ? user.merchant.name
-                                                        : '(SUPER ADMIN)'}
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td
-                                                colSpan="4"
-                                                className="text-center">
-                                                <CustomSpinner
-                                                    loading={loading}
-                                                    type="table"
-                                                />
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </CardBody>
-                    </Card>
-                </div>
+                <CustomTable
+                    noDataMessage="Tidak ada user"
+                    tableClassName="user"
+                    tableHead={[
+                        intlText.users.table.name,
+                        intlText.users.table.email,
+                        intlText.users.table.merchant,
+                    ]}
+                    tableBody={users.map((item) => ({
+                        id: item.id,
+                        name: item.name,
+                        email: item.email,
+                        merchant: item.merchant
+                            ? item.merchant.name
+                            : '(SUPER ADMIN)',
+                    }))}
+                    loading={loading}
+                />
             </Container>
         </div>
     );
@@ -86,11 +77,12 @@ const GetUsers = ({ alert, loading, setLoading, language }) => {
 const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
     setLoading: (loading) => dispatch(setLoading(loading)),
+    logout: () => dispatch(logout()),
 });
 
 const mapStateToProps = (state) => ({
     loading: state.loading,
-    language: state.language
+    language: state.language,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetUsers);

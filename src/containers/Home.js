@@ -4,7 +4,7 @@ import { GetStocks } from './Stocks';
 import { Cards } from './Reports/Sales/index';
 import { Container, Row, Col, CardTitle, Card, CardBody } from 'reactstrap';
 import { get } from '../axios';
-import { setLoading, addAlert, getProductStocks } from '../redux/actions';
+import { setLoading, addAlert, getProductStocks, logout } from '../redux/actions';
 import { CustomSpinner } from '../components';
 import moment from 'moment';
 import { intlMessage } from '../language';
@@ -17,10 +17,13 @@ function Home({
     history,
     language,
     alert,
+    logout
 }) {
     const [income, setIncome] = useState(0);
     const [spending, setSpending] = useState(0);
     const [revenue, setRevenue] = useState(0);
+
+    const [products, setProducts] = useState(null)
 
     useEffect(() => {
         if (merchant_id) {
@@ -34,33 +37,76 @@ function Home({
                     setLoading(false);
                 },
                 (error) => {
+                    if (error) {
+                        if (error.message === 'jwt expired, please login.') {
+                            alert(
+                                'Anda belum login setelah seminggu. Harap login lagi.'
+                            );
+                            logout();
+                        } else if (error.message !== 'Need authorization header') {
+                            alert(
+                                `Telah terjadi kesalahan${
+                                    error ? `: ${error.message}` : ''
+                                }.`
+                            );
+                        }
+                    } else {
+                        alert(
+                            `Telah terjadi kesalahan${
+                                error ? `: ${error.message}` : ''
+                            }.`
+                        );
+                    }
                     setLoading(false);
-                    alert('Telah terjadi kesalahan');
                 }
             );
+            get(
+                '/products_groups',
+                ({data}) => {
+                    setProducts(data);
+                    setLoading(false)
+                },
+                (error) => {
+                    if (error) {
+                        if (error.message === 'jwt expired, please login.') {
+                            alert(
+                                'Anda belum login setelah seminggu. Harap login lagi.'
+                            );
+                            logout();
+                        } else if (error.message !== 'Need authorization header') {
+                            alert(
+                                `Telah terjadi kesalahan${
+                                    error ? `: ${error.message}` : ''
+                                }.`
+                            );
+                        }
+                    } else {
+                        alert(
+                            `Telah terjadi kesalahan${
+                                error ? `: ${error.message}` : ''
+                            }.`
+                        );
+                    }
+                    setLoading(false);
+                }
+            )
         }
     }, []);
 
-    const [products, setProducts] = useState(null)
-    const [productLoading, setProductLoading] = useState(false)
-    const [productTemp, setProductTemp] = useState(false);
-
     useEffect(() => {
-        if (merchant_id) {
-            setProductLoading(true);
-                get(
-                    '/products/stocks',
-                    ({data}) => {
-                        setProducts(data);
-                        setProductLoading(false)
-                    },
-                    (error) => {
-                        alert('Telah terjadi kesalahan');
-                        setProductLoading(false)
-                    }
-                )
-        }
-    }, [merchant_id ? productTemp : null])
+
+    })
+
+    const goToButton = (onClick) => (
+        <div className="custom-button">
+            <button
+                className="goto-button"
+                onClick={onClick}
+                title="Go to page">
+                <i className="simple-icon-action-redo"></i>
+            </button>
+        </div>
+    )
 
     const { sales } = intlMessage(language);
 
@@ -111,28 +157,12 @@ function Home({
                                 </CardBody>
                             </Card>
                             <Card className="mt-2">
-                                <div className="custom-button">
-                                    <button
-                                        className="goto-button"
-                                        onClick={() =>
-                                            history.push('/transactions/get')
-                                        }
-                                        title="Go to page">
-                                        <i className="simple-icon-action-redo"></i>
-                                    </button>
-                                    <button
-                                        className={`refresh-button ${productLoading ? 'spin' : ''}`}
-                                        disabled={productLoading}
-                                        title="Refresh"
-                                        onClick={() => setProductTemp(!productTemp)}>
-                                        <i className="simple-icon-refresh" />
-                                    </button>
-                                </div>
+                                {goToButton(() => history.push('/transactions/get'))}
                                 <CardTitle className="p-3 m-0">
                                     <h3>Product Stock</h3>
                                 </CardTitle>
                                 <CardBody className="pt-0">
-                                    <GetStocks products={products} loading={productLoading} />
+                                    <GetStocks products={products} />
                                 </CardBody>
                             </Card>
                         </Fragment>
@@ -158,7 +188,8 @@ const mapDispatchToProps = (dispatch) => ({
     setLoading: (loading) => dispatch(setLoading(loading)),
     getProducts: () => dispatch(getProducts(1, null, 0)),
     alert: (message) => dispatch(addAlert(message)),
-    getProductStocks: () => dispatch(getProductStocks())
+    getProductStocks: () => dispatch(getProductStocks()),
+    logout: () => dispatch(logout())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

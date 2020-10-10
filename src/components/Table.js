@@ -1,30 +1,29 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardBody } from 'reactstrap';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { CustomSpinner, InfoTooltip } from './';
 
 const Table = ({
-    tableName,
+    noDataMessage,
     tableClassName,
     tableHead = [],
-    tableBody = {},
+    tableBody = [],
+    deleteId = true,
+    actions,
     loading,
     deleteFunction = () => {},
+    setModal = () => {},
 }) => {
-    const exampleBody = {
-        data: [],
-        actions: {
-            edit: 'edit-link'
-        },
-    };
-
-    const deleteIdFromTable = (table) => {
-        delete table.id;
+    const deleteFromTable = (table) => {
+        if (deleteId) {
+            delete table.id;
+        }
+        delete table.info
         return table;
     };
-    
+
     return (
         <div className="custom-table">
             <Card className={tableClassName}>
@@ -32,47 +31,58 @@ const Table = ({
                     <table className={`${tableClassName}-table`}>
                         <thead>
                             <tr className="text-center">
-                                {tableHead.map((thead, index) => (
+                                {tableHead.map((thead, index) => thead !== null && (
                                     <th key={index}>{thead}</th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
                             {!loading ? (
-                                tableBody.data &&
-                                tableBody.data.length > 0 ? (
-                                    tableBody.data.map((tbody, index) => (
-                                        <tr key={index}>
-                                            {Object.values(
-                                                deleteIdFromTable(tbody)
-                                            ).map((title, index) => console.log(tbody))}
-                                            {tableBody.actions && (
+                                tableBody && tableBody.length > 0 ? (
+                                    tableBody.map((tbody, index) => (
+                                        <tr key={index} className="text-center">
+                                            {console.log()}
+                                            {Object.values(deleteFromTable({...tbody})).map(
+                                                (item, index) =>
+                                                    item !== null && (
+                                                        <td key={index}>
+                                                            {item}
+                                                        </td>
+                                                    )
+                                            )}
+                                            {actions && (
                                                 <td>
-                                                <Link
-                                                    to={`${tableBody.actions.edit}?id=${tbody.id}`}
-                                                    className="mr-2">
+                                                    <Link
+                                                        to={`${actions.edit}?id=${tbody.id}`}
+                                                        className="mr-2">
+                                                        <i
+                                                            className="simple-icon-note edit-icon"
+                                                            title="Edit"></i>
+                                                    </Link>
                                                     <i
-                                                        className="simple-icon-note edit-icon"
-                                                        title="Edit"></i>
-                                                </Link>
-                                                <i
-                                                    className={`simple-icon-close delete-icon ${
-                                                        tbody.info ? 'mr-2' : ''
-                                                    }`}
-                                                    data-toggle="modal"
-                                                    data-target="#modal"
-                                                    title="Delete"
-                                                    onClick={() =>
-                                                        deleteFunction(tbody.id)
-                                                    }></i>
-                                                {tbody.info ? (
-                                                    <Fragment>
-                                                        <InfoTooltip
-                                                            info={tbody.info}
-                                                        />
-                                                    </Fragment>
-                                                ) : null}
-                                            </td>
+                                                        className={`simple-icon-close delete-icon ${
+                                                            tbody.info
+                                                                ? 'mr-2'
+                                                                : ''
+                                                        }`}
+                                                        title="Delete"
+                                                        onClick={() => {
+                                                            deleteFunction(
+                                                                tbody.id
+                                                            );
+                                                            setModal(true);
+                                                        }}></i>
+                                                    {tbody.info &&
+                                                        actions.info && (
+                                                            <Fragment>
+                                                                <InfoTooltip
+                                                                    info={
+                                                                        tbody.info
+                                                                    }
+                                                                />
+                                                            </Fragment>
+                                                        )}
+                                                </td>
                                             )}
                                         </tr>
                                     ))
@@ -81,8 +91,7 @@ const Table = ({
                                         <td
                                             colSpan={tableHead.length}
                                             className="text-center">
-                                            Belum ada {tableName}, silahkan
-                                            tambahkan {tableName}
+                                            {noDataMessage}
                                         </td>
                                     </tr>
                                 )
@@ -107,11 +116,14 @@ const Table = ({
 };
 
 Table.propTypes = {
-    tableName: PropTypes.string.isRequired,
+    noDataMessage: PropTypes.string.isRequired,
     tableClassName: PropTypes.string.isRequired,
     tableHead: PropTypes.array.isRequired,
-    tableBody: PropTypes.object.isRequired,
-    deleteFunction: PropTypes.func.isRequired
+    tableBody: PropTypes.array.isRequired,
+    deleteFunction: PropTypes.func,
+    actions: PropTypes.object,
+    loading: PropTypes.bool.isRequired,
+    setModal: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {

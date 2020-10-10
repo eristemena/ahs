@@ -1,10 +1,10 @@
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store, persistor } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
-import Content from './containers/Content'
-import './styles/App.scss'
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store, persistor } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Content } from './containers';
+import './styles/App.scss';
 
 function App() {
     return (

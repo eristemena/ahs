@@ -7,7 +7,7 @@ import { addAlert } from '../../redux/actions/alert';
 const AddProduct = ({ history, alert }) => {
     const [submitting, setSubmitting] = useState(false);
 
-    const submitHandler = (name, price, buying_price) => {
+    const submitHandler = (name, price, buying_price, group_id) => {
         setSubmitting(true);
         postWithAuth(
             '/products',
@@ -15,6 +15,7 @@ const AddProduct = ({ history, alert }) => {
                 name,
                 price,
                 buying_price,
+                group_id
             },
             (success) => {
                 alert('Produk berhasil ditambahkan', 'success');
@@ -26,9 +27,9 @@ const AddProduct = ({ history, alert }) => {
                 }
             },
             (error) => {
-                console.log(error);
+                alert(`Telah terjadi kesalahan${error ? `: ${error.message}` : ''}.`);
+                history.push('/products/get');
                 setSubmitting(false);
-                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     };

@@ -30,10 +30,10 @@ export const getProducts = (page, name, limit) => (dispatch) => {
                     );
                     dispatch(logout());
                 } else if (error.message !== 'Need authorization header') {
-                    dispatch(addAlert(`Terjadi kesalahan: ${error.message}`));
+                    dispatch(addAlert(`Telah terjadi kesalahan: ${error.message}`));
                 }
             } else {
-                dispatch(addAlert('Terjadi kesalahan'));
+                dispatch(addAlert('Telah terjadi kesalahan'));
             }
             dispatch(setLoading(false));
         }

@@ -1,20 +1,19 @@
-import { MERCHANT_SET } from '../actionTypes';
+import { addAlert, setLoading, logout } from './index';
 import { get } from '../../axios';
-import { addAlert } from './alert';
-import { logout } from './user';
-import { setLoading } from './loading';
+import { GROUP_GET } from '../actionTypes';
 
-export const getMerchants = (page = 1, name) => (dispatch) => {
+export const getGroups = (page, sort, name, limit) => (dispatch) => {
     dispatch(setLoading(true));
     get(
-        `/merchants?page=${page}${name ? `&name=${name}` : ''}`,
-        ({ data, page, totalData, totalPage }) => {
+        `/products_groups?page=${page}&limit=${limit || 8}&sort=${
+            sort + '-desc' || 'updated_at-desc'
+        }${name ? `&name=${name}` : ''}`,
+        ({ data, totalData, totalPage }) => {
             dispatch({
-                type: MERCHANT_SET,
+                type: GROUP_GET,
                 payload: {
-                    totalPage,
                     totalData,
-                    page,
+                    totalPage,
                     data,
                 },
             });

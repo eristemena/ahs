@@ -3,12 +3,10 @@ import { get, put } from '../../axios';
 import { addAlert } from '../../redux/actions/alert';
 import { TransactionEditForm } from '../../components/Forms';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import 'moment/locale/id';
 import { setLoading } from '../../redux/actions/loading';
 import CustomSpinner from '../../components/CustomSpinner';
 
-const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
+const EditTransaction = ({ alert, history, loading, setLoading }) => {
     const [submitting, setSubmitting] = useState(false);
     const [date, setDate] = useState('');
     const [productId, setProductId] = useState('');
@@ -18,6 +16,7 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
     const [customer, setCustomer] = useState('');
 
     useEffect(() => {
+        setLoading(true);
         const search = history.location.search;
         if (!search.length > 0) {
             history.push('/transactions/get');
@@ -89,8 +88,8 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
     };
     return (
         <Fragment>
-            <CustomSpinner loading={loading} type="page" />
-            <TransactionEditForm
+            {!loading ? (
+                <TransactionEditForm
                 submitting={submitting}
                 stateDate={date}
                 stateProduct={productId}
@@ -101,6 +100,9 @@ const EditTransaction = ({ alert, history, loading, setLoading, user }) => {
                 onSubmit={onSubmitHandler}
                 history={history}
             />
+            ) : (
+                <CustomSpinner loading={loading} type="page" />
+            )}
         </Fragment>
     );
 };

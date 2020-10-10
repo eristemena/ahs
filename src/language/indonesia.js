@@ -5,7 +5,13 @@ module.exports = {
     sidenav: {
         dashboard: 'Home',
         users: 'Pengguna',
-        products: 'Produk',
+        products: {
+            name: 'Produk',
+            sub: {
+                products: 'Produk',
+                groups: 'Grup'
+            }
+        },
         transactions: 'Transaksi',
         customers: 'Konsumen',
         merchant: 'Pedangan',
@@ -43,13 +49,15 @@ module.exports = {
     products: {
         get: {
             title: 'Produk',
-            add_product: 'TAMBAH PRODUK',
+            button: 'TAMBAH PRODUK',
             table: {
                 id: 'ID',
                 name: 'Nama Produk',
                 price: 'Harga Jual',
                 buying_price: 'Harga Beli',
                 merchant: 'Pedagang',
+                group: 'Grup',
+                no_data: 'Belum ada produk, silahkan tambahkan produk.'
             },
         },
         form: {
@@ -75,7 +83,7 @@ module.exports = {
     transactions: {
         get: {
             title: 'Transaksi',
-            add_transaction: 'TAMBAH TRANSAKSI',
+            button: 'TAMBAH TRANSAKSI',
             table: {
                 date: 'Tanggal',
                 name: 'Nama Produk',
@@ -83,7 +91,7 @@ module.exports = {
                 quantity: 'Jumlah',
                 price: 'Harga',
                 customer: 'Konsumen',
-                no_data: 'Belum ada transaksi, silahkan tambahkan transaksi'
+                no_data: 'Belum ada transaksi, silahkan tambahkan transaksi.'
             }
         },
         form: {
@@ -121,7 +129,7 @@ module.exports = {
     customers: {
         get: {
             title: 'Konsumen',
-            add_transaction: 'TAMBAH KONSUMEN',
+            button: 'TAMBAH KONSUMEN',
             table: {
                 name: 'Nama',
                 email: 'Email',
@@ -157,7 +165,7 @@ module.exports = {
                 type: 'Tipe',
                 quantity: 'Jumlah',
                 customer: 'Pelanggan',
-                no_data: 'Belum ada transaksi, silahkan tambahkan transaksi'
+                no_data: 'Belum ada transaksi, silahkan tambahkan transaksi.'
             },
         },
         form: {
@@ -264,5 +272,31 @@ module.exports = {
         sell: 'Jual',
         borrow: 'Pinjam',
         return: 'Balik'
+    },
+    groups: {
+        get: {
+            title: 'Grup',
+            button: 'TAMBAH GRUP',
+            table: {
+                name: 'Nama Grup',
+                quantity: 'Jumlah',
+                merchant: 'Pedagang',
+                no_data: 'Belum ada grup, silahkan tambahkan grup.'
+            },
+        },
+        form: {
+            name: 'Nama',
+            quantity: 'Jumlah',
+            error: {
+                name: {
+                    empty: 'Nama harus diisi',
+                    lt2: 'Nama harus lebih dari dua huruf'
+                },
+                quantity: {
+                    empty: 'Jumlah harus diisi',
+                    NaN: 'Jumlah harus dalam bentuk angka',
+                }
+            }
+        },
     }
 };

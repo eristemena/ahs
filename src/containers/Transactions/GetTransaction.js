@@ -1,6 +1,5 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { addAlert } from '../../redux/actions/alert';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getTransactions } from '../../redux/actions/transaction';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
@@ -9,18 +8,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { del } from '../../axios';
-import { formatPrice, checkAdminMerchant, parseType as tableParseType } from '../../utilities';
+import { formatPrice, checkAdminMerchant, parseType } from '../../utilities';
 import {
     DeleteModal,
-    InfoTooltip,
     CustomPagination,
+    Table
 } from '../../components';
 import { setLoading } from '../../redux/actions/loading';
-import CustomSpinner from '../../components/CustomSpinner';
 import {
     Container,
-    Card,
-    CardBody,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -136,59 +132,11 @@ const GetTransaction = ({
 
     const {
         transactions: {
-            get: { title, add_transaction, table },
+            get: { title, button, table },
         },
         action,
     } = intlMessage(language);
-
-    const [tableHead, setTableHead] = useState([]);
-
-    useEffect(() => {
-        setTableHead([
-            table.date,
-            table.name,
-            table.type,
-            table.quantity,
-            table.price,
-            table.customer,
-        ]);
-        if (checkAdminMerchant(user)) {
-            setTableHead((prevData) => [...prevData, action.action]);
-        }
-    }, []);
-
-    const parseType = (type) => {
-        switch (type) {
-            case 'sell':
-                return 'Sell';
-            case 'buy':
-                return 'Buy';
-            default:
-                return '';
-        }
-    };
-
-    const showTableData = ({
-        date,
-        product,
-        type,
-        customer,
-        quantity,
-        price,
-    }) => {
-        const formatDate = moment(date).format('LL');
-        const typeParse = parseType(type);
-        const priceFormat = formatPrice(price);
-        return {
-            date: formatDate,
-            name: product ? product.name : '~',
-            type: typeParse,
-            quantity,
-            price: price && `Rp. ${priceFormat}`,
-            customer: customer ? customer.name : '~',
-        };
-    };
-
+    
     return (
         <Container fluid>
             <div className="d-sm-flex flex-column flex-sm-row justify-content-between mb-3 align-middle">
@@ -199,7 +147,7 @@ const GetTransaction = ({
                     }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/transactions/add')}>
-                    {add_transaction}
+                    {button}
                 </button>
             </div>
             <div className="d-flex flex-column flex-sm-row justify-content-between mb-2">
@@ -278,130 +226,41 @@ const GetTransaction = ({
                 </div>
             </div>
             <Container fluid>
-                {/* <CustomTable tableName={title.toLowerCase()} tableClassName="transaction"
-                    tableHead={tableHead}
-                    tableBody={{
-                        data: transaction.data && transaction.data.map(data => showTableData(data)),
-                        actions: checkAdminMerchant(user)
-                            && { edit: '/transactions/edit' }
-                    }}
+                <Table
+                    tableClassName="transaction"
+                    tableHead={[
+                        table.date,
+                        table.name,
+                        table.type,
+                        table.quantity,
+                        table.price,
+                        table.customer,
+                        checkAdminMerchant(user) ? action.action : null
+                    ]}
+                    tableBody={transaction && transaction.data && transaction.data.map((item) => ({
+                        id: item.id,
+                        date: moment(item.date).format('LL'),
+                        name: item.product.name,
+                        type: parseType(item.type, language),
+                        quantity: item.quantity,
+                        price: `Rp. ${formatPrice(
+                            item.type === 'sell'
+                                ? item.price
+                                : item.buying_price
+                        )}`,
+                        customer: item.customer ? item.customer.name : '~',
+                        info: item.info
+                    }))}
+                    deleteId
+                    loading={loading}
                     deleteFunction={setDelId}
-                /> */}
-                <div className="custom-table">
-                    <Card className="transaction">
-                        <CardBody>
-                            <table className="transaction-table">
-                                <thead>
-                                    <tr className="text-center">
-                                        <th>{table.date}</th>
-                                        <th>{table.name}</th>
-                                        <th>{table.type}</th>
-                                        <th>{table.quantity}</th>
-                                        <th>{table.price}</th>
-                                        <th>{table.customer}</th>
-                                        {checkAdminMerchant(user) ? (
-                                            <th>{action.action}</th>
-                                        ) : null}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {!loading ? (
-                                        transaction &&
-                                        transaction.data &&
-                                        transaction.data.length > 0 ? (
-                                            transaction.data.map((tran) => (
-                                                <tr
-                                                    key={tran.id}
-                                                    role="row"
-                                                    className="text-center">
-                                                    <td>
-                                                        {moment(
-                                                            tran.date
-                                                        ).format('LL')}
-                                                    </td>
-                                                    <td>{tran.product.name}</td>
-                                                    <td>{tableParseType(tran.type, language)}</td>
-                                                    <td>{tran.quantity}</td>
-                                                    <td>
-                                                        Rp.{' '}
-                                                        {formatPrice(
-                                                            tran.type === 'sell'
-                                                                ? tran.price
-                                                                : tran.buying_price
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        {tran.customer
-                                                            ? tran.customer.name
-                                                            : '~'}
-                                                    </td>
-                                                    {checkAdminMerchant(
-                                                        user
-                                                    ) ? (
-                                                        <td>
-                                                            <Link
-                                                                to={`/transactions/edit?id=${tran.id}`}
-                                                                className="mr-2">
-                                                                <i
-                                                                    className="simple-icon-note edit-icon"
-                                                                    title={
-                                                                        action.edit
-                                                                    }></i>
-                                                            </Link>
-                                                            <i
-                                                                className={`simple-icon-close delete-icon ${
-                                                                    tran.info
-                                                                        ? 'mr-2'
-                                                                        : ''
-                                                                }`}
-                                                                title={
-                                                                    action.delete
-                                                                }
-                                                                onClick={(e) => {
-                                                                    setDelId(
-                                                                        tran.id
-                                                                    );
-                                                                    setModalToggle(true)
-                                                                }}></i>
-                                                            {tran.info ? (
-                                                                <Fragment>
-                                                                    <InfoTooltip
-                                                                        info={
-                                                                            tran.info
-                                                                        }
-                                                                    />
-                                                                </Fragment>
-                                                            ) : null}
-                                                        </td>
-                                                    ) : null}
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td
-                                                    colSpan="7"
-                                                    className="text-center">
-                                                    {table.no_data}
-                                                </td>
-                                            </tr>
-                                        )
-                                    ) : (
-                                        <tr className="align-middle">
-                                            <td
-                                                colSpan="7"
-                                                className="text-center">
-                                                <CustomSpinner
-                                                    loading={loading}
-                                                    type="table"
-                                                />
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </CardBody>
-                    </Card>
-                </div>
+                    setModal={setModalToggle}
+                    actions={checkAdminMerchant(user) && {
+                        edit: '/transactions/edit',
+                        info: true
+                    }}
+                    noDataMessage={table.no_data}
+                />
                 <CustomPagination
                     currentPage={page}
                     pages={totalPage}

@@ -1,109 +1,110 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { ProductForm } from '../../components/Forms';
-import { put, get } from '../../axios';
+import { GroupForm } from '../../../components/Forms';
+import { put, get } from '../../../axios';
 import { connect } from 'react-redux';
-import { addAlert } from '../../redux/actions/alert';
-import { checkAdminMerchant } from '../../utilities';
-import CustomSpinner from '../../components/CustomSpinner';
-import { setLoading } from '../../redux/actions/loading';
+import { addAlert, setLoading } from '../../../redux/actions/';
+import { CustomSpinner } from '../../../components';
+import { checkAdminMerchant } from '../../../utilities';
 
-const EditProduct = ({ user, history, alert, loading, setLoading }) => {
+const EditGroup = ({ history, alert, loading, setLoading, user }) => {
     const [submitting, setSubmitting] = useState(false);
     const [id, setId] = useState(null);
     const [name, setName] = useState(null);
-    const [price, setPrice] = useState(null);
-    const [buyingPrice, setBuyingPrice] = useState(null);
-    const [group, setGroup] = useState(null)
+    const [quantity, setQuantity] = useState(null);
 
     useEffect(() => {
         setLoading(true);
         if (!checkAdminMerchant(user)) {
             alert('Login sebagai admin merchant untuk menambahkan produk');
-            return history.push('/products/get');
+            history.goBack();
         }
 
         const search = history.location.search;
 
         if (!search.length > 0) {
-            history.push('/products/get');
+            history.goBack();
             return alert('Telah terjadi kesalahan');
         }
 
         if (!search.includes('id')) {
-            history.push('/products/get');
+            history.goBack();
             return alert('Telah terjadi kesalahan');
         }
 
         const queryId = search.replace('?id=', '');
 
         if (isNaN(queryId)) {
-            history.push('/products/get');
+            history.goBack();
             return alert('Telah terjadi kesalahan');
         }
 
         setId(queryId);
         get(
-            `/products?id=${queryId}`,
+            `/products_groups?id=${queryId}`,
             ({ data }) => {
-                const product = data[0];
-                setName(product.name);
-                setPrice(product.price);
-                setBuyingPrice(product.buying_price);
-                setGroup(product.group_id)
+                const group = data[0];
+                setName(group.name);
+                setQuantity(group.quantity);
                 setLoading(false);
             },
             (error) => {
+                alert(
+                    `Telah terjadi kesalahan${
+                        error ? `: ${error.message}` : ''
+                    }.`
+                );
                 setLoading(false);
-                history.push('/products/get');
-                alert(`Telah terjadi kesalahan${error ? `: ${error.message}` : ''}.`);
+                history.goBack();
             }
         );
     }, []);
 
-    const submitHandler = (name, price, buying_price, group_id) => {
+    const submitHandler = (name, quantity) => {
         setSubmitting(true);
         put(
-            `/products/${id}`,
+            `/products_groups/${id}`,
             {
                 name,
-                price,
-                buying_price,
-                group_id
+                quantity,
             },
             (success) => {
-                alert('Produk berhasil diedit', 'success');
+                alert('Grup berhasil diedit', 'success');
+                history.push('/products/groups/get');
                 setSubmitting(false);
-                history.push('/products/get');
             },
             (error) => {
+                alert(
+                    `Telah terjadi kesalahan${
+                        error ? `: ${error.message}` : ''
+                    }.`
+                );
                 setSubmitting(false);
-                alert(`Telah terjadi kesalahan: ${error.message}`);
             }
         );
     };
+
     return (
         <Fragment>
             {!loading ? (
-                <ProductForm
+                <GroupForm
                     onSubmit={submitHandler}
+                    edit={true}
                     submitting={submitting}
                     stateName={name}
-                    statePrice={price}
-                    stateBuyingPrice={buyingPrice}
-                    stateGroup={group}
-                    action="Edit"
+                    stateQuantity={quantity}
                     history={history}
+                    action="Edit"
                 />
             ) : (
-                <CustomSpinner loading={loading} type="page" />
+                <CustomSpinner type="page" loading={loading} />
             )}
         </Fragment>
     );
 };
 
 const mapStateToProps = (state) => ({
-    user: state.user,
     loading: state.loading,
+    user: state.user,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -111,4 +112,4 @@ const mapDispatchToProps = (dispatch) => ({
     setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(EditGroup);
