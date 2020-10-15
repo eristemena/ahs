@@ -1,5 +1,5 @@
 import { SALES_ADD } from '../actionTypes';
-import { addAlert } from './alert';
+import { error_handler } from './';
 import { get } from '../../axios';
 
 export const getSales = (week_code = 1, product_id) => (dispatch) => {
@@ -14,7 +14,7 @@ export const getSales = (week_code = 1, product_id) => (dispatch) => {
             });
         },
         (error) => {
-            dispatch(addAlert('Telah terjadi kesalahan'));
+            dispatch(error_handler(error))
         }
     );
 };

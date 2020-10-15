@@ -1,4 +1,4 @@
-import { addAlert, setLoading, logout } from './index';
+import { addAlert, setLoading, logout, error_handler } from './index';
 import { get } from '../../axios';
 import { GROUP_GET } from '../actionTypes';
 
@@ -20,20 +20,7 @@ export const getGroups = (page, sort, name, limit) => (dispatch) => {
             dispatch(setLoading(false));
         },
         (error) => {
-            if (error) {
-                if (error.message === 'jwt expired, please login.') {
-                    dispatch(
-                        addAlert(
-                            'Anda belum login setelah seminggu. Harap login lagi.'
-                        )
-                    );
-                    dispatch(logout());
-                } else if (error.message !== 'Need authorization header') {
-                    dispatch(addAlert(`Telah terjadi kesalahan: ${error.message}`));
-                }
-            } else {
-                dispatch(addAlert('Telah terjadi kesalahan'));
-            }
+            dispatch(error_handler(error))
             dispatch(setLoading(false));
         }
     );

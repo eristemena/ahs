@@ -1,8 +1,6 @@
 import { FETCH_STOCKS } from '../actionTypes';
 import { get } from '../../axios';
-import { setLoading } from './loading';
-import { logout } from './user';
-import { addAlert } from './alert';
+import { setLoading, error_handler } from './';
 
 export const fetchStocks = (page, limit, sort, date) => (dispatch) => {
     dispatch(setLoading(true));
@@ -22,20 +20,7 @@ export const fetchStocks = (page, limit, sort, date) => (dispatch) => {
             dispatch(setLoading(false));
         },
         (error) => {
-            if (error) {
-                if (error.message === 'jwt expired, please login.') {
-                    dispatch(
-                        addAlert(
-                            'Anda belum login setelah seminggu. Harap login lagi.'
-                        )
-                    );
-                    dispatch(logout());
-                } else if (error.message !== 'Need authorization header') {
-                    dispatch(addAlert(`Telah terjadi kesalahan: ${error.message}`));
-                }
-            } else {
-                dispatch(addAlert('Telah terjadi kesalahan'));
-            }
+            dispatch(error_handler(error))
             dispatch(setLoading(false));
         }
     )
