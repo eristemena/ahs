@@ -8,7 +8,7 @@ const GallonStocks = () => {
     return (
         <Switch>
             <Route path="/gallons/get" exact component={GetStocks} />
-            <Route path="/gallons/add" exact component={AddStock} />
+            <Route path="/gallons/add" component={AddStock} />
             <Route path="/gallons/edit" component={EditStock} />
             <Route component={NotFound} />
         </Switch>

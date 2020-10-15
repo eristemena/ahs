@@ -13,7 +13,7 @@ import {
     Card,
     CardBody,
 } from 'reactstrap';
-import { addAlert } from '../../redux/actions';
+import { addAlert, logout } from '../../redux/actions';
 import { Table, Cards } from './Sales/index';
 import { CustomPagination } from '../../components';
 import ReactDatePicker, { registerLocale } from 'react-datepicker';
@@ -22,9 +22,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { intlMessage } from '../../language';
+import {errorHandler} from '../../utilities'
 registerLocale('id', id);
 
-const Sales = ({ alert, history, language }) => {
+const Sales = ({ alert, history, language, logout }) => {
     const [data, setData] = useState([]);
     const [temp, setTemp] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -66,13 +67,9 @@ const Sales = ({ alert, history, language }) => {
                 setLoading(false);
             },
             (error) => {
+                errorHandler(error, alert, logout)
                 history.push('/');
                 setLoading(false);
-                alert(
-                    `Telah terjadi kesalahan${
-                        error ? `: ${error.message}` : ''
-                    }`
-                );
             }
         );
     }, [temp, startDate, endDate, page]);
@@ -287,6 +284,7 @@ const Sales = ({ alert, history, language }) => {
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
+    logout: () => dispatch(logout())
 });
 
 const mapStateToProps = (state) => ({

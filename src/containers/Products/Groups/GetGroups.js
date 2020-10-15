@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { addAlert, setLoading, getGroups } from '../../../redux/actions';
+import { addAlert, setLoading, getGroups, logout } from '../../../redux/actions';
 import { connect } from 'react-redux';
-import { checkAdminMerchant } from '../../../utilities';
+import { checkAdminMerchant, errorHandler } from '../../../utilities';
 import {
     DeleteModal,
     TableSearchbar,
@@ -27,6 +27,7 @@ const GetGroups = ({
     getGroups,
     setLoading,
     language,
+    logout
 }) => {
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState([]);
@@ -88,15 +89,15 @@ const GetGroups = ({
             return alert('Telah terjadi kesalahan');
         }
         del(
-            `/products/${delId}`,
-            (success) => {
+            `/products_groups/${delId}`,
+            () => {
                 alert('Berhasil menghapus data', 'success');
                 getGroups(page, sortBy, queryName, limit);
                 setLoading(false);
                 setDelId(-1);
             },
             (error) => {
-                alert('Telah terjadi kesalahan');
+                errorHandler(error, alert, logout)
                 getGroups(page, sortBy, queryName, limit);
                 setLoading(false);
                 setDelId(-1);
@@ -238,6 +239,7 @@ const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
     getGroups: (page, sort, name, limit) => dispatch(getGroups(page, sort, name, limit)),
     setLoading: (loading) => dispatch(setLoading(loading)),
+    logout: () => dispatch(logout())
 });
 
 const mapStateToProps = (state) => ({

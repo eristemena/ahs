@@ -11,11 +11,12 @@ import {
     InputGroupAddon,
     InputGroupText,
 } from 'reactstrap';
-import {addAlert} from '../../redux/actions'
+import {addAlert, logout} from '../../redux/actions'
 import { Formik, Form, Field } from 'formik';
 import Select from 'react-select';
 import { get } from '../../axios';
 import * as Yup from 'yup';
+import {errorHandler} from '../../utilities'
 import SubmitAndCancelButtons from './SubmitAndCancelButtons';
 import { intlMessage } from '../../language';
 
@@ -29,7 +30,8 @@ const ProductForm = ({
     history,
     action,
     language,
-    alert
+    alert,
+    logout
 }) => {
     const {
         products: { form },
@@ -50,7 +52,7 @@ const ProductForm = ({
                 setGroupLoading(false);
             },
             (error) => {
-                alert(`Telah terjadi kesalahan${error ? `: ${error.message}` : ''}.`);
+                errorHandler(error, alert, logout)
                 setGroupFailed(true)
                 setGroupLoading(false);
             }
@@ -199,7 +201,8 @@ ProductForm.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    alert: (message) => dispatch(addAlert(message))
+    alert: (message) => dispatch(addAlert(message)),
+    logout: () => dispatch(logout())
 })
 
 const mapStateToProps = (state) => ({

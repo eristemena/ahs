@@ -2,11 +2,11 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { GroupForm } from '../../../components/Forms';
 import { put, get } from '../../../axios';
 import { connect } from 'react-redux';
-import { addAlert, setLoading } from '../../../redux/actions/';
+import { addAlert, setLoading, logout } from '../../../redux/actions/';
 import { CustomSpinner } from '../../../components';
-import { checkAdminMerchant } from '../../../utilities';
+import { checkAdminMerchant, errorHandler } from '../../../utilities';
 
-const EditGroup = ({ history, alert, loading, setLoading, user }) => {
+const EditGroup = ({ history, alert, loading, setLoading, user, logout }) => {
     const [submitting, setSubmitting] = useState(false);
     const [id, setId] = useState(null);
     const [name, setName] = useState(null);
@@ -48,11 +48,7 @@ const EditGroup = ({ history, alert, loading, setLoading, user }) => {
                 setLoading(false);
             },
             (error) => {
-                alert(
-                    `Telah terjadi kesalahan${
-                        error ? `: ${error.message}` : ''
-                    }.`
-                );
+                errorHandler(error, alert, logout)
                 setLoading(false);
                 history.goBack();
             }
@@ -67,17 +63,13 @@ const EditGroup = ({ history, alert, loading, setLoading, user }) => {
                 name,
                 quantity,
             },
-            (success) => {
+            () => {
                 alert('Grup berhasil diedit', 'success');
                 history.push('/products/groups/get');
                 setSubmitting(false);
             },
             (error) => {
-                alert(
-                    `Telah terjadi kesalahan${
-                        error ? `: ${error.message}` : ''
-                    }.`
-                );
+                errorHandler(error, alert, logout)
                 setSubmitting(false);
             }
         );
@@ -110,6 +102,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
     setLoading: (loading) => dispatch(setLoading(loading)),
+    logout: () => dispatch(logout())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditGroup);

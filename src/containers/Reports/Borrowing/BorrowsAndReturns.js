@@ -1,13 +1,14 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Card, CardBody, CardTitle } from 'reactstrap';
 import { get } from '../../../axios';
-import { addAlert } from '../../../redux/actions';
+import { addAlert, logout } from '../../../redux/actions';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { errorHandler } from '../../../utilities';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 
-const BorrowsAndReturns = ({ history, alert, language }) => {
+const BorrowsAndReturns = ({ history, alert, language, logout }) => {
     const [data, setData] = useState([]);
     const [temp, setTemp] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -17,19 +18,20 @@ const BorrowsAndReturns = ({ history, alert, language }) => {
         get(
             '/stocks/report',
             ({ data }) => {
-                let placeholder = [];
-                data.transactions.map((item) => {
-                    if (item.owed !== 0) {
-                        placeholder.push(item);
-                    }
-                });
-                setData(placeholder);
+                if (data.length > 0) {
+                    let placeholder = [];
+                    data.transactions.map((item) => {
+                        if (item.owed !== 0) {
+                            placeholder.push(item);
+                        }
+                    });
+                    setData(placeholder);
+                }
                 setLoading(false);
             },
             (error) => {
-                history.push('/');
+                errorHandler(error, alert, logout);
                 setLoading(false);
-                alert('Telah terjadi kesalahan');
             }
         );
     }, [temp]);
@@ -93,6 +95,7 @@ const BorrowsAndReturns = ({ history, alert, language }) => {
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message) => dispatch(addAlert(message)),
+    logout: () => dispatch(logout()),
 });
 
 export default withRouter(connect(null, mapDispatchToProps)(BorrowsAndReturns));

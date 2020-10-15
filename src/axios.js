@@ -4,7 +4,7 @@ const baseUrl = process.env.REACT_APP_BACKEND_URL || 'https://ahs-merdeka.heroku
 
 // link: https://ahs-merdeka.herokuapp.com/api/v1
 
-export const get = async (path, success = () => {}, error = () => {}) => {
+export const get = async (path, success = () => {}, error = () => {}, download_progress) => {
     try {
         let config = {};
 

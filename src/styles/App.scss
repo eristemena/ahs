@@ -73,7 +73,6 @@ body {
                 margin-top: 5px;
                 color: white;
                 border-top-color: black;
-                animation: spinner-rotate 1.2s ease infinite;
             }
 
             &.page-loading-spinner {
@@ -101,8 +100,18 @@ body {
             &.card-loading-spinner {
                 height: 48px;
                 width: 48px;
-                margin-top: 1.2rem;
                 margin: .75rem auto;
+                margin-top: 1.2rem;
+            }
+
+            &.small {
+                width: 24px;
+                height: 24px;
+                margin: 0;
+                margin-left: -2px;
+                margin-right: -2px;
+                vertical-align: middle;
+                animation-duration: .8s;
             }
 
             @keyframes spinner-rotate {
@@ -315,6 +324,10 @@ body {
                 .dropdown-divider {
                     border-color: $separator-color !important;
                     border-top-width: 1.4px !important;
+
+                    &.dark {
+                        border-color: black;
+                    }
                 }
 
                 ul {
@@ -506,7 +519,7 @@ body {
                 user-select: none;
 
                 &.show {
-                    animation: notification-slide .5s ease forwards;
+                    animation: notification-slide .5s ease forwards; 
 
                     @keyframes notification-slide {
                         0% {
@@ -814,6 +827,43 @@ body {
             opacity: 0;
             animation: custom-form-card-slide .5s ease forwards;
 
+            &.transaction {
+                .products-row {
+                    margin-top: 1rem;
+                    margin-bottom: 1rem;
+
+                    &:last-of-type .divider {
+                        display: none !important;
+                    }
+
+                    .divider {
+                        border-color: $text-light;
+                        border-top-width: 2px;
+                        margin: 0;
+                    }
+
+                    .check {
+                        font-size: 1.4rem;
+                    }
+
+                    @media (min-width: 576px) {
+                        margin-top: 0;
+                        margin-bottom: 0;
+                        &:first-of-type {
+                            margin-top: 0;
+                        }
+
+                        &:last-of-type {
+                            margin-bottom: 0;
+                        }
+                        
+                        .divider {
+                            display: none;
+                        }
+                    }
+                }
+            }
+
             @keyframes custom-form-card-slide {
                 0% {
                     transform: translateY(1rem);
@@ -981,6 +1031,10 @@ body {
                 }
             }
 
+            &.--is-disabled .__value-container {
+                background: #e9ecef;
+            }
+
             &.__single-value,
             &.__multi-value__label {
                 bottom: initial;
@@ -989,6 +1043,7 @@ body {
             &.__control {
                 border-radius: 0;
                 background: white;
+                transition: background-color linear;
                 outline: initial;
                 box-shadow: none;
                 border: 2px solid initial;
@@ -1008,6 +1063,10 @@ body {
 
                 &.__control--menu-is-open .__dropdown-indicator svg {
                     transform: rotateZ(180deg);
+                }
+
+                &.__control--is-disabled {
+                    background: #e9ecef;
                 }
             }
 
@@ -1091,10 +1150,6 @@ body {
             &.disabled {
                 padding: 0 1.5rem;
 
-                &.button-waiting-for-confirmation {
-                    padding: .5rem 1.25rem !important;
-                }
-
                 &:hover {
                     background-color: $primary-color;
                 }
@@ -1119,10 +1174,6 @@ body {
             &.disabled {
                 padding: 0 1.5rem;
 
-                &.button-waiting-for-confirmation {
-                    padding: .5rem 1.25rem !important;
-                }
-
                 &:hover {
                     background-color: $danger-color;
                 }
@@ -1131,6 +1182,10 @@ body {
                     padding: 0.8rem 1.25rem;
                 }
             }
+        }
+
+        &.button-waiting-for-confirmation {
+            padding: .5rem 1.25rem !important;
         }
 
         // &.input-group-append-button {

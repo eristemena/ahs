@@ -3,11 +3,13 @@ import { get } from '../../axios';
 import { addAlert, setLoading, logout } from '../../redux/actions/';
 import { connect } from 'react-redux';
 import { Table as CustomTable } from '../../components';
-import { Container } from 'reactstrap';
+import { Container, Modal, Tooltip } from 'reactstrap';
 import { intlMessage } from '../../language';
+import {errorHandler} from '../../utilities'
 
 const GetUsers = ({ alert, loading, setLoading, language, logout }) => {
     const [users, setList] = useState([]);
+    const [modal, setModal] = useState(false)
 
     useEffect(() => {
         setLoading(true);
@@ -18,26 +20,7 @@ const GetUsers = ({ alert, loading, setLoading, language, logout }) => {
                 setLoading(false);
             },
             (error) => {
-                if (error) {
-                    if (error.message === 'jwt expired, please login.') {
-                        alert(
-                            'Anda belum login setelah seminggu. Harap login lagi.'
-                        );
-                        logout();
-                    } else if (error.message !== 'Need authorization header') {
-                        alert(
-                            `Telah terjadi kesalahan${
-                                error ? `: ${error.message}` : ''
-                            }.`
-                        );
-                    }
-                } else {
-                    alert(
-                        `Telah terjadi kesalahan${
-                            error ? `: ${error.message}` : ''
-                        }.`
-                    );
-                }
+                errorHandler(error, alert, logout)
                 setLoading(false);
             }
         );
@@ -48,7 +31,7 @@ const GetUsers = ({ alert, loading, setLoading, language, logout }) => {
     return (
         <div className="container-fluid">
             <div className="mb-3 page-title">
-                <h1>{intlText.users.title}</h1>
+                <h1 onClick={() => setModal(!modal)}>{intlText.users.title}</h1>
             </div>
             <Container fluid>
                 <CustomTable
@@ -70,6 +53,9 @@ const GetUsers = ({ alert, loading, setLoading, language, logout }) => {
                     loading={loading}
                 />
             </Container>
+            <Modal isOpen={modal} toggle={() => setModal(!modal)}>
+
+            </Modal>
         </div>
     );
 };

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { GroupForm } from '../../../components/Forms';
 import { postWithAuth } from '../../../axios';
 import { connect } from 'react-redux';
-import { addAlert } from '../../../redux/actions/';
+import { addAlert, logout } from '../../../redux/actions/';
+import { errorHandler } from '../../../utilities';
 
-const AddGroup = ({ history, alert }) => {
+const AddGroup = ({ history, alert, logout }) => {
     const [submitting, setSubmitting] = useState(false);
 
     const submitHandler = (name, quantity) => {
@@ -21,11 +22,7 @@ const AddGroup = ({ history, alert }) => {
                 setSubmitting(false);
             },
             (error) => {
-                alert(
-                    `Telah terjadi kesalahan${
-                        error ? `: ${error.message}` : ''
-                    }.`
-                );
+                errorHandler(error, alert, logout)
                 setSubmitting(false);
             }
         );
@@ -41,6 +38,7 @@ const AddGroup = ({ history, alert }) => {
 
 const mapDispatchToProps = (dispatch) => ({
     alert: (message, type) => dispatch(addAlert(message, type)),
+    logout: () => dispatch(logout())
 });
 
 export default connect(null, mapDispatchToProps)(AddGroup);

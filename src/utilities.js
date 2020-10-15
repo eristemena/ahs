@@ -23,3 +23,22 @@ exports.parseType = (type, language) => {
             return '';
     }
 };
+
+exports.errorHandler = (error, alert = () => {}, logout = () => {}) => {
+    if (error) {
+        if (error.message === 'jwt expired, please login.') {
+            alert('Anda belum login setelah seminggu. Harap login lagi.');
+            logout();
+        } else if (error.message !== 'Need authorization header') {
+            alert(
+                `Telah terjadi kesalahan${
+                    error ? `: ${error.message}` : ''
+                }.`
+            );
+        }
+    } else {
+        alert(
+            `Telah terjadi kesalahan${error ? `: ${error.message}` : ''}.`
+        );
+    }
+}

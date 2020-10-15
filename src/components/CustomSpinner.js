@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const CustomSpinner = ({ loading, type, menu }) => {
+const CustomSpinner = ({ loading, type, menu, className = '' }) => {
     switch (type) {
         case 'page':
             return (
                 <div
                     className={`custom-spinner page-loading-spinner ${
                         !loading ? 'd-none' : ''
-                    } ${menu ? 'menu-open' : 'menu-close'}`}
+                    } ${menu ? 'menu-open' : 'menu-close'} ${className}`}
                 />
             );
         case 'table':
@@ -17,7 +17,7 @@ const CustomSpinner = ({ loading, type, menu }) => {
                 <div
                     className={`custom-spinner table-loading-spinner ${
                         !loading ? 'd-none' : ''
-                    }`}
+                    } ${className}`}
                 />
             );
         case 'button':
@@ -25,7 +25,7 @@ const CustomSpinner = ({ loading, type, menu }) => {
                 <div
                     className={`custom-spinner button-loading-spinner ${
                         !loading ? 'd-none' : ''
-                    }`}
+                    } ${className}`}
                 />
             );
         case 'card':

@@ -10,6 +10,7 @@ const SubmitAndCancelButtons = ({
     history,
     action,
     language,
+    cancel = () => history.goBack()
 }) => {
     const { button } = intlMessage(language);
     return (
@@ -32,7 +33,7 @@ const SubmitAndCancelButtons = ({
             <button
                 className="btn btn-secondary cancel-button"
                 type="button"
-                onClick={() => history.goBack()}>
+                onClick={cancel}>
                 {button.cancel}
             </button>
         </div>

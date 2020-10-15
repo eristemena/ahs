@@ -17,7 +17,7 @@ function Alerts({ alerts, deleteAlert }) {
                             className="notification-alert">
                             {alert.message}
                             <i
-                                class="fas fa-times notification-close-icon"
+                                className="fas fa-times notification-close-icon"
                                 title="Close"
                                 onClick={() => deleteAlert(alert.id)}></i>
                         </Alert>

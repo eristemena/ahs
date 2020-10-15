@@ -119,7 +119,7 @@ const GetCustomers = ({
 
     const {
         customers: {
-            get: { title, add_transaction, table },
+            get: { title, button, table },
         },
         action,
     } = intlMessage(language);
@@ -134,7 +134,7 @@ const GetCustomers = ({
                     }`}
                     disabled={!checkAdminMerchant(user)}
                     onClick={() => history.push('/customers/add')}>
-                    {add_transaction}
+                    {button}
                 </button>
             </div>
             <div className="d-flex flex-column flex-md-row">

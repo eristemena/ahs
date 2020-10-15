@@ -31,6 +31,7 @@ const StockForm = ({
     alert,
     history,
     language,
+    shortcut = false
 }) => {
     const [ownedCustomers, setOwnedCustomers] = useState([]);
     const [loadingOwnedCustomer, setLoadingOwnedCustomer] = useState(false);
@@ -242,6 +243,7 @@ const StockForm = ({
                         loading1={loadingOwnedCustomer}
                         action={action}
                         history={history}
+                        cancel={() => shortcut ? window.close() : history.goBack()}
                     />
                 </Form>
             </CardBody>
@@ -291,6 +293,7 @@ StockForm.propTypes = {
     stateInfo: PropTypes.string,
     action: PropTypes.string,
     history: PropTypes.object.isRequired,
+    shortcut: PropTypes.bool
 };
 
 const mapDispatchToProps = (dispatch) => ({

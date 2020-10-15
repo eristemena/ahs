@@ -58,6 +58,7 @@
     "jsxBracketSameLine": true,
     "jsxSingleQuote": false,
     "bracketSpacing": true,
-    "arrowParens": "always"
+    "arrowParens": "always",
+    "printWidth": 200
   }
 }

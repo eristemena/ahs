@@ -172,7 +172,7 @@ const SideNav = ({ user, menu, setMenuState, setSubMenuState, history, language 
                             wheelSpeed: 0.3,
                         }}>
                             <p className="sub-menu-title">{sub}</p>
-                            <div class="dropdown-divider"></div>
+                            <div className="dropdown-divider"></div>
                             <Nav vertical className="list-unstyled">
                                 {sub === sidenav.reporting.name && (
                                     <Fragment>
