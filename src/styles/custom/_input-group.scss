@@ -1,0 +1,17 @@
+.input-group {
+	.input-group-prepend {
+		.input-group-text {
+			font-size: 0.8rem;
+			border-radius: 0 !important;
+			outline: initial !important;
+			box-shadow: initial !important;
+			border: 1px solid $separator-color;
+			background: white;
+			color: black;
+		}
+
+		.btn {
+			z-index: 0;
+		}
+	}
+}

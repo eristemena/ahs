@@ -1,0 +1,346 @@
+.custom-navbar {
+	background: $navbar-color;
+	padding: 10px 0;
+	height: $navbar-height;
+
+	.navbar-left {
+		height: 100%;
+	}
+
+	.navbar-logo {
+		width: 170px;
+		height: 170px;
+		position: absolute;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+
+		.logo-mobile {
+			// width: 100%;
+			height: 100%;
+			background: url('../../icon.png') no-repeat;
+			background-position: center;
+			background-size: contain;
+			display: block;
+		}
+
+		@media (max-width: 576px) {
+			width: 70px;
+			height: 70px;
+		}
+	}
+
+	.default-profile-picture {
+		font-size: 40px;
+	}
+
+	.name {
+		margin-top: 1.32rem;
+		margin-right: 0.2rem;
+	}
+
+	.menu-button {
+		color: $secondary-color;
+		width: $main-menu-width;
+		text-align: center;
+		text-decoration: none;
+
+		svg {
+			height: 13px;
+		}
+
+		.main,
+		.sub {
+			fill: $primary-color;
+		}
+
+		.main {
+			width: 10px;
+		}
+
+		@media (max-width: 576px) {
+			width: 100%;
+			margin: 0 1rem;
+		}
+	}
+}
+
+.side-nav {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	padding-top: $navbar-height;
+	z-index: 4;
+	height: calc(100% - #{$navbar-height});
+	transition: border-radius $menu-collapse-time;
+
+	.scrollbar-container {
+		margin-right: 0;
+		padding-right: 0;
+	}
+
+	.main-menu {
+		width: $main-menu-width;
+		height: calc(100% - #{$navbar-height});
+		background: $navbar-color;
+		z-index: 3;
+		position: fixed;
+		transition: all $menu-collapse-time;
+		padding-top: 20px;
+		border-top-right-radius: $navbar-border-radius;
+		border-bottom-right-radius: $navbar-border-radius;
+		padding-bottom: 10px;
+		left: 0;
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+		@media (max-width: 576px) {
+			width: $main-menu-width - 20px;
+		}
+
+		.scroll {
+			padding-right: unset;
+			margin-right: unset;
+			height: 100%;
+
+			.ps__thumb-y {
+				right: 0;
+			}
+		}
+
+		&.main-hidden {
+			transform: translateX(-$main-menu-width);
+			box-shadow: 0 0.5rem 1rem transparent;
+		}
+
+		ul li {
+			position: relative;
+
+			i {
+				text-align: center;
+				padding: 0 10px;
+				line-height: 14px;
+			}
+
+			label {
+				cursor: pointer;
+			}
+
+			a {
+				height: $main-menu-item-height;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				font-size: 13px;
+				font-style: normal;
+				font-weight: 400;
+				border-bottom: 1px solid $separator-color;
+				color: $sidenav-dark;
+				transition: color $menu-collapse-time;
+				transition: background $menu-collapse-time;
+				text-decoration: none;
+
+				&:hover,
+				&:focus {
+					color: $sidenav-light;
+				}
+			}
+
+			i {
+				font-size: 32px;
+				line-height: 42px;
+			}
+
+			&.active a {
+				color: $sidenav-dark;
+			}
+
+			&.active:after {
+				content: '';
+				background: $sidenav-dark;
+				border-radius: 10px;
+				position: absolute;
+				width: 6px;
+				height: 90px;
+				top: 50%;
+				transform: translateY(-50%);
+				left: 0;
+			}
+
+			&:last-of-type {
+				a {
+					border-bottom: initial;
+				}
+			}
+		}
+	}
+
+	.main-menu.sub-open {
+		border-radius: 0;
+		box-shadow: 0 0.5rem 1rem transparent;
+	}
+
+	.sub-menu {
+		width: $sub-menu-width;
+		background: $navbar-color;
+		z-index: 2;
+		position: fixed;
+		left: $main-menu-width;
+		border-left: 1px solid $separator-color;
+		border-top-right-radius: $navbar-border-radius;
+		border-bottom-right-radius: $navbar-border-radius;
+		transition: all $menu-collapse-time;
+		height: calc(100% - #{$navbar-height});
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-right: 0;
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+		@media (max-width: 576px) {
+			width: calc(100% - #{$main-menu-width - 20px});
+			left: $main-menu-width - 20px;
+			border-top-right-radius: 0px;
+			border-bottom-right-radius: 0px;
+		}
+
+		.scroll {
+			margin-right: unset;
+			padding-right: unset;
+			height: 100%;
+
+			.ps__thumb-y {
+				right: 0;
+			}
+
+			.scrollbar-container {
+				padding-top: 15px;
+				padding-bottom: 15px;
+			}
+		}
+
+		.sub-menu-title {
+			font-size: 1.5em;
+			font-weight: 500;
+			color: $text-light;
+			margin-left: 2rem;
+		}
+
+		ul {
+			li {
+				margin-bottom: 0;
+				margin-left: 30px;
+				position: relative;
+
+				a {
+					display: block;
+					padding: 8px 0;
+					margin-bottom: 10px;
+
+					label {
+						cursor: pointer;
+						color: $text-light;
+						font-size: 1.1em;
+						vertical-align: top;
+						margin: 0%;
+					}
+
+					&:hover label,
+					&:hover i {
+						color: $sidenav-light;
+					}
+				}
+
+				i {
+					font-size: 1.3em;
+					margin-right: 10px;
+					color: $text-light;
+					vertical-align: middle;
+					display: inline-block;
+				}
+
+				&.active i,
+				&.active a label {
+					color: $sidenav-light;
+				}
+
+				&.active:after {
+					content: ' ';
+					background: $primary-color;
+					border-radius: 50%;
+					position: absolute;
+					width: 4px;
+					height: 4px;
+					top: 37%;
+					left: -16px;
+				}
+
+				span {
+					vertical-align: middle;
+					padding-top: 3px;
+					display: inline-block;
+				}
+			}
+
+			li.has-sub-item {
+				&.active:after {
+					content: ' ';
+					background: initial;
+				}
+			}
+
+			ul.third-level-menu {
+				display: block !important;
+
+				li {
+					a,
+					i {
+						color: $primary-color;
+					}
+
+					a:hover,
+					&.active i,
+					&.active a {
+						color: $primary-color;
+					}
+
+					&.active:after {
+						left: -22px;
+					}
+				}
+			}
+
+			.rotate-arrow-icon {
+				i {
+					transition: transform $menu-collapse-time;
+					transform: rotate(0);
+				}
+
+				&.collapsed {
+					i {
+						transform: rotate(-90deg);
+					}
+				}
+			}
+		}
+	}
+
+	.sub-menu.main-show.hidden {
+		box-shadow: 0 0.5rem 1rem transparent;
+		transform: translateX(-$sub-menu-width);
+
+		@media (max-width: 576px) {
+			width: $main-menu-width - 20px;
+			transform: translateX(-$main-menu-width + 20px);
+		}
+	}
+
+	.sub-menu.main-hidden.hidden {
+		box-shadow: 0 0.5rem 1rem transparent;
+		transform: translateX(-$sub-menu-width - $main-menu-width);
+
+		@media (max-width: 576px) {
+			width: $main-menu-width - 20px;
+			transform: translateX(calc(#{-$main-menu-width + 20px} * 2));
+		}
+	}
+}

@@ -8,22 +8,22 @@ import Transaction from './Transaction';
 import Customer from './Customer';
 import Alerts from '../components/Alerts';
 import Navigation from './Navigation';
-import GallonsStocks from './GallonStocks'
+import GallonsStocks from './GallonStocks';
 import Report from './Report';
-import Content from './Content'
+import Content from './Content';
 
 export {
-    Home,
-    NotFound,
-    User,
-    Product,
-    Login,
-    Merchant,
-    Transaction,
-    Customer,
-    Alerts,
-    Navigation,
-    GallonsStocks,
-    Report,
-    Content
-}
+	Home,
+	NotFound,
+	User,
+	Product,
+	Login,
+	Merchant,
+	Transaction,
+	Customer,
+	Alerts,
+	Navigation,
+	GallonsStocks,
+	Report,
+	Content,
+};

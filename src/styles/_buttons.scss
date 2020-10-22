@@ -1,0 +1,206 @@
+.btn {
+	border-radius: $button-border-radius;
+	outline: initial !important;
+	box-shadow: none !important;
+	box-shadow: initial !important;
+	font-size: 0.8rem;
+	padding: 0.5rem 1.25rem;
+
+	&.btn-primary {
+		background-color: $primary-color;
+
+		&:hover {
+			background-color: $primary-color - rgb(26, 26, 26);
+
+			&:active {
+				background-color: $primary-color - rgb(46, 46, 46);
+			}
+		}
+
+		&.disabled {
+			padding: 0 1.5rem;
+
+			&:hover {
+				background-color: $primary-color;
+			}
+
+			&.table-button {
+				padding: 0.8rem 1.25rem;
+			}
+		}
+	}
+
+	&.btn-danger {
+		background-color: $danger-color;
+
+		&:hover {
+			background-color: $danger-color - rgb(26, 26, 26);
+
+			&:active {
+				background-color: $danger-color - rgb(46, 46, 46);
+			}
+		}
+
+		&.disabled {
+			padding: 0 1.5rem;
+
+			&:hover {
+				background-color: $danger-color;
+			}
+
+			&.table-button {
+				padding: 0.8rem 1.25rem;
+			}
+		}
+	}
+
+	&.button-waiting-for-confirmation {
+		padding: 0.5rem 1.25rem !important;
+	}
+
+	// &.input-group-append-button {
+	//     border-radius: 0px;
+	// }
+
+	&.dropdown-button {
+		&.dropdown-button-primary {
+			&.outline {
+				border: 0.05rem solid $primary-color;
+				background-color: white;
+				color: $primary-color;
+				transition: all $menu-collapse-time;
+
+				&:hover,
+				&[aria-expanded='true'] {
+					background-color: $primary-color;
+					color: white;
+				}
+			}
+		}
+	}
+
+	&.sorting-button {
+		background: none;
+		border: 1px solid #8f8f8f;
+		border-radius: 15px;
+		padding: 0.25rem 0.75rem;
+		font-size: 0.76rem;
+		line-height: 1.3;
+		color: #3a3a3a;
+
+		.arrow {
+			margin-top: 2px;
+			transition: transform $menu-collapse-time,
+				margin $menu-collapse-time;
+		}
+
+		&:hover,
+		&[aria-expanded='true'],
+		&:active {
+			border-color: $primary-color !important;
+			background-color: $primary-color !important;
+			color: white !important;
+		}
+
+		&.open .arrow {
+			margin-top: 0;
+			transform: rotateZ(180deg);
+		}
+
+		@media (max-width: 576px) {
+			width: 100%;
+			padding: 0.6rem 0.75rem;
+			font-size: 1rem;
+		}
+	}
+
+	&.language-button {
+		color: $text-light;
+		background-color: $background-color;
+		padding: 10px 20px;
+
+		span {
+			font-size: 0.8rem;
+		}
+
+		&::after {
+			display: inline-block;
+			margin-left: 0.4em;
+			vertical-align: 0.255em;
+			content: '';
+			border-top: 0.355em solid;
+			border-right: 0.355em solid transparent;
+			border-bottom: 0;
+			border-left: 0.355em solid transparent;
+		}
+	}
+
+	&.nav-profile-picture:focus {
+		box-shadow: none;
+	}
+
+	@media (max-width: 576px) {
+		display: block;
+		width: 100%;
+		padding: 0.75rem 1.25rem;
+	}
+
+	&.submit-button {
+		@media (max-width: 576px) {
+			margin-bottom: 0.75rem;
+		}
+	}
+
+	&.login-button {
+		@media (max-width: 576px) {
+			margin-top: 0.5rem;
+		}
+	}
+}
+
+.dropdown {
+	> .dropdown-menu {
+		border-radius: $navbar-border-radius;
+
+		&.show {
+			outline: none;
+		}
+
+		button.dropdown-item {
+			user-select: none;
+			transition: background-color $menu-collapse-time;
+			color: black;
+
+			&:active {
+				outline: none;
+			}
+		}
+	}
+
+	.sort-dropdown,
+	.show-entry-dropdown {
+		border-radius: $navbar-border-radius;
+
+		&.show {
+			outline: none;
+		}
+
+		.dropdown-item {
+			user-select: none;
+			color: $text-light !important;
+			font-weight: lighter;
+			font-size: 0.9rem;
+			padding: 0.4rem 1.3rem;
+			transition: none !important;
+
+			&:hover {
+				background-color: $primary-color;
+				color: white !important;
+			}
+
+			&:active {
+				outline: none;
+			}
+		}
+	}
+}

@@ -1,0 +1,40 @@
+.custom-login {
+    height: $full-height;
+    width: $full-width;
+    margin: 0;
+    background-image: linear-gradient(to top right,
+            $primary-color,
+            $secondary-color);
+
+    .custom-login-button {
+        background-color: $primary-color;
+    }
+
+    .custom-login-form-forgot-password {
+        text-decoration: none;
+        color: $primary-color;
+    }
+
+    .custom-loading-spinner {
+        max-width: 1.5rem;
+        max-height: 1.5rem;
+    }
+
+    .custom-login-card {
+        transform: translateY(0rem);
+        opacity: 0;
+        animation: custom-login-card-slide .5s ease forwards;
+
+        @keyframes custom-login-card-slide {
+            0% {
+                transform: translateY(1rem);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0rem);
+                opacity: 1;
+            }
+        }
+    }
+}

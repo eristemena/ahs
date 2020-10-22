@@ -1,0 +1,74 @@
+.custom-spinner {
+    color: white - rgb(26, 26, 26);
+    position: relative;
+    display: inline-block;
+    border: .2rem solid;
+    border-radius: 50%;
+    border-top-color: $primary-color;
+    animation: spinner-rotate 1.2s ease infinite;
+
+    &.table-loading-spinner {
+        height: 48px;
+        width: 48px;
+        margin-top: 1.2rem;
+    }
+
+    &.button-loading-spinner {
+        height: 2rem;
+        width: 2rem;
+        margin-top: 5px;
+        color: white;
+        border-top-color: black;
+    }
+
+    &.page-loading-spinner {
+        position: fixed;
+        width: 60px;
+        height: 60px;
+        border-width: .25rem;
+        transition: left $menu-collapse-time;
+
+        &.menu-open {
+            left: 9%;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        &.menu-close {
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
+    }
+
+    &.card-loading-spinner {
+        height: 48px;
+        width: 48px;
+        margin: .75rem auto;
+        margin-top: 1.2rem;
+    }
+
+    &.small {
+        width: 24px;
+        height: 24px;
+        margin: 0;
+        margin-left: -2px;
+        margin-right: -2px;
+        vertical-align: middle;
+        animation-duration: .8s;
+    }
+
+    @keyframes spinner-rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}

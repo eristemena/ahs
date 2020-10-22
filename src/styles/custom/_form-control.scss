@@ -1,0 +1,32 @@
+.form-control {
+    border-radius: 0;
+    outline: initial !important;
+    box-shadow: initial !important;
+    font-size: 0.8rem;
+    border: 1px solid $separator-color;
+    background-color: white;
+    color: $text-light;
+    height: initial;
+    padding: 0.5rem 0.75rem;
+    line-height: 1;
+
+    &:focus,
+    &:hover {
+        color: black;
+    }
+
+    &:focus {
+        border-bottom: 2px solid $secondary-color;
+    }
+
+    &.quantity-input {
+        @media (max-width: 576px) {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        height: 3rem;
+        font-size: 1rem;
+    }
+}

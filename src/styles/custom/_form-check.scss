@@ -1,0 +1,9 @@
+.custom-form-check {
+    .form-check-label {
+        margin-top: 3.2px;
+
+        @media (max-width: 576px) {
+            font-size: 1rem;
+        }
+    }
+}

@@ -1,0 +1,61 @@
+.custom-pagination {
+	overflow-x: auto;
+
+	.pagination-sm {
+		.page-item {
+			padding: 6px;
+			user-select: none;
+
+			.page-link {
+				width: 40px;
+				height: 40px;
+				font-size: 0.8rem;
+				border-radius: 50% !important;
+
+				&:hover {
+					border-color: $primary-color;
+				}
+
+				&:focus {
+					box-shadow: none;
+				}
+			}
+
+			&.goto-page {
+				.page-link {
+					background-color: white;
+
+					&:hover {
+						border-color: $primary-color;
+					}
+				}
+
+				&.active .page-link {
+					border-color: $secondary-color;
+					background-color: $primary-color;
+					color: white;
+				}
+			}
+
+			&.next-page,
+			&.previous-page {
+				.page-link {
+					background-color: $primary-color;
+					color: white;
+
+					&:hover {
+						background-color: white;
+						color: $primary-color;
+					}
+				}
+
+				&.disabled {
+					.page-link {
+						background-color: white;
+						color: $primary-color;
+					}
+				}
+			}
+		}
+	}
+}
