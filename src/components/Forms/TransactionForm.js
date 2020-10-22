@@ -422,6 +422,8 @@ const TransactionForm = ({
 																		item.product_id
 																	) {
 																		return own.label;
+																	} else {
+																		return null;
 																	}
 																}
 															),
@@ -520,6 +522,8 @@ const TransactionForm = ({
 																							item.stock_added ===
 																							true
 																						);
+																					} else {
+																						return false;
 																					}
 																				}
 																			);

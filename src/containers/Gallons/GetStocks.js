@@ -135,7 +135,9 @@ const GetGallonStocks = ({
 				</div>
 			</div>
 			<button
-				className="btn btn-primary sorting-button mb-2 d-flex justify-content-center justify-content-md-between sorting-button"
+				className={`btn btn-primary sorting-button mb-2 d-flex justify-content-center justify-content-md-between sorting-button ${
+					filter && 'open'
+				}`}
 				onClick={() => setFilter(!filter)}>
 				<span>Filter</span>
 				<i className="fas fa-chevron-down arrow ml-2"></i>

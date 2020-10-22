@@ -28,7 +28,8 @@ const FilterComponent = ({
 					<DropdownMenu className="sort-dropdown">
 						{dropdown.items.map((item) => (
 							<DropdownItem
-								onClick={() => onDropdownItemClick(item.value)}>
+								onClick={() => onDropdownItemClick(item.value)}
+								key={item.value}>
 								{item.text}
 							</DropdownItem>
 						))}
