@@ -1,0 +1,144 @@
+.custom-table {
+	overflow-x: auto;
+
+	table {
+		border-collapse: separate;
+		border-spacing: 0px 0.6rem;
+		width: 100%;
+
+		thead th {
+			color: $text-light;
+		}
+
+		tbody {
+			tr {
+				& > td {
+					padding: 10px 5px 5px 5px;
+
+					a {
+						text-decoration: none;
+					}
+
+					.edit-icon,
+					.delete-icon,
+					.info-icon {
+						font-size: 1.2rem;
+						user-select: none;
+					}
+
+					.edit-icon {
+						color: $primary-color;
+
+						&:hover {
+							color: $primary-color - rgb(63, 63, 63);
+						}
+
+						&::before {
+							vertical-align: middle;
+						}
+					}
+
+					.delete-icon {
+						color: $danger-color;
+						cursor: pointer;
+
+						&:hover {
+							color: $danger-color - rgb(63, 63, 63);
+						}
+
+						&::before {
+							vertical-align: middle;
+						}
+					}
+
+					.info-icon {
+						color: $info-color;
+
+						&:hover {
+							color: $info-color - rgb(63, 63, 63);
+						}
+
+						&::before {
+							vertical-align: middle;
+						}
+					}
+				}
+
+				// border-radius: 0.75rem !important;
+
+				line-height: 50px;
+				box-shadow: 0 1px 15px rgba(0, 0, 0, 0.1),
+					0 1px 6px rgba(0, 0, 0, 0.04);
+			}
+		}
+	}
+
+	.card {
+		.card-body {
+			table tbody tr {
+				box-shadow: none !important;
+
+				td {
+					border-top: #e3e3e3 1px solid;
+					border-bottom: #e3e3e3 1px solid;
+
+					&:first-of-type {
+						border-left: #e3e3e3 1px solid;
+						border-top-left-radius: $border-radius;
+						border-bottom-left-radius: $border-radius;
+					}
+
+					&:last-of-type {
+						border-right: #e3e3e3 1px solid;
+						border-top-right-radius: $border-radius;
+						border-bottom-right-radius: $border-radius;
+					}
+				}
+			}
+		}
+
+		&.transaction {
+			min-width: 645px;
+		}
+
+		&.product {
+			min-width: 540px;
+		}
+
+		&.customer {
+			min-width: 780px;
+		}
+
+		&.user {
+			min-width: 473px;
+		}
+
+		&.merchant {
+			min-width: 371px;
+		}
+
+		&.stock {
+			min-width: 564px;
+		}
+
+		&.gallon {
+			min-width: 337px;
+		}
+
+		&.sales {
+			min-width: 501px;
+		}
+
+		&.borrowing {
+			min-width: 338px;
+		}
+
+		&.group {
+			min-width: 376px;
+		}
+
+		&.borrowing .scrollbar-container {
+			max-height: 300px;
+		}
+	}
+}

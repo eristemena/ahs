@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700');
+@import './colors';
+@import './variables';
+
+@import './buttons';
+@import './notification-box';
+
+@import './customs';
+
+body {
+	font-family: $custom-font;
+	font-size: 0.8rem;
+	font-weight: 400;
+	background-color: $background-color;
+}
+
+.main-container {
+	main {
+		position: relative;
+		height: 100%;
+		margin-top: 6rem;
+		margin-left: 0rem;
+		margin-right: 0rem;
+		max-width: $full-width;
+		transition: margin-left $menu-collapse-time;
+
+		&.sidenav-open {
+			margin-left: 7.2rem;
+		}
+
+		.content-container {
+			height: 100%;
+		}
+
+		.card {
+			border-radius: $navbar-border-radius;
+		}
+
+		@media (max-width: 576px) {
+			&.sidenav-open {
+				margin-left: 0rem;
+			}
+		}
+	}
+
+	@import './custom/searchable-select';
+
+	.stocks-card {
+		height: 100%;
+		vertical-align: middle;
+	}
+
+	.dropdown-divider {
+		border-color: $separator-color !important;
+		border-top-width: 1.4px !important;
+
+		&.dark {
+			border-color: black;
+		}
+	}
+
+	.page-title {
+		@media (max-width: 576px) {
+			text-align: center;
+		}
+	}
+
+	.tooltip-container {
+		border-radius: $border-radius;
+
+		.tooltip-body {
+			color: $text-light;
+			padding: 0.5rem 0.75rem;
+		}
+	}
+
+	.modal .modal-dialog .modal-content {
+		border-radius: 0px;
+		background-clip: border-box;
+	}
+
+	i.simple-icon {
+		&.simple-icon-arrow-left,
+		&.simple-icon-arrow-right {
+			margin: auto;
+			padding: 0.5rem;
+
+			&:hover {
+				color: $primary-color;
+			}
+		}
+	}
+
+	.not-found {
+		text-align: center;
+
+		h1 {
+			font-weight: bold;
+		}
+
+		small {
+			font-size: 1em;
+		}
+	}
+}

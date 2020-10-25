@@ -1,0 +1,115 @@
+.react-datepicker-wrapper {
+    width: 100%;
+
+    .react-datepicker__input-container {
+        width: 100%;
+
+        input {
+            width: 100%;
+        }
+    }
+
+    &.transaction-table-datepicker {
+        width: 9rem;
+        margin-left: .5rem;
+
+        input {
+            width: 100%;
+            background: none;
+            border: 1px solid #8f8f8f;
+            border-radius: 15px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.76rem;
+            line-height: 1.3;
+            color: #3a3a3a;
+        }
+
+        .react-datepicker__close-icon {
+            outline: none !important;
+
+            &::after {
+                background-color: transparent !important;
+                color: black !important;
+                border-radius: 0 !important;
+                font-size: 1.2rem;
+
+            }
+
+            @media (max-width: 576px) {
+                &::after {
+                    font-size: 1.6rem;
+                    font-weight: lighter;
+                }
+
+                margin-right: 7px;
+                padding-bottom: 4px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            width: 100%;
+            margin-top: .25rem;
+            margin-left: 0;
+
+            input {
+                padding: 0.25rem 0.75rem !important;
+                font-size: 1rem;
+                line-height: 10;
+                text-align: center;
+                color: #3a3a3a;
+            }
+        }
+    }
+}
+
+.react-datepicker {
+    font-family: $custom-font;
+    border-radius: 0;
+
+    .react-datepicker__triangle {
+        border-bottom-color: white !important;
+        left: 50% !important;
+    }
+
+    .react-datepicker__month-container {
+        .react-datepicker__header {
+            background-color: white !important;
+            border-bottom: none;
+        }
+
+        .react-datepicker__month .react-datepicker__day {
+            font-weight: lighter;
+
+            &.react-datepicker__day--today {
+                font-weight: bolder;
+            }
+
+            &:hover {
+                background-color: $primary-color;
+                color: white;
+                border-radius: 0;
+            }
+
+            &.react-datepicker__day--disabled {
+                &:hover {
+                    color: $text-light;
+                    background-color: initial;
+                }
+
+                &:focus,
+                &:active {
+                    outline: none;
+                }
+            }
+
+        }
+    }
+
+    .react-datepicker__today-button {
+        background-color: white;
+    }
+
+    @media (max-width: 576px) {
+        width: 100%;
+    }
+}

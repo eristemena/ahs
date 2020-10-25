@@ -6,16 +6,16 @@ import TransactionForm from './TransactionForm';
 import StockForm from './StockForm';
 import RstPwFindEmailForm from './RstPwFindEmailForm';
 import TransactionEditForm from './TransactionEditForm';
-import GroupForm from './GroupForm'
+import GroupForm from './GroupForm';
 
 export {
-    CustomerForm,
-    LoginForm,
-    ProductForm,
-    RegisterForm,
-    TransactionForm,
-    StockForm,
-    RstPwFindEmailForm,
-    TransactionEditForm,
-    GroupForm
+	CustomerForm,
+	LoginForm,
+	ProductForm,
+	RegisterForm,
+	TransactionForm,
+	StockForm,
+	RstPwFindEmailForm,
+	TransactionEditForm,
+	GroupForm,
 };

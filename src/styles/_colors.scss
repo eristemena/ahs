@@ -1,0 +1,17 @@
+$primary-color: #008ecc;
+$secondary-color: #73c2fb;
+$danger-color: rgb(200, 49, 49);
+$info-color: #17a2b8;
+$success-color: #28a745;
+$background-color: whitesmoke;
+
+$navbar-color: white;
+$separator-color: #d4d4d4;
+$sidenav-dark: $primary-color - rgb(68, 68, 68);
+$sidenav-light: $primary-color + rgb(22, 22, 22);
+
+$text-light: grey;
+
+$button-color: $primary-color;
+$button-hover: $primary-color - rgb(26, 26, 26);
+$button-click: $primary-color - rgb(46, 46, 46);

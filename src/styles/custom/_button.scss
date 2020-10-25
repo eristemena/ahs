@@ -1,0 +1,58 @@
+.custom-button {
+    position: absolute;
+    top: 17px;
+    right: 20px;
+
+    button {
+        padding: 0;
+        width: 34px;
+        height: 34px;
+        background-color: transparent;
+        border-radius: 50%;
+        border: transparent;
+        transition: border $menu-collapse-time;
+
+        i {
+            &::before {
+                font-size: 1rem;
+                vertical-align: middle;
+                color: #cacaca;
+                transition: color $menu-collapse-time;
+            }
+        }
+
+        &:hover {
+            border: #e3e3e3 1px solid;
+
+            i::before {
+                color: black;
+            }
+
+            &:disabled {
+                border: transparent;
+            }
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &.spin {
+            animation: button-spin 1s linear infinite;
+
+            i::before {
+                color: black;
+            }
+        }
+
+        @keyframes button-spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    }
+}

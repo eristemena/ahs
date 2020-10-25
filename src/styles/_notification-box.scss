@@ -1,0 +1,45 @@
+.notification-container {
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 999999;
+    width: 320px;
+    padding: 0px 15px;
+    max-height: calc(100% - 30px);
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .notification-alert {
+        margin-top: 20px;
+        transform: translateX(120%);
+        user-select: none;
+
+        &.show {
+            animation: notification-slide .5s ease forwards;
+
+            @keyframes notification-slide {
+                0% {
+                    transform: translateX(120%)
+                }
+
+                100% {
+                    transform: translateX(0%)
+                }
+            }
+        }
+
+        .notification-close-icon::before {
+            cursor: pointer;
+            position: absolute;
+            right: 9px;
+            top: 5px;
+            font-size: 1rem;
+
+            @media (max-width: 576px) {
+                font-size: 1.2rem;
+                top: 7px;
+            }
+        }
+    }
+}

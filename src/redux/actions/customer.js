@@ -1,7 +1,5 @@
 import { get } from '../../axios';
-import { addAlert } from './alert';
-import { setLoading } from './loading';
-import { logout } from './user';
+import { setLoading, error_handler } from './';
 import { CUSTOMER_ADD } from '../actionTypes';
 
 export const getCustomers = (page, name) => (dispatch) => {
@@ -21,20 +19,7 @@ export const getCustomers = (page, name) => (dispatch) => {
             dispatch(setLoading(false));
         },
         (error) => {
-            if (error) {
-                if (error.message === 'jwt expired, please login.') {
-                    dispatch(
-                        addAlert(
-                            'Anda belum login setelah seminggu. Harap login lagi.'
-                        )
-                    );
-                    dispatch(logout());
-                } else if (error.message !== 'Need authorization header') {
-                    dispatch(addAlert(`Telah terjadi kesalahan: ${error.message}`));
-                }
-            } else {
-                dispatch(addAlert('Telah terjadi kesalahan'));
-            }
+            dispatch(error_handler(error))
             dispatch(setLoading(false));
         }
     );

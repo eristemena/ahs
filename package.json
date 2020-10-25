@@ -50,14 +50,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "prettier": {
-    "singleQuote": true,
-    "tabWidth": 4,
-    "semi": true,
-    "jsxBracketSameLine": true,
-    "jsxSingleQuote": false,
-    "bracketSpacing": true,
-    "arrowParens": "always"
   }
 }
