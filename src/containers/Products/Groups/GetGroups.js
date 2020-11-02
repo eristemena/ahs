@@ -190,7 +190,7 @@ const GetGroups = ({
 					}}
 					onDropdownItemClick={setSortBy}
 				/>
-				<FilterComponent text="Search by name:">
+				<FilterComponent text="Name:">
 					<TableSearchbar
 						searchName={searchName}
 						inputOnChange={inputOnChange}

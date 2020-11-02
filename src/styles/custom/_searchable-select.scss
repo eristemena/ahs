@@ -1,105 +1,224 @@
 .custom-searchable-select {
-    outline: initial;
-    box-shadow: none;
+	outline: initial;
+	box-shadow: none;
 
-    &.__value-container {
-        outline: initial;
-        box-shadow: none;
-        padding: 0.75rem 0.75rem 0.4rem 0.75rem;
-        background: white;
-        padding-top: 2px;
-        padding-bottom: 2px;
-        padding-left: 9px;
+	&.__value-container {
+		outline: initial;
+		box-shadow: none;
+		padding: 0.75rem 0.75rem 0.4rem 0.75rem;
+		background: white;
+		padding-top: 2px;
+		padding-bottom: 2px;
+		padding-left: 9px;
 
-        @media (max-width: 576px) {
-            height: 3rem;
-            font-size: 1rem;
-        }
-    }
+		@media (max-width: 576px) {
+			height: 3rem;
+			font-size: 1rem;
+		}
+	}
 
-    &.--is-disabled .__value-container {
-        background: #e9ecef;
-    }
+	&.--is-disabled .__value-container {
+		background: #e9ecef;
+	}
 
-    &.__single-value,
-    &.__multi-value__label {
-        bottom: initial;
-    }
+	&.__single-value,
+	&.__multi-value__label {
+		bottom: initial;
+	}
 
-    &.__control {
-        border-radius: 0;
-        background: white;
-        transition: background-color linear;
-        outline: initial;
-        box-shadow: none;
-        border: 2px solid initial;
+	&.__control {
+		border-radius: 0;
+		background: white;
+		transition: background-color linear;
+		outline: initial;
+		box-shadow: none;
+		border: 2px solid initial;
 
-        &.__control--is-focused {
-            border: 1px solid $secondary-color;
+		&.__control--is-focused {
+			border: 1px solid $secondary-color;
 
-            &.__control--menu-is-open {
-                border-bottom: none;
+			&.__control--menu-is-open {
+				border-bottom: none;
+			}
+		}
 
-            }
-        }
+		svg {
+			transition: transform $menu-collapse-time;
+		}
 
-        svg {
-            transition: transform $menu-collapse-time;
-        }
+		&.__control--menu-is-open .__dropdown-indicator svg {
+			transform: rotateZ(180deg);
+		}
 
-        &.__control--menu-is-open .__dropdown-indicator svg {
-            transform: rotateZ(180deg);
-        }
+		&.__control--is-disabled {
+			background: #e9ecef;
+		}
+	}
 
-        &.__control--is-disabled {
-            background: #e9ecef;
-        }
-    }
+	&.home {
+		&.__control {
+			border-radius: 0.4rem;
 
-    &.home {
-        &.__control {
-            border-radius: .4rem;
+			&.__control--menu-is-open {
+				border-bottom-left-radius: 0;
+				border-bottom-right-radius: 0;
+				border-bottom: none;
+			}
+		}
 
-            &.__control--menu-is-open {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                border-bottom: none;
-            }
-        }
+		&.__menu {
+			border-bottom-left-radius: 0.4rem;
+			border-bottom-right-radius: 0.4rem;
+		}
+	}
 
-        &.__menu {
-            border-bottom-left-radius: .4rem;
-            border-bottom-right-radius: .4rem;
-        }
-    }
+	&.__indicator-separator {
+		display: none;
+	}
 
-    &.__indicator-separator {
-        display: none;
-    }
+	&.__menu {
+		margin: 0;
+		border-radius: 0;
+		border: 1px solid $secondary-color;
+		border-top: none;
 
-    &.__menu {
-        margin: 0;
-        border-radius: 0;
-        border: 1px solid $secondary-color;
-        border-top: none;
+		.__option {
+			background: white;
+			color: black;
 
-        .__option {
-            background: white;
-            color: black;
+			&:hover {
+				background: $secondary-color;
+				color: black;
+			}
 
-            &:hover {
-                background: $secondary-color;
-                color: black;
-            }
+			&.__option--is-selected {
+				background-color: $primary-color;
+				color: white;
+			}
 
-            &.__option--is-selected {
-                background-color: $primary-color;
-                color: white;
-            }
+			@media (max-width: 576px) {
+				font-size: 1rem;
+			}
+		}
+	}
 
-            @media (max-width: 576px) {
-                font-size: 1rem;
-            }
-        }
-    }
+	&.filter {
+		padding: 0;
+		font-style: italic;
+		cursor: pointer;
+		transition: background 200ms, color 200ms;
+		&.__value-container {
+			background: none;
+			font-size: 0.76rem;
+			padding-right: 4rem;
+
+			@media (max-width: 576px) {
+				height: 3rem;
+				font-size: 1rem;
+			}
+		}
+
+		&.--is-disabled .__value-container {
+			background: #e9ecef;
+		}
+
+		&.__single-value,
+		&.__multi-value__label {
+			bottom: initial;
+		}
+
+		&.__control {
+			border-radius: 17px;
+			background: none;
+			padding: 0 0.75rem;
+			border: 1px solid #8f8f8f;
+			width: 150px;
+
+			&:hover {
+				background: $primary-color;
+			}
+
+			// &.__control--is-focused {
+			// 	border: 1px solid $secondary-color;
+
+			// 	&.__control--menu-is-open {
+			// 		border-bottom: none;
+			// 	}
+			// }
+
+			svg {
+				color: #3a3a3a;
+			}
+
+			&.__control--menu-is-open .__dropdown-indicator svg {
+				transform: none;
+			}
+
+			&.__control--is-disabled {
+				background: #e9ecef;
+			}
+
+			&:hover,
+			&.__control--menu-is-open {
+				background: $primary-color;
+				svg {
+					color: white;
+				}
+				.__single-value,
+				.__placeholder {
+					color: white;
+				}
+			}
+		}
+
+		// &.home {
+		// 	&.__control {
+		// 		border-radius: 0.4rem;
+
+		// 		&.__control--menu-is-open {
+		// 			border-bottom-left-radius: 0;
+		// 			border-bottom-right-radius: 0;
+		// 			border-bottom: none;
+		// 		}
+		// 	}
+
+		// 	&.__menu {
+		// 		border-bottom-left-radius: 0.4rem;
+		// 		border-bottom-right-radius: 0.4rem;
+		// 	}
+		// }
+
+		&.__indicator-separator {
+			display: none;
+		}
+
+		&.__menu {
+			margin: 0;
+			border-radius: 13px !important;
+			border: 1px solid #cacaca !important;
+			border-top: none;
+			padding: 10px 0;
+
+			.__option {
+				background: white;
+				color: black;
+				transition: none;
+				padding: 6px 20px;
+
+				&:hover {
+					background: $primary-color;
+					color: white;
+				}
+
+				&.__option--is-selected {
+					background-color: $primary-color;
+					color: white;
+				}
+
+				@media (max-width: 576px) {
+					font-size: 1rem;
+				}
+			}
+		}
+	}
 }

@@ -5,7 +5,6 @@ import { addAlert, logout } from '../../redux/actions';
 import * as Yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import Select from 'react-select';
-import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 import 'moment/locale/id';
 import { get, postWithAuth, del } from '../../axios';
@@ -176,6 +175,8 @@ const TransactionForm = ({
 				return item;
 			})
 		);
+
+		console.log(customer_id);
 		postWithAuth(
 			'/stocks',
 			{
@@ -183,7 +184,7 @@ const TransactionForm = ({
 				type,
 				quantity,
 				info: null,
-				customer_id,
+				customer_id: customer_id || null,
 			},
 			({ data }) => {
 				alert(`Stok galon berhasil ditambahkan`, 'success');

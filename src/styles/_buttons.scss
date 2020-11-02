@@ -100,6 +100,11 @@
 			border-color: $primary-color !important;
 			background-color: $primary-color !important;
 			color: white !important;
+
+			&.btn-danger {
+				border-color: $danger-color !important;
+				background-color: $danger-color !important;
+			}
 		}
 
 		&.open .arrow {
@@ -112,6 +117,9 @@
 			padding: 0.6rem 0.75rem;
 			font-size: 1rem;
 		}
+	}
+
+	&.filter-button {
 	}
 
 	&.language-button {

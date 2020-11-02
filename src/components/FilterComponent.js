@@ -13,7 +13,7 @@ const FilterComponent = ({
 	children,
 }) => {
 	return (
-		<div className="d-flex flex-column flex-sm-row mb-2">
+		<div className="d-flex flex-column flex-sm-row mb-2 filter-component">
 			<p
 				className="my-auto mr-2 text-center"
 				style={{ color: '#808080' }}>

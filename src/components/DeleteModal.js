@@ -33,7 +33,7 @@ const DeleteModal = ({
 						deleteHandler();
 						setToggle(false);
 					}}>
-					Delete Permanently
+					Delete
 				</button>
 			</ModalFooter>
 		</Modal>
