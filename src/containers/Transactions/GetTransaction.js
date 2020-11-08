@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { addAlert, setLoading, getTransactions } from '../../redux/actions';
+import {
+	addAlert,
+	setLoading,
+	getTransactions,
+	logout,
+} from '../../redux/actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/id';
-import { del } from '../../axios';
-import { formatPrice, checkAdminMerchant, parseType } from '../../utilities';
+import { del, get } from '../../axios';
+import {
+	formatPrice,
+	checkAdminMerchant,
+	parseType,
+	errorHandler,
+} from '../../utilities';
 import {
 	DeleteModal,
 	CustomPagination,
@@ -12,7 +22,8 @@ import {
 	Datepicker,
 	FilterComponent,
 } from '../../components';
-import { Container, Collapse } from 'reactstrap';
+import Select from 'react-select';
+import { Container, Collapse, Row, Col } from 'reactstrap';
 import { intlMessage } from '../../language';
 
 const GetTransaction = ({
@@ -30,20 +41,40 @@ const GetTransaction = ({
 	const [delId, setDelId] = useState(-1);
 	const [sortBy, setSortBy] = useState('updated_at');
 	const [dateSearch, setDateSearch] = useState(null);
+	const [typeSearch, setTypeSearch] = useState(null);
 	const [limit, setLimit] = useState(8);
+	const [productSearch, setProductSearch] = useState(null);
+	const [groupSearch, setGroupSearch] = useState(null);
+	const [customerSearch, setCustomerSearch] = useState(null);
 
 	const [modalToggle, setModalToggle] = useState(false);
 
 	const [filter, setFilter] = useState(false);
 
 	useEffect(() => {
+		if (!dateSearch && !limit) {
+			setLimit(8);
+		}
 		getTransaction(
 			page,
 			sortBy,
-			dateSearch ? moment(dateSearch).format('YYYY-MM-DD') : null,
-			limit
+			dateSearch && moment(dateSearch).format('YYYY-MM-DD'),
+			limit,
+			typeSearch,
+			productSearch && productSearch.value,
+			groupSearch && groupSearch.value,
+			customerSearch && customerSearch.value
 		);
-	}, [page, sortBy, dateSearch, limit]);
+	}, [
+		page,
+		sortBy,
+		dateSearch,
+		limit,
+		typeSearch,
+		productSearch,
+		groupSearch,
+		customerSearch,
+	]);
 
 	useEffect(() => {
 		if (loading) {
@@ -60,6 +91,64 @@ const GetTransaction = ({
 			});
 		}
 	}, [transaction]);
+
+	const [productOption, setProductOption] = useState([]);
+	const [productOptionLoading, setProductOptionLoading] = useState(false);
+	const [groupOption, setGroupOption] = useState([]);
+	const [groupOptionLoading, setGroupOptionLoading] = useState(false);
+	const [customerOption, setCustomerOption] = useState([]);
+	const [customerOptionLoading, setCustomerOptionLoading] = useState(false);
+
+	useEffect(() => {
+		setProductOptionLoading(true);
+		setGroupOptionLoading(true);
+		setCustomerOptionLoading(true);
+		get(
+			'/products',
+			({ data }) => {
+				if (data.length > 0) {
+					setProductOption(
+						data.map(({ id, name }) => ({ value: id, label: name }))
+					);
+				}
+				setProductOptionLoading(false);
+			},
+			(error) => {
+				errorHandler(error, alert, logout);
+				setProductOptionLoading(false);
+			}
+		);
+		get(
+			'/customers',
+			({ data }) => {
+				if (data.length > 0) {
+					setCustomerOption(
+						data.map(({ id, name }) => ({ value: id, label: name }))
+					);
+				}
+				setCustomerOptionLoading(false);
+			},
+			(error) => {
+				errorHandler(error, alert, logout);
+				setCustomerOptionLoading(false);
+			}
+		);
+		get(
+			'/products_groups',
+			({ data }) => {
+				if (data.length > 0) {
+					setGroupOption(
+						data.map(({ id, name }) => ({ value: id, label: name }))
+					);
+				}
+				setGroupOptionLoading(false);
+			},
+			(error) => {
+				errorHandler(error, alert, logout);
+				setGroupOptionLoading(false);
+			}
+		);
+	}, []);
 
 	const activeNav = (type) => {
 		if (loading) {
@@ -129,6 +218,18 @@ const GetTransaction = ({
 		action,
 	} = intlMessage(language);
 
+	const customSelect = (options, loading, onChange, value) => (
+		<Select
+			classNamePrefix="custom-searchable-select filter "
+			value={value}
+			options={options}
+			maxMenuHeight={110}
+			onChange={onChange}
+			isDisabled={loading}
+			isLoading={loading}
+		/>
+	);
+
 	return (
 		<Container fluid>
 			<div className="d-sm-flex flex-column flex-sm-row justify-content-between align-middle mb-2">
@@ -143,7 +244,7 @@ const GetTransaction = ({
 				</button>
 			</div>
 			<button
-				className={`btn btn-primary sorting-button mb-2 d-flex justify-content-center justify-content-md-between sorting-button ${
+				className={`btn btn-primary sorting-button mb-2 d-flex justify-content-center justify-content-md-between ${
 					filter && 'open'
 				}`}
 				onClick={() => setFilter(!filter)}>
@@ -152,47 +253,138 @@ const GetTransaction = ({
 			</button>
 			<div className="dropdown-divider dark"></div>
 			<Collapse isOpen={filter}>
-				<FilterComponent
-					text="Order by:"
-					dropdown={{
-						selected: sortBy === 'date' ? 'Date' : 'Modified At',
-						items: [
-							{
-								text: 'Date',
-								value: 'date',
-							},
-							{
-								text: 'Modified At',
-								value: 'updated_at',
-							},
-						],
-					}}
-					onDropdownItemClick={setSortBy}
-				/>
-				<FilterComponent text="Select date:">
-					<Datepicker
-						value={dateSearch}
-						wrapperClassname="transaction-table-datepicker ml-0"
-						isClearable
-						onChange={(e) => {
-							setDateSearch(e);
-							setPage(1);
-							// setFilter(!filter);
-						}}
-						placeholder="Pilih hari"
-					/>
-				</FilterComponent>
-				<FilterComponent
-					text="Limit:"
-					dropdown={{
-						selected: limit,
-						items: [4, 8, 12, 20].map((number) => ({
-							text: number,
-							value: number,
-						})),
-					}}
-					onDropdownItemClick={setLimit}
-				/>
+				<Row>
+					<Col xs="12" md="6">
+						<FilterComponent
+							text="Order by:"
+							dropdown={{
+								selected:
+									sortBy === 'date' ? 'Date' : 'Modified At',
+								items: [
+									{
+										text: 'Date',
+										value: 'date',
+									},
+									{
+										text: 'Modified At',
+										value: 'updated_at',
+									},
+								],
+							}}
+							onDropdownItemClick={setSortBy}
+						/>
+						<FilterComponent text="Select date:">
+							<Datepicker
+								value={dateSearch}
+								wrapperClassname="transaction-table-datepicker ml-0"
+								isClearable
+								onChange={(e) => {
+									setDateSearch(e);
+									setPage(1);
+									// setFilter(!filter);
+								}}
+								placeholder="Pilih hari"
+							/>
+						</FilterComponent>
+						<FilterComponent
+							text="Type:"
+							dropdown={{
+								selected: typeSearch
+									? parseType(typeSearch, language)
+									: '-',
+								items: [
+									{
+										text: '-',
+										value: null,
+									},
+									{
+										text: parseType('buy', language),
+										value: 'buy',
+									},
+									{
+										text: parseType('sell', language),
+										value: 'sell',
+									},
+								],
+							}}
+							onDropdownItemClick={setTypeSearch}
+						/>
+						<FilterComponent
+							text="Limit:"
+							dropdown={{
+								selected: limit || 'All',
+								items: [4, 8, 12, 20, null].map((number) => ({
+									text: number || 'All',
+									value: number,
+								})),
+							}}
+							onDropdownItemClick={(value) => {
+								if (!dateSearch && !value) {
+									alert('Pilih tanggal');
+								} else {
+									setLimit(value);
+								}
+							}}
+						/>
+					</Col>
+					<Col xs="12" md="6">
+						<FilterComponent text="Product:">
+							{customSelect(
+								productOption,
+								productOptionLoading,
+								(item) => {
+									if (groupSearch !== null) {
+										setGroupSearch(null);
+									}
+									setProductSearch(item);
+								},
+								productSearch
+							)}
+							{productSearch && (
+								<button
+									onClick={() => setProductSearch(null)}
+									className="btn btn-danger sorting-button ml-2">
+									Cancel
+								</button>
+							)}
+						</FilterComponent>
+						<FilterComponent text="Group:">
+							{customSelect(
+								groupOption,
+								groupOptionLoading,
+								(item) => {
+									if (productSearch !== null) {
+										setProductSearch(null);
+									}
+									setGroupSearch(item);
+								},
+								groupSearch
+							)}
+							{groupSearch && (
+								<button
+									onClick={() => setGroupSearch(null)}
+									className="btn btn-danger sorting-button ml-2">
+									Cancel
+								</button>
+							)}
+						</FilterComponent>
+						<FilterComponent text="Customer:">
+							{customSelect(
+								customerOption,
+								customerOptionLoading,
+								(item) => setCustomerSearch(item),
+								customerSearch
+							)}
+							{customerSearch && (
+								<button
+									onClick={() => setCustomerSearch(null)}
+									className="btn btn-danger sorting-button ml-2">
+									Cancel
+								</button>
+							)}
+						</FilterComponent>
+					</Col>
+				</Row>
 			</Collapse>
 			<Container fluid>
 				<Table
@@ -255,8 +447,28 @@ const GetTransaction = ({
 
 const mapDispatchToProps = (dispatch) => ({
 	alert: (message, type) => dispatch(addAlert(message, type)),
-	getTransaction: (page, sort, date, limit) =>
-		dispatch(getTransactions(page, sort, date, limit)),
+	getTransaction: (
+		page,
+		sort,
+		date,
+		limit,
+		type,
+		product_id,
+		group_id,
+		customer_id
+	) =>
+		dispatch(
+			getTransactions(
+				page,
+				sort,
+				date,
+				limit,
+				type,
+				product_id,
+				group_id,
+				customer_id
+			)
+		),
 	setLoading: (loading) => dispatch(setLoading(loading)),
 });
 
