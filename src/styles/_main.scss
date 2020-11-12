@@ -29,7 +29,7 @@ body {
 		}
 
 		.content-container {
-			height: 100%;
+			height: calc(#{$full-height} - #{$navbar-height});
 		}
 
 		.card {
