@@ -127,12 +127,12 @@ const Data = ({ history, logout, alert }) => {
 														)}
 														{card(
 															'mx-2',
-															'Buy',
+															'Total Buy',
 															item.qty_buy
 														)}
 														{card(
 															'mx-2',
-															'Sell',
+															'Total Sell',
 															item.qty_sell
 														)}
 														{card(
@@ -172,23 +172,18 @@ const Data = ({ history, logout, alert }) => {
 													)}
 													{card(
 														'mx-2',
-														'Buy',
-														item.buy
+														'Total Buy',
+														item.qty_buy
 													)}
 													{card(
 														'mx-2',
-														'Sell',
+														'Total Sell',
 														item.qty_sell
 													)}
 													{card(
 														'mx-2',
 														'Total',
 														item.total
-													)}
-													{card(
-														'ml-2',
-														'Stock',
-														item.qty_buy
 													)}
 												</div>
 											</PerfectScrollbar>
