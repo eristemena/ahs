@@ -8,6 +8,8 @@ import {
 	Container,
 	Modal,
 	ModalBody,
+	InputGroup,
+	InputGroupAddon,
 } from 'reactstrap';
 import moment from 'moment';
 import { get } from '../../axios';
@@ -20,7 +22,7 @@ import { CustomSpinner, Datepicker } from '../../components';
 
 const Data = ({ history, logout, alert }) => {
 	const [modal, setModal] = useState(false);
-	const [date, setDate] = useState(null);
+	const [date, setDate] = useState(new Date());
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(false);
 
@@ -41,9 +43,7 @@ const Data = ({ history, logout, alert }) => {
 	const load = () => {
 		setLoading(true);
 		get(
-			`/transactions/report${
-				date ? `?date=${moment(date).format('YYYY-MM-DD')}` : ''
-			}`,
+			`/transactions/report?date=${moment(date).format('YYYY-MM-DD')}`,
 			({ data }) => {
 				setData(data);
 				setLoading(false);
@@ -67,7 +67,17 @@ const Data = ({ history, logout, alert }) => {
 				minWidth: 170,
 			}}>
 			<CardHeader>{title}</CardHeader>
-			<CardBody style={{ fontSize: '1rem' }}>{item}</CardBody>
+			<CardBody
+				className={`${
+					item * 1 !== 0
+						? item * 1 > 0
+							? 'text-success'
+							: 'text-danger'
+						: ''
+				} font-weight-bold`}
+				style={{ fontSize: '1rem' }}>
+				{item}
+			</CardBody>
 		</Card>
 	);
 	return (
@@ -77,7 +87,12 @@ const Data = ({ history, logout, alert }) => {
 			) : (
 				<Fragment>
 					<div className="d-md-flex justify-content-between mb-2">
-						<h1 className="page-title">Data</h1>
+						<h1 className="page-title">
+							Data{' '}
+							<h4 className="d-inline">
+								({moment(date).format('D MMMM YYYY')})
+							</h4>
+						</h1>
 						<button
 							className="btn btn-primary font-weight-bold"
 							type="button"
@@ -102,16 +117,6 @@ const Data = ({ history, logout, alert }) => {
 													<div className="d-flex flex-row flex-nowrap">
 														{card(
 															'mr-2',
-															'Total Buy',
-															item.total_buy
-														)}
-														{card(
-															'mx-2',
-															'Total Sell',
-															item.total_sell
-														)}
-														{card(
-															'mx-2',
 															'Buy',
 															item.buy
 														)}
@@ -119,6 +124,21 @@ const Data = ({ history, logout, alert }) => {
 															'mx-2',
 															'Sell',
 															item.sell
+														)}
+														{card(
+															'mx-2',
+															'Buy',
+															item.qty_buy
+														)}
+														{card(
+															'mx-2',
+															'Sell',
+															item.qty_sell
+														)}
+														{card(
+															'ml-2',
+															'Total',
+															item.total
 														)}
 													</div>
 												</PerfectScrollbar>
@@ -129,34 +149,54 @@ const Data = ({ history, logout, alert }) => {
 													'Stock',
 													item.stock
 												)}
+
+												<small>
+													*Only shows stock until the
+													selected date
+												</small>
 											</Col>
 										</Row>
 									) : (
-										<PerfectScrollbar className="mt-2">
-											<div className="d-flex flex-row flex-nowrap mt-2">
-												{card(
-													'mr-2',
-													'Total Buy',
-													item.total_buy
-												)}
-												{card(
-													'mx-2',
-													'Total Sell',
-													item.total_sell
-												)}
-												{card('mx-2', 'Buy', item.buy)}
-												{card(
-													'mx-2',
-													'Sell',
-													item.sell
-												)}
-												{card(
-													'ml-2',
-													'Stock',
-													item.stock
-												)}
-											</div>
-										</PerfectScrollbar>
+										<Fragment>
+											<PerfectScrollbar className="mt-2">
+												<div className="d-flex flex-row flex-nowrap mt-2">
+													{card(
+														'mr-2',
+														'Total Buy',
+														item.buy
+													)}
+													{card(
+														'mx-2',
+														'Total Sell',
+														item.sell
+													)}
+													{card(
+														'mx-2',
+														'Buy',
+														item.buy
+													)}
+													{card(
+														'mx-2',
+														'Sell',
+														item.qty_sell
+													)}
+													{card(
+														'mx-2',
+														'Total',
+														item.total
+													)}
+													{card(
+														'ml-2',
+														'Stock',
+														item.qty_buy
+													)}
+												</div>
+											</PerfectScrollbar>
+											<small>
+												*Only shows stock until the
+												selected date
+											</small>
+										</Fragment>
 									)}
 								</CardBody>
 							</Card>
@@ -170,14 +210,15 @@ const Data = ({ history, logout, alert }) => {
 				className="modal-right">
 				<ModalBody>
 					<p>Select Date:</p>
-					<Datepicker
-						isClearable
-						onChange={(e) => {
-							setDate(e);
-							setModal(false);
-						}}
-						value={date}
-					/>
+					<InputGroup>
+						<Datepicker
+							onChange={(e) => {
+								setDate(e);
+								setModal(false);
+							}}
+							value={date}
+						/>
+					</InputGroup>
 				</ModalBody>
 			</Modal>
 		</Container>
