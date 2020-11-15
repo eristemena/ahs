@@ -8,7 +8,7 @@ const GetStocks = ({ history, alert, logout }) => {
 	const [items, setItems] = useState(null);
 	const [loading, setLoading] = useState(false);
 
-	useEffect(() => {
+	const getFunc = () => {
 		setLoading(true);
 		get(
 			'/products_groups',
@@ -17,9 +17,14 @@ const GetStocks = ({ history, alert, logout }) => {
 				setLoading(false);
 			},
 			(error) => {
+				setLoading(false);
 				errorHandler(error, alert, logout);
 			}
 		);
+	};
+
+	useEffect(() => {
+		getFunc();
 	}, []);
 
 	const onClick = () => {
@@ -31,21 +36,11 @@ const GetStocks = ({ history, alert, logout }) => {
 					{},
 					() => {
 						if (index + 1 === items.length) {
-							get(
-								'/products_groups',
-								({ data }) => {
-									setItems(data);
-									setLoading(false);
-								},
-								(error) => {
-									setLoading(true);
-									errorHandler(error, alert, logout);
-								}
-							);
+							getFunc();
 						}
 					},
 					(error) => {
-						setLoading(true);
+						setLoading(false);
 						errorHandler(error, alert, logout);
 					}
 				);

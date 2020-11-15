@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import { Nav, NavItem, Label } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -81,6 +80,11 @@ const SideNav = ({
 				name: sidenav.reporting.sub.sales,
 				icon: 'simple-icon-wallet',
 				to: '/reports/sales',
+			},
+			{
+				name: 'Data',
+				icon: 'simple-icon-book-open',
+				to: '/reports/data',
 			},
 		],
 		products: [

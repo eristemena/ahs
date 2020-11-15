@@ -16,6 +16,7 @@ import moment from 'moment';
 import { intlMessage } from '../language';
 import { getProducts } from '../redux/actions';
 import { errorHandler } from '../utilities';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 function Home({
 	merchant_id,
