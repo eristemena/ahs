@@ -88,8 +88,8 @@ const Data = ({ history, logout, alert }) => {
 				<Fragment>
 					<div className="d-md-flex justify-content-between mb-2">
 						<h1 className="page-title">
-							Data
-							<h4 className="d-inline">
+							Data{' '}
+							<h4 className="d-md-inline d-block">
 								({moment(date).format('D MMMM YYYY')})
 							</h4>
 						</h1>
