@@ -1,58 +1,71 @@
 .custom-button {
-    position: absolute;
-    top: 17px;
-    right: 20px;
+	position: absolute;
+	top: 17px;
+	right: 20px;
 
-    button {
-        padding: 0;
-        width: 34px;
-        height: 34px;
-        background-color: transparent;
-        border-radius: 50%;
-        border: transparent;
-        transition: border $menu-collapse-time;
+	&.data {
+		position: relative;
+		padding: 0;
+		top: 0px;
+		right: 0;
+		width: 34px;
+		height: 34px;
+		transition: background-color $menu-collapse-time;
+		&:hover {
+			background-color: #dadada;
+		}
+	}
 
-        i {
-            &::before {
-                font-size: 1rem;
-                vertical-align: middle;
-                color: #cacaca;
-                transition: color $menu-collapse-time;
-            }
-        }
+	button {
+		padding: 0;
+		width: 34px;
+		height: 34px;
+		background-color: transparent;
+		border-radius: 50%;
+		border: transparent;
+		transition: border $menu-collapse-time;
 
-        &:hover {
-            border: #e3e3e3 1px solid;
+		i {
+			&::before {
+				font-size: 1rem;
+				vertical-align: middle;
+				color: #cacaca;
+				transition: color $menu-collapse-time;
+			}
+		}
 
-            i::before {
-                color: black;
-            }
+		&:hover {
+			border: #e3e3e3 1px solid;
 
-            &:disabled {
-                border: transparent;
-            }
-        }
+			i::before {
+				color: black;
+			}
 
-        &:focus {
-            outline: none;
-        }
+			&:disabled {
+				border: transparent;
+			}
+		}
 
-        &.spin {
-            animation: button-spin 1s linear infinite;
+		&:focus {
+			outline: none;
+		}
 
-            i::before {
-                color: black;
-            }
-        }
+		&.spin {
+			animation: button-spin 1s linear infinite;
 
-        @keyframes button-spin {
-            0% {
-                transform: rotate(0deg);
-            }
+			i::before {
+				color: black;
+			}
+		}
 
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-    }
+		@keyframes button-spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+	}
 }

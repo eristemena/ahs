@@ -80,94 +80,80 @@ const Data = ({ history, logout, alert }) => {
 			</CardBody>
 		</Card>
 	);
+	const buttonStyle = (item) => {
+		if (moment(item).get('dayOfYear') === moment().get('dayOfYear')) {
+			return { opacity: 0, cursor: 'default' };
+		} else {
+			return {};
+		}
+	};
 	return (
 		<Container fluid>
-			{loading ? (
-				<CustomSpinner type="page" loading={loading} />
-			) : (
-				<Fragment>
-					<div className="d-md-flex justify-content-between mb-2">
-						<h1 className="page-title">
-							Data{' '}
-							<h4 className="d-md-inline d-block">
-								({moment(date).format('D MMMM YYYY')})
-							</h4>
-						</h1>
-						<button
-							className="btn btn-primary font-weight-bold"
-							type="button"
-							onClick={() => setModal(!modal)}>
-							FILTER BY DATE RANGE
-						</button>
-					</div>
-					{data.map((item, index) => (
-						<Fragment key={index}>
-							<div className="dropdown-divider dark"></div>
-							<Card>
-								<CardBody>
-									<div className="d-md-flex justify-content-between mb-2">
-										<h3 className="page-title pb-3">
-											{item.name}
-										</h3>
-									</div>
-									{windowWidth > 576 ? (
-										<Row className="mt-2">
-											<Col xs="9">
-												<PerfectScrollbar>
-													<div className="d-flex flex-row flex-nowrap">
-														{card(
-															'mr-2',
-															'Buy',
-															item.buy
-														)}
-														{card(
-															'mx-2',
-															'Sell',
-															item.sell
-														)}
-														{card(
-															'mx-2',
-															'Total Buy',
-															item.qty_buy
-														)}
-														{card(
-															'mx-2',
-															'Total Sell',
-															item.qty_sell
-														)}
-														{card(
-															'ml-2',
-															'Total',
-															item.total
-														)}
-													</div>
-												</PerfectScrollbar>
-											</Col>
-											<Col xs="3">
-												{card(
-													'ml-2',
-													'Stock',
-													item.stock
-												)}
-
-												<small>
-													*Only shows stock until the
-													selected date
-												</small>
-											</Col>
-										</Row>
-									) : (
-										<Fragment>
-											<PerfectScrollbar className="mt-2">
-												<div className="d-flex flex-row flex-nowrap mt-2">
+			<div className="d-md-flex justify-content-between mb-2">
+				<h1 className="page-title">Data</h1>
+				<div className="d-md-flex justify-content-center  my-auto">
+					<button
+						className="btn custom-button data mr-1"
+						disabled={loading}
+						onClick={() => {
+							setDate(moment(date).subtract(1, 'days').toDate());
+						}}>
+						<i className="fas fa-chevron-left"></i>
+					</button>
+					<h4 className="d-md-inline d-block my-auto">
+						{moment(date).format('D MMMM YYYY')}{' '}
+						{moment(date).get('dayOfYear') ===
+							moment().get('dayOfYear') && '(Today)'}
+					</h4>
+					<button
+						className="btn custom-button data ml-1"
+						disabled={loading}
+						style={buttonStyle(date)}
+						onClick={() => {
+							const currentDate = moment(date).get('dayOfYear');
+							const currentYear = moment(date).get('year');
+							if (
+								currentDate === moment().get('dayOfYear') &&
+								currentYear === moment().get('year')
+							) {
+								return;
+							}
+							setDate(moment(date).add(1, 'days').toDate());
+						}}>
+						<i className="fas fa-chevron-right"></i>
+					</button>
+				</div>
+				<button
+					className="btn btn-primary font-weight-bold"
+					type="button"
+					onClick={() => setModal(!modal)}>
+					SELECT DATE
+				</button>
+			</div>
+			{!loading ? (
+				data.map((item, index) => (
+					<Fragment key={index}>
+						<div className="dropdown-divider dark"></div>
+						<Card>
+							<CardBody>
+								<div className="d-md-flex justify-content-between mb-2">
+									<h3 className="page-title pb-3">
+										{item.name}
+									</h3>
+								</div>
+								{windowWidth > 576 ? (
+									<Row className="mt-2">
+										<Col xs="9">
+											<PerfectScrollbar>
+												<div className="d-flex flex-row flex-nowrap">
 													{card(
 														'mr-2',
-														'Total Buy',
+														'Buy',
 														item.buy
 													)}
 													{card(
 														'mx-2',
-														'Total Sell',
+														'Sell',
 														item.sell
 													)}
 													{card(
@@ -181,28 +167,67 @@ const Data = ({ history, logout, alert }) => {
 														item.qty_sell
 													)}
 													{card(
-														'mx-2',
+														'ml-2',
 														'Total',
 														item.total
 													)}
 												</div>
 											</PerfectScrollbar>
+										</Col>
+										<Col xs="3">
+											{card('ml-2', 'Stock', item.stock)}
+
 											<small>
 												*Only shows stock until the
 												selected date
 											</small>
-										</Fragment>
-									)}
-								</CardBody>
-							</Card>
-						</Fragment>
-					))}
-				</Fragment>
+										</Col>
+									</Row>
+								) : (
+									<Fragment>
+										<PerfectScrollbar className="mt-2">
+											<div className="d-flex flex-row flex-nowrap mt-2">
+												{card(
+													'mr-2',
+													'Total Buy',
+													item.buy
+												)}
+												{card(
+													'mx-2',
+													'Total Sell',
+													item.sell
+												)}
+												{card(
+													'mx-2',
+													'Total Buy',
+													item.qty_buy
+												)}
+												{card(
+													'mx-2',
+													'Total Sell',
+													item.qty_sell
+												)}
+												{card(
+													'mx-2',
+													'Total',
+													item.total
+												)}
+											</div>
+										</PerfectScrollbar>
+										<small>
+											*Only shows stock until the selected
+											date
+										</small>
+									</Fragment>
+								)}
+							</CardBody>
+						</Card>
+					</Fragment>
+				))
+			) : (
+				<CustomSpinner type="page" loading={loading} />
 			)}
-			<Modal
-				isOpen={modal}
-				toggle={() => setModal(!modal)}
-				className="modal-right">
+			<Modal isOpen={modal} toggle={() => setModal(!modal)}>
 				<ModalBody>
 					<p>Select Date:</p>
 					<InputGroup>
